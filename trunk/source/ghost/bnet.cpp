@@ -2454,7 +2454,16 @@ void CBNET :: UnqueueGameRefreshes( )
 bool CBNET :: IsAdmin( string name )
 {
 	transform( name.begin( ), name.end( ), name.begin( ), (int(*)(int))tolower );
-
+	if (m_GHost->m_AdminClan)
+	{
+		for( vector<CIncomingClanList *> :: iterator i = m_Clans.begin(); i != m_Clans.end(); i++ )
+		{
+			string MemberName = (*i)->GetName();
+			transform( MemberName.begin(), MemberName.end(), MemberName.begin(), (int(*)(int))tolower );
+			if( MemberName == name )
+            return true;
+		}
+	}
 	for( vector<string> :: iterator i = m_Admins.begin( ); i != m_Admins.end( ); ++i )
 	{
 		if( *i == name )
