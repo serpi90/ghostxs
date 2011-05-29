@@ -396,7 +396,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !BAN
 			//
 
-			else if( ( Command == "addban" || Command == "ban" ) && !Payload.empty( ) && !m_GHost->m_BNETs.empty( ) )
+			else if( ( Command == "addban" || Command == "ban" || Command == "b" ) && !Payload.empty( ) && !m_GHost->m_BNETs.empty( ) )
 			{
 				// extract the victim and the reason
 				// e.g. "Varlock leaver after dying" -> victim: "Varlock", reason: "leaver after dying"
@@ -471,7 +471,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !ANNOUNCE
 			//
 
-			else if( Command == "announce" && !m_CountDownStarted )
+			else if( Command == "announce" || Command == "ann" && !m_CountDownStarted )
 			{
 				if( Payload.empty( ) || Payload == "off" )
 				{
@@ -555,7 +555,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !BANLAST
 			//
 
-			else if( Command == "banlast" && m_GameLoaded && !m_GHost->m_BNETs.empty( ) && m_DBBanLast )
+			else if( Command == "banlast" || Command == "bl" && m_GameLoaded && !m_GHost->m_BNETs.empty( ) && m_DBBanLast )
 				m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( m_DBBanLast->GetServer( ), m_DBBanLast->GetName( ), m_DBBanLast->GetIP( ), m_GameName, User, Payload ) ) );
 
 			//
@@ -608,7 +608,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !CHECKBAN
 			//
 
-			else if( Command == "checkban" && !Payload.empty( ) && !m_GHost->m_BNETs.empty( ) )
+			else if( Command == "checkban" || Command == "cb" && !Payload.empty( ) && !m_GHost->m_BNETs.empty( ) )
 			{
 				for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 					m_PairedBanChecks.push_back( PairedBanCheck( User, m_GHost->m_DB->ThreadedBanCheck( (*i)->GetServer( ), Payload, string( ) ) ) );
@@ -628,7 +628,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !CLOSE (close slot)
 			//
 
-			else if( Command == "close" && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
+			else if( Command == "close" || Command == "c" && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
 			{
 				// close as many slots as specified, e.g. "5 10" closes slots 5 and 10
 
@@ -946,7 +946,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !FAKEPLAYER
 			//
 
-			else if( Command == "fakeplayer" && !m_CountDownStarted )
+			else if( Command == "fakeplayer" || Command == "fk" && !m_CountDownStarted )
 			{
 				if( m_FakePlayerPID == 255 )
 					CreateFakePlayer( );
@@ -982,7 +982,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !FROM
 			//
 
-			else if( Command == "from" )
+			else if( Command == "from" || Command == "f" )
 			{
 				string Froms;
 
@@ -1071,7 +1071,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !KICK (kick a player)
 			//
 
-			else if( Command == "kick" && !Payload.empty( ) )
+			else if( Command == "kick" || Command == "k" && !Payload.empty( ) )
 			{
 				CGamePlayer *LastMatch = NULL;
 				uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
@@ -1099,7 +1099,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !LATENCY (set game latency)
 			//
 
-			else if( Command == "latency" )
+			else if( Command == "latency" || Command == "dr" )
 			{
 				if( Payload.empty( ) )
 					SendAllChat( m_GHost->m_Language->LatencyIs( UTIL_ToString( m_Latency ) ) );
@@ -1154,7 +1154,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !MUTE
 			//
 
-			else if( Command == "mute" )
+			else if( Command == "mute" || Command == "m" )
 			{
 				CGamePlayer *LastMatch = NULL;
 				uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
@@ -1184,7 +1184,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !OPEN (open slot)
 			//
 
-			else if( Command == "open" && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
+			else if( Command == "open" || Command "o" && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
 			{
 				// open as many slots as specified, e.g. "5 10" opens slots 5 and 10
 
@@ -1240,7 +1240,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !PING
 			//
 
-			else if( Command == "ping" )
+			else if( Command == "ping" || Command == "p" )
 			{
 				// kick players with ping higher than payload if payload isn't empty
 				// we only do this if the game hasn't started since we don't want to kick players from a game in progress
@@ -1381,9 +1381,17 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !REFRESH (turn on or off refresh messages)
 			//
 
-			else if( Command == "refresh" && !m_CountDownStarted )
+			else if( Command == "refresh" || Command == "r" && !m_CountDownStarted )
 			{
-				if( Payload == "on" )
+				if( Payload.empty() )
+				{
+					m_RefreshMessages = !m_RefreshMessages;
+					if (m_RefreshMessages == true )
+						SendAllChat (m_GHost->m_Language->RefreshMessagesEnabled() );
+					else
+						SendAllChat (m_GHost->m_Language->RefreshMessagesDisabled() );
+				}			
+				else if( Payload == "on" )
 				{
 					SendAllChat( m_GHost->m_Language->RefreshMessagesEnabled( ) );
 					m_RefreshMessages = true;
@@ -1535,7 +1543,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !SYNCLIMIT
 			//
 
-			else if( Command == "synclimit" )
+			else if( Command == "synclimit" || Command == "s" )
 			{
 				if( Payload.empty( ) )
 					SendAllChat( m_GHost->m_Language->SyncLimitIs( UTIL_ToString( m_SyncLimit ) ) );
@@ -1579,7 +1587,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !UNMUTE
 			//
 
-			else if( Command == "unmute" )
+			else if( Command == "unmute" || Command == "um" )
 			{
 				CGamePlayer *LastMatch = NULL;
 				uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
@@ -1719,7 +1727,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 	// !VERSION
 	//
 
-	else if( Command == "version" )
+	else if( Command == "version" || Command == "v" )
 	{
 		if( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
 			SendChat( player, m_GHost->m_Language->VersionAdmin( m_GHost->m_Version ) );
