@@ -496,7 +496,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !ANNOUNCE
 			//
 
-			else if( Command == "announce" || Command == "ann" && !m_CountDownStarted )
+			else if( ( Command == "announce" || Command == "ann" ) && !m_CountDownStarted )
 			{
 				if( Payload.empty( ) || Payload == "off" )
 				{
@@ -580,7 +580,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !BANLAST
 			//
 
-			else if( Command == "banlast" || Command == "bl" && m_GameLoaded && !m_GHost->m_BNETs.empty( ) && m_DBBanLast )
+			else if( ( Command == "banlast" || Command == "bl" ) && m_GameLoaded && !m_GHost->m_BNETs.empty( ) && m_DBBanLast )
 				m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( m_DBBanLast->GetServer( ), m_DBBanLast->GetName( ), m_DBBanLast->GetIP( ), m_GameName, User, Payload ) ) );
 
 			//
@@ -633,7 +633,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !CHECKBAN
 			//
 
-			else if( Command == "checkban" || Command == "cb" && !Payload.empty( ) && !m_GHost->m_BNETs.empty( ) )
+			else if( ( Command == "checkban" || Command == "cb" ) && !Payload.empty( ) && !m_GHost->m_BNETs.empty( ) )
 			{
 				for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 					m_PairedBanChecks.push_back( PairedBanCheck( User, m_GHost->m_DB->ThreadedBanCheck( (*i)->GetServer( ), Payload, string( ) ) ) );
@@ -653,7 +653,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !CLOSE (close slot)
 			//
 
-			else if( Command == "close" || Command == "c" && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
+			else if( ( Command == "close" || Command == "c" ) && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
 			{
 				// close as many slots as specified, e.g. "5 10" closes slots 5 and 10
 
@@ -971,7 +971,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !FAKEPLAYER
 			//
 
-			else if( Command == "fakeplayer" || Command == "fk" && !m_CountDownStarted )
+			else if( ( Command == "fakeplayer" || Command == "fk" ) && !m_CountDownStarted )
 			{
 				if( m_FakePlayerPID == 255 )
 					CreateFakePlayer( );
@@ -1096,7 +1096,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !KICK (kick a player)
 			//
 
-			else if( Command == "kick" || Command == "k" && !Payload.empty( ) )
+			else if( ( Command == "kick" || Command == "k" ) && !Payload.empty( ) )
 			{
 				CGamePlayer *LastMatch = NULL;
 				uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
@@ -1209,7 +1209,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !OPEN (open slot)
 			//
 
-			else if( Command == "open" || Command "o" && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
+			else if( ( Command == "open" || Command == "o" ) && !Payload.empty( ) && !m_GameLoading && !m_GameLoaded )
 			{
 				// open as many slots as specified, e.g. "5 10" opens slots 5 and 10
 
@@ -1406,7 +1406,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !REFRESH (turn on or off refresh messages)
 			//
 
-			else if( Command == "refresh" || Command == "r" && !m_CountDownStarted )
+			else if( ( Command == "refresh" || Command == "r" ) && !m_CountDownStarted )
 			{
 				if( Payload.empty() )
 				{
