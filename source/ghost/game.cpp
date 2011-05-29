@@ -377,7 +377,32 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			/*****************
 			* ADMIN COMMANDS *
 			******************/
-
+			//
+			// !ADMINCHAT by Zephyrix improved by Metal_Koola
+			//
+			if( Command == "ac" && !Payload.empty( ) )
+			{
+				for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+				{
+						if((*i)->GetSpoofed( ))
+						{
+							bool IsAdmin = false;
+							string Name = (*i)->GetName( );
+							for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
+							{
+								if( (*j)->GetServer( ) == player->GetSpoofedRealm( ) && ( (*j)->IsRootAdmin( Name ) || (*j)->IsAdmin( Name ) ) )
+								{
+									IsAdmin = true;
+									break;
+								}
+							}
+			
+							if( IsAdmin )
+								SendChat( player->GetPID( ), (*i)->GetPID( ), "[ACHAT]-[" + User + "]: " + Payload );
+						}
+				}
+				HideCommand = true;
+			}
 			//
 			// !ABORT (abort countdown)
 			// !A
@@ -385,7 +410,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
 			// we use "!a" as an alias for abort because you don't have much time to abort the countdown so it's useful for the abort command to be easy to type
 
-			if( ( Command == "abort" || Command == "a" ) && m_CountDownStarted && !m_GameLoading && !m_GameLoaded )
+			else if( ( Command == "abort" || Command == "a" ) && m_CountDownStarted && !m_GameLoading && !m_GameLoaded )
 			{
 				SendAllChat( m_GHost->m_Language->CountDownAborted( ) );
 				m_CountDownStarted = false;
