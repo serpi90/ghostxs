@@ -2044,6 +2044,12 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 				SendChat( Player, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
 		}
 	}
+	// Show Player realm on join
+	if (m_GHost->m_ShowServerOnJoin)
+	{	
+		SendAllChat( "Bienvenido [" + joinPlayer->GetName( ) + "] Realm: [" + ( JoinedRealm == string( ) ? "LAN" : JoinedRealm ) + "]" );
+	}
+	//TODO : Make language for this.
 
 	// check for multiple IP usage
 

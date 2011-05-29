@@ -133,6 +133,8 @@ public:
 	uint32_t m_ReplayBuildNumber;			// config value: replay build number (for saving replays)
 	bool m_TCPNoDelay;						// config value: use Nagle's algorithm or not
 	uint32_t m_MatchMakingMethod;			// config value: the matchmaking method
+	bool m_ShowServerOnJoin;				// config value: show realm of player on game join
+	bool m_AdminClan;						// config value: make clan admin or not
 
 	CGHost( CConfig *CFG );
 	~CGHost( );
