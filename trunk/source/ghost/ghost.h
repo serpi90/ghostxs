@@ -135,7 +135,8 @@ public:
 	uint32_t m_MatchMakingMethod;			// config value: the matchmaking method
 	bool m_ShowServerOnJoin;				// config value: show realm of player on game join
 	bool m_AdminClan;						// config value: make clan admin or not
-
+	bool m_GameIDReplays;					// config value: save replays with database game id or not
+	
 	CGHost( CConfig *CFG );
 	~CGHost( );
 
