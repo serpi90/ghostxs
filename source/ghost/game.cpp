@@ -1539,6 +1539,23 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			}
 
 			//
+			// !STARN
+			//
+
+			else if( Command == "startn" && !m_CountDownStarted )
+			{
+				if( GetTicks( ) - m_LastPlayerLeaveTicks < 1000 )
+				{
+					SendAllChat( m_GHost->m_Language->CountDownAbortedSomeoneLeftRecently( ) );
+				}
+				else
+				{
+					StartCountDown( true );
+					m_CountDownCounter = 0;
+				}
+			}
+
+			//
 			// !SWAP (swap slots)
 			//
 
