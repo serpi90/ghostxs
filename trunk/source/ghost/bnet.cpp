@@ -1459,7 +1459,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !ENABLE
 				//
 
-				else if( Command == "enable" )
+				else if( Command == "enable" || Command == "e" )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1530,7 +1530,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !QUIT
 				//
 
-				else if( Command == "exit" || Command == "quit" )
+				else if( Command == "exit" || Command == "quit" || Command == "q" )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1574,7 +1574,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !GETGAME
 				//
 
-				else if( Command == "getgame" && !Payload.empty( ) )
+				else if( ( Command == "getgame" || Command == "gg" ) && !Payload.empty( ) )
 				{
 					uint32_t GameNumber = UTIL_ToUInt32( Payload ) - 1;
 
@@ -1588,7 +1588,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !GETGAMES
 				//
 
-				else if( Command == "getgames" )
+				else if( Command == "getgames" || Command == "ggs" )
 				{
 					if( m_GHost->m_CurrentGame )
 						QueueChatCommand( m_GHost->m_Language->GameIsInTheLobby( m_GHost->m_CurrentGame->GetDescription( ), UTIL_ToString( m_GHost->m_Games.size( ) ), UTIL_ToString( m_GHost->m_MaxGames ) ), User, Whisper );
@@ -1928,7 +1928,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !RELOAD
 				//
 
-				else if( Command == "reload" )
+				else if( Command == "reload" || Command == "rcfg" )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1956,7 +1956,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !SAYGAME
 				//
 
-				else if( Command == "saygame" && !Payload.empty( ) )
+				else if(( Command == "saygame" || Command == "sg" ) && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1984,7 +1984,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 									Message = Message.substr( Start );
 
 								if( GameNumber - 1 < m_GHost->m_Games.size( ) )
-									m_GHost->m_Games[GameNumber - 1]->SendAllChat( "ADMIN: " + Message );
+									m_GHost->m_Games[GameNumber - 1]->SendAllChat( "[ADMIN]-[" + User + "]: " + Message );
 								else
 									QueueChatCommand( m_GHost->m_Language->GameNumberDoesntExist( UTIL_ToString( GameNumber ) ), User, Whisper );
 							}
@@ -2006,7 +2006,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 							m_GHost->m_CurrentGame->SendAllChat( Payload );
 
 						for( vector<CBaseGame *> :: iterator i = m_GHost->m_Games.begin( ); i != m_GHost->m_Games.end( ); ++i )
-							(*i)->SendAllChat( "ADMIN: " + Payload );
+							(*i)->SendAllChat( "[ADMIN]-[" + User + "]: " + Payload  );
 					}
 					else
 						QueueChatCommand( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ), User, Whisper );
