@@ -1267,6 +1267,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
 			//
 			// !PING
+			// !P
 			//
 
 			else if( Command == "ping" || Command == "p" )
@@ -1276,16 +1277,47 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
 				uint32_t Kicked = 0;
 				uint32_t KickPing = 0;
-
+				string Pings;
+	
 				if( !m_GameLoading && !m_GameLoaded && !Payload.empty( ) )
 					KickPing = UTIL_ToUInt32( Payload );
 
+				if (!Payload.empty())
+				{
+					CGamePlayer *LastMatch = NULL;
+					uint32_t Matches = GetPlayerFromNamePartial( Payload , &LastMatch );
+
+					if( Matches == 0 )
+						CONSOLE_Print("No matches");
+
+					else if( Matches == 1 )
+					{
+						Pings = LastMatch->GetName( );
+						Pings +=": ";
+						if( LastMatch->GetNumPings( ) > 0 )
+						{
+							Pings += UTIL_ToString( LastMatch->GetPing( m_GHost->m_LCPings ) );
+							Pings +=" ms";
+						} else
+							Pings += "N/A";
+
+						Pings += " (";
+						Pings += ")";
+						SendAllChat(Pings);
+						return HideCommand;
+					}
+					else
+						CONSOLE_Print("Found more than one match");
+				}
+
+				if( !m_GameLoading && !m_GameLoaded && !Payload.empty( ) )
+					KickPing = UTIL_ToUInt32( Payload );
+					
 				// copy the m_Players vector so we can sort by descending ping so it's easier to find players with high pings
 
 				vector<CGamePlayer *> SortedPlayers = m_Players;
 				sort( SortedPlayers.begin( ), SortedPlayers.end( ), CGamePlayerSortDescByPing( ) );
-				string Pings;
-
+				
 				for( vector<CGamePlayer *> :: iterator i = SortedPlayers.begin( ); i != SortedPlayers.end( ); ++i )
 				{
 					Pings += (*i)->GetNameTerminated( );
