@@ -1387,6 +1387,7 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	m_LocalAdminMessages = CFG->GetInt( "bot_localadminmessages", 1 ) == 0 ? false : true;
 	m_TCPNoDelay = CFG->GetInt( "tcp_nodelay", 0 ) == 0 ? false : true;
 	m_MatchMakingMethod = CFG->GetInt( "bot_matchmakingmethod", 1 );
+	m_ApprovedCountries = CFG->GetString( "bot_approvedcountries", string( ));
 }
 
 void CGHost :: ExtractScripts( )
