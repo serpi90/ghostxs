@@ -1266,6 +1266,30 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			}
 
 			//
+			// !IPS
+			//
+
+			if( Command == "ips" )
+			{
+				string Froms;
+
+				for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
+				{
+					// we reverse the byte order on the IP because it's stored in network byte order
+
+					Froms += (*i)->GetName( );
+					Froms += ": (";
+					Froms += (*i)->GetExternalIPString( );
+					Froms += ")";
+
+					if( i != m_Players.end( ) - 1 )
+						Froms += ", ";
+				}
+
+				SendAllChat( Froms );
+			}
+
+			//
 			// !PING
 			// !P
 			//
