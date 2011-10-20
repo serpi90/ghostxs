@@ -254,6 +254,7 @@ public:
 	string WaitForReconnectSecondsRemain( string seconds );
 	string WasUnrecoverablyDroppedFromGProxy( );
 	string PlayerReconnectedWithGProxy( string name );
+    string AutokickingPlayerForDeniedCountry( string victim, string country );
 };
 
 #endif

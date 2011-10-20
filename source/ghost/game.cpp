@@ -1208,7 +1208,60 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 				SendAllChat( m_GHost->m_Language->GlobalChatMuted( ) );
 				m_MuteAll = true;
 			}
-
+            
+            //
+            // !ONLY GhostXS
+            //
+            
+            else if( Command == "only" && !m_GameLoading && !m_GameLoaded )
+			{
+                if ( Payload.empty( ) )
+                {   
+                    SendAllChat( "Country check disabled, allowing all countries"); //TODOXS: Add it to Language
+                    m_Countries_Allow = false;
+                    m_Countries_Allowed = "";
+                }
+                else
+                {
+                    m_Countries_Allow = true;
+                    m_Countries_Allowed = Payload;
+                    transform( m_Countries_Allowed.begin( ), m_Countries_Allowed.end( ), m_Countries_Allowed.begin( ), (int(*)(int))toupper );
+                    SendAllChat( "Country check enabled, allowed countries: "+m_Countries_Allowed); //TODOXS: Add it to Language
+					m_Countries_Allowed = m_Countries_Allowed + " ??";
+                    
+                    for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
+                    {
+                        string From = m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( (*i)->GetExternalIP( ), true ) );
+                        transform( From.begin( ), From.end( ), From.begin( ), (int(*)(int))toupper );
+                        
+                        bool isAdmin = IsOwner((*i)->GetName( ));
+                        for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); j++ )
+                        {
+                            if( (*j)->IsAdmin((*i)->GetName( ) ) || (*j)->IsRootAdmin( (*i)->GetName( ) ) )
+                            {
+                                SendAllChat("Player: " + (*i)->GetName( ) + "("+ From +") is " + (isAdmin?"":"NOT ") + "an Admin." );
+                                isAdmin = true;
+                                break;
+                            }
+                        }
+                        
+                        if (IsReserved ((*i)->GetName())){
+                            isAdmin = true;
+                            SendAllChat("Player: " + (*i)->GetName( ) + "("+ From +") is " + (isAdmin?"":"NOT ") + "reserved." );
+                        }
+                        
+                        if ( !isAdmin && (*i)->GetName( )!=User && m_Countries_Allowed.find(From)==string :: npos )
+                        {
+                            SendAllChat( m_GHost->m_Language->AutokickingPlayerForDeniedCountry( (*i)->GetName( ), From ) );
+                            (*i)->SetDeleteMe( true );
+                            (*i)->SetLeftReason( "was autokicked," + From + " not on the allowed countries list");
+                            (*i)->SetLeftCode( PLAYERLEAVE_LOBBY );
+                            OpenSlot( GetSIDFromPID( (*i)->GetPID( ) ), false );
+                        }
+                    }
+                }
+            }
+            
 			//
 			// !OPEN (open slot)
 			//
