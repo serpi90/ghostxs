@@ -49,6 +49,8 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Protocol = new CGameProtocol( m_GHost );
 	m_Map = new CMap( *nMap );
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
+    m_Countries_Allow = false;
+    m_Countries_Allowed = "";
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );	
@@ -1695,7 +1697,43 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 		}
 	}
 
-	// check if the new player's name is banned but only if bot_banmethod is not 0
+	// Check if the new player's country is allowed to join. GHOSTXS
+	if( m_Countries_Allow )
+	{
+        bool isAdmin = false;
+        isAdmin = IsOwner(joinPlayer->GetName( ));
+        for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); j++ )
+        {
+            if( (*j)->IsAdmin(joinPlayer->GetName( ) ) || (*j)->IsRootAdmin( joinPlayer->GetName( ) ) )
+            {
+                isAdmin = true;
+                break;
+            }
+        }
+        
+        if (IsReserved (joinPlayer->GetName()))
+            isAdmin=true;
+
+        
+        if( !isAdmin )
+        {
+            string From = m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( potential->GetExternalIP( ), true ) );
+            transform( From.begin( ), From.end( ), From.begin( ), (int(*)(int))toupper );
+            if (m_Countries_Allowed.find(From) == string :: npos) //if not in the allowed countries list
+            {
+                string n=joinPlayer->GetName();
+
+                SendAllChat( m_GHost->m_Language->AutokickingPlayerForDeniedCountry( n, From ) );
+
+                vector<CGameSlot> Slots = m_Map->GetSlots( );
+                potential->Send( m_Protocol->SEND_W3GS_SLOTINFOJOIN( 1, potential->GetSocket( )->GetPort( ), potential->GetExternalIP( ), Slots, 0, m_Map->GetMapLayoutStyle( ), m_Map->GetMapNumPlayers( ) ) );
+                potential->SetDeleteMe( true );
+                return;
+            }
+        }
+	}
+
+	// check if the new player's name is banned but onlpotentialy if bot_banmethod is not 0
 	// this is because if bot_banmethod is 0 and we announce the ban here it's possible for the player to be rejected later because the game is full
 	// this would allow the player to spam the chat by attempting to join the game multiple times in a row
 
@@ -3784,6 +3822,7 @@ unsigned char CBaseGame :: GetEmptySlot( unsigned char team, unsigned char PID )
 			vector<CGameSlot> SaveGameSlots = m_SaveGame->GetSlots( );
 
                         for( unsigned char i = StartSlot; i < m_Slots.size( ); ++i )
+
 			{
 				if( m_Slots[i].GetSlotStatus( ) == SLOTSTATUS_OPEN && m_Slots[i].GetTeam( ) == team && SaveGameSlots[i].GetSlotStatus( ) == SLOTSTATUS_OCCUPIED && SaveGameSlots[i].GetComputer( ) == 0 )
 					return i;
@@ -3828,6 +3867,7 @@ void CBaseGame :: SwapSlots( unsigned char SID1, unsigned char SID2 )
 
 		if( m_Map->GetMapOptions( ) & MAPOPT_FIXEDPLAYERSETTINGS )
 		{
+
 			// don't swap the team, colour, race, or handicap
 			m_Slots[SID1] = CGameSlot( Slot2.GetPID( ), Slot2.GetDownloadStatus( ), Slot2.GetSlotStatus( ), Slot2.GetComputer( ), Slot1.GetTeam( ), Slot1.GetColour( ), Slot1.GetRace( ), Slot2.GetComputerType( ), Slot1.GetHandicap( ) );
 			m_Slots[SID2] = CGameSlot( Slot1.GetPID( ), Slot1.GetDownloadStatus( ), Slot1.GetSlotStatus( ), Slot1.GetComputer( ), Slot2.GetTeam( ), Slot2.GetColour( ), Slot2.GetRace( ), Slot1.GetComputerType( ), Slot2.GetHandicap( ) );

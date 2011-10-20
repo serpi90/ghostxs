@@ -1533,3 +1533,11 @@ string CLanguage :: PlayerReconnectedWithGProxy( string name )
 	UTIL_Replace( Out, "$NAME$", name );
 	return Out;
 }
+
+string CLanguage :: AutokickingPlayerForDeniedCountry( string victim, string country )
+{
+	string Out = m_CFG->GetString( "lang_0221", "lang_0221" );
+	UTIL_Replace( Out, "$VICTIM$", victim );
+	UTIL_Replace( Out, "$COUNTRY$", country );
+	return Out;
+}
