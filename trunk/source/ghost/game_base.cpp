@@ -591,18 +591,20 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 		m_LastAnnounceTime = GetTime( );
 	}
 
-	// kick players who don't spoof check within 20 seconds when spoof checks are required and the game is autohosted
+	// kick players who don't spoof check within 30 seconds when spoof checks are required and the game is autohosted
 
-	if( !m_CountDownStarted && m_GHost->m_RequireSpoofChecks && m_GameState == GAME_PUBLIC && !m_GHost->m_AutoHostGameName.empty( ) && m_GHost->m_AutoHostMaximumGames != 0 && m_GHost->m_AutoHostAutoStartPlayers != 0 && m_AutoStartPlayers != 0 )
+	//if( !m_CountDownStarted && m_GHost->m_RequireSpoofChecks && m_GameState == GAME_PUBLIC && !m_GHost->m_AutoHostGameName.empty( ) && m_GHost->m_AutoHostMaximumGames != 0 && m_GHost->m_AutoHostAutoStartPlayers != 0 && m_AutoStartPlayers != 0 )
+    if( !m_CountDownStarted && m_GHost->m_RequireSpoofChecks )
 	{
-                for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+        for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
 		{
-			if( !(*i)->GetSpoofed( ) && GetTime( ) - (*i)->GetJoinTime( ) >= 20 )
+			if( !(*i)->GetSpoofed( ) && GetTime( ) - (*i)->GetJoinTime( ) >= 30 )
 			{
 				(*i)->SetDeleteMe( true );
 				(*i)->SetLeftReason( m_GHost->m_Language->WasKickedForNotSpoofChecking( ) );
 				(*i)->SetLeftCode( PLAYERLEAVE_LOBBY );
 				OpenSlot( GetSIDFromPID( (*i)->GetPID( ) ), false );
+                SendAllChat( (*i)->GetName( ) + " " + m_GHost->m_Language->WasKickedForNotSpoofChecking( ) );
 			}
 		}
 	}
@@ -1334,15 +1336,13 @@ void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 		if( m_HCLCommandString.empty( ) )
 			SendChat( player, " " );
 
-		SendChat( player, " " );
-		SendChat( player, " " );
-		SendChat( player, " " );
-		SendChat( player, "GHost++                                         http://www.codelain.com/" );
-		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-GHostXS-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 		SendChat( player, "     Game Name:                 " + m_GameName );
 
 		if( !m_HCLCommandString.empty( ) )
 			SendChat( player, "     HCL Command String:  " + m_HCLCommandString );
+        SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+        
 	}
 	else
 	{
@@ -2125,9 +2125,10 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 	// if spoof checks are required and we won't automatically spoof check this player then tell them how to spoof check
 	// e.g. if automatic spoof checks are disabled, or if automatic spoof checks are done on admins only and this player isn't an admin
 
-	if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
+	//if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
+    if( m_GHost->m_RequireSpoofChecks )
 	{
-                for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
+        for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
 			// note: the following (commented out) line of code will crash because calling GetUniqueName( ) twice will result in two different return values
 			// and unfortunately iterators are not valid if compared against different containers
@@ -2137,7 +2138,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 			BYTEARRAY UniqueName = (*i)->GetUniqueName( );
 
 			if( (*i)->GetServer( ) == JoinedRealm )
-				SendChat( Player, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
+				SendChat( Player, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
 		}
 	}
 	// Show Player realm on join
@@ -2520,7 +2521,8 @@ void CBaseGame :: EventPlayerJoinedWithScore( CPotentialPlayer *potential, CInco
 	// if spoof checks are required and we won't automatically spoof check this player then tell them how to spoof check
 	// e.g. if automatic spoof checks are disabled, or if automatic spoof checks are done on admins only and this player isn't an admin
 
-	if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
+	//if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
+    if( m_GHost->m_RequireSpoofChecks )
 	{
                 for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
@@ -2532,7 +2534,7 @@ void CBaseGame :: EventPlayerJoinedWithScore( CPotentialPlayer *potential, CInco
 			BYTEARRAY UniqueName = (*i)->GetUniqueName( );
 
 			if( (*i)->GetServer( ) == JoinedRealm )
-				SendChat( Player, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
+				SendChat( Player, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
 		}
 	}
 
