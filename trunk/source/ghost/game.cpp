@@ -1239,16 +1239,14 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                         {
                             if( (*j)->IsAdmin((*i)->GetName( ) ) || (*j)->IsRootAdmin( (*i)->GetName( ) ) )
                             {
-                                SendAllChat("Player: " + (*i)->GetName( ) + "("+ From +") is " + (isAdmin?"":"NOT ") + "an Admin." );
                                 isAdmin = true;
                                 break;
                             }
                         }
                         
-                        if (IsReserved ((*i)->GetName())){
+                        if (IsReserved ((*i)->GetName()))
+
                             isAdmin = true;
-                            SendAllChat("Player: " + (*i)->GetName( ) + "("+ From +") is " + (isAdmin?"":"NOT ") + "reserved." );
-                        }
                         
                         if ( !isAdmin && (*i)->GetName( )!=User && m_Countries_Allowed.find(From)==string :: npos )
                         {
