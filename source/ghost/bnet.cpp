@@ -1387,14 +1387,14 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !DBSTATUS
 				//
 
-				else if( Command == "dbstatus" )
+				else if( Command == "dbstatus" || "dbs" )
 					QueueChatCommand( m_GHost->m_DB->GetStatus( ), User, Whisper );
 
 				//
 				// !DELADMIN
 				//
 
-				else if( Command == "deladmin" && !Payload.empty( ) )
+				else if( ( Command == "deladmin" || Command == "da" ) && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1419,7 +1419,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !DISABLE
 				//
 
-				else if( Command == "disable" )
+				else if( Command == "disable" || Command == "d")
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1600,7 +1600,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !HOLD (hold a slot for someone)
 				//
 
-				else if( Command == "hold" && !Payload.empty( ) && m_GHost->m_CurrentGame )
+				else if( ( Command == "hold" || Command == "h" ) && !Payload.empty( ) && m_GHost->m_CurrentGame )
 				{
 					// hold as many players as specified, e.g. "Varlock Kilranin" holds players "Varlock" and "Kilranin"
 
@@ -1900,7 +1900,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !PUB (host public game)
 				//
 
-				else if( Command == "pub" && !Payload.empty( ) )
+				else if( (Command == "pub" || Command == "p" ) && !Payload.empty( ) )
 					m_GHost->CreateGame( m_GHost->m_Map, GAME_PUBLIC, false, Payload, User, User, m_Server, Whisper );
 
 				//
@@ -1998,7 +1998,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !SAYGAMES
 				//
 
-				else if( Command == "saygames" && !Payload.empty( ) )
+				else if( ( Command == "saygames" || Command == "sgs") && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{
