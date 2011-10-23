@@ -74,6 +74,7 @@ CGame :: CGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHost
 		m_Stats = new CStatsW3MMD( this, m_Map->GetMapStatsW3MMDCategory( ) );
 	else if( m_Map->GetMapType( ) == "dota" )
 		m_Stats = new CStatsDOTA( this );
+	trade_allowed = m_Map->GetTradeAllowed( );
 }
 
 CGame :: ~CGame( )
@@ -338,6 +339,24 @@ void CGame :: EventPlayerAction( CGamePlayer *player, CIncomingAction *action )
 		SendEndMessage( );
 		m_GameOverTime = GetTime( );
 	}
+	
+	/* Anti Trade-Hack thanks to K[a]ne from CodeLain 
+	 * http://www.codelain.com/forum/index.php?topic=17681.0;topicseen
+	 */
+	BYTEARRAY *ActionData = action->GetAction( );
+
+    if ( !trade_allowed && player && ActionData->size( ) >= 1 && m_GameLoaded )
+    {
+        if( (*ActionData)[0] == 0x51 )
+        {
+               CONSOLE_Print( "[GAME: " + m_GameName + "] tradehack detected by [" + player->GetName( ) + "]" );
+               SendAllChat( "Tradehack detected by [" + player->GetName( ) + "] !" );
+               m_PairedBanAdds.push_back( PairedBanAdd( string( ), m_GHost->m_DB->ThreadedBanAdd( player->GetJoinedRealm( ), player->GetName( ), player->GetExternalIPString( ), m_GameName, "AUTO BAN" , "[AUTOBAN] Tradehack detected" ) ) );
+               player->SetDeleteMe( true );
+               player->SetLeftReason( m_GHost->m_Language->WasKickedByPlayer( "Anti-tradehack" ) );
+               player->SetLeftCode( PLAYERLEAVE_LOST );
+        }
+    }
 }
 
 bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string payload )

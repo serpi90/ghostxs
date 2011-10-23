@@ -120,6 +120,7 @@ private:
 	uint32_t m_MapDefaultPlayerScore;			// config value: map default player score (for matchmaking)
 	string m_MapLocalPath;						// config value: map local path
 	bool m_MapLoadInGame;
+	bool m_TradeAllowed;						// config value: map trade allowed
 	string m_MapData;							// the map data itself, for sending the map to players
 	uint32_t m_MapNumPlayers;
 	uint32_t m_MapNumTeams;
@@ -158,6 +159,8 @@ public:
 	uint32_t GetMapNumPlayers( )			{ return m_MapNumPlayers; }
 	uint32_t GetMapNumTeams( )				{ return m_MapNumTeams; }
 	vector<CGameSlot> GetSlots( )			{ return m_Slots; }
+	bool GetTradeAllowed( )					{ return m_TradeAllowed; }
+	
 
 	void Load( CConfig *CFG, string nCFGFile );
 	void CheckValid( );
