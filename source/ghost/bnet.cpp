@@ -1387,7 +1387,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !DBSTATUS
 				//
 
-				else if( Command == "dbstatus" || "dbs" )
+				else if( Command == "dbstatus" || Command == "dbs" )
 					QueueChatCommand( m_GHost->m_DB->GetStatus( ), User, Whisper );
 
 				//
