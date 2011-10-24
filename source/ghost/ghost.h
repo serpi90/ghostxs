@@ -137,6 +137,7 @@ public:
 	bool m_AdminClan;						// config value: make clan admin or not
 	bool m_GameIDReplays;					// config value: save replays with database game id or not
 	string m_ApprovedCountries;				// config value: approved countries
+    bool m_Verbose;                         // config value: display player reject messages
 	
 	CGHost( CConfig *CFG );
 	~CGHost( );

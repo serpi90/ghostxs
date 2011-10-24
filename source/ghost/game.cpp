@@ -702,7 +702,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !CLOSEALL
 			//
 
-			else if( Command == "closeall" && !m_GameLoading && !m_GameLoaded )
+			else if( ( Command == "closeall" || Command == "ca" ) && !m_GameLoading && !m_GameLoaded )
 				CloseAllSlots( );
 
 			//
@@ -1309,7 +1309,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			// !OPENALL
 			//
 
-			else if( Command == "openall" && !m_GameLoading && !m_GameLoaded )
+			else if( ( Command == "openall" || Command == "oa" ) && !m_GameLoading && !m_GameLoaded )
 				OpenAllSlots( );
 
 			//
@@ -1665,7 +1665,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			}
 
 			//
-			// !STARN
+			// !STARTN
 			//
 
 			else if( Command == "startn" && !m_CountDownStarted )
@@ -1784,6 +1784,21 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 				SendAllChat( m_GHost->m_Language->GlobalChatUnmuted( ) );
 				m_MuteAll = false;
 			}
+            
+            
+            //
+            // !VERBOSE
+            // !VB
+            //
+
+            if( Command == "verbose" || Command == "vb" )
+            {
+                m_GHost->m_Verbose = !m_GHost->m_Verbose;
+                if (m_GHost->m_Verbose)
+                    SendAllChat( "Verbose ON" );
+                else
+                    SendAllChat( "Verbose OFF" );
+            }
 
 			//
 			// !VIRTUALHOST
@@ -1855,6 +1870,33 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
 	if( Command == "checkme" )
 		SendChat( player, m_GHost->m_Language->CheckedPlayer( User, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A", m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( player->GetExternalIP( ), true ) ), AdminCheck || RootAdminCheck ? "Yes" : "No", IsOwner( User ) ? "Yes" : "No", player->GetSpoofed( ) ? "Yes" : "No", player->GetSpoofedRealm( ).empty( ) ? "N/A" : player->GetSpoofedRealm( ), player->GetReserved( ) ? "Yes" : "No" ) );
+        
+    //
+	// !GN !GAMENAME
+	//
+
+	if( Command == "gn" || Command == "gamename" )
+        	SendAllChat( "[ " +  m_GameName + " ]");
+        
+    //
+	// !PING !P
+	//
+
+	if( Command == "ping" || Command == "p" )
+        	SendChat( player, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A" );
+        
+    //
+    // !ROLL
+    //
+        
+    if( Command == "roll" )
+    {
+        int RandomNumber;
+        int max = Payload.empty()? 100 : UTIL_ToUInt32( Payload );
+        srand((unsigned)time(0));
+        RandomNumber = (rand()%(max-1))+1;
+        SendAllChat(User + " rolled "+UTIL_ToString(RandomNumber) + " of " + UTIL_ToString( max ) );
+    }
 
 	//
 	// !STATS
