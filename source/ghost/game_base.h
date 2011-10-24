@@ -128,8 +128,9 @@ protected:
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
 	string m_GetMapType;							// map_type
     //GHostXS
-    bool m_Countries_Allow;                          // wether country filter is enabled or not
-    string m_Countries_Allowed;                      // list of countries allowed to join the game
+    bool m_Countries_Allow;                         // wether country filter is enabled or not
+    string m_Countries_Allowed;                     // list of countries allowed to join the game
+    uint32_t m_LastSpoofCheckTime;                  // GetTime when the last game spoof check advice was sent
 
 public:
 	CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer );
