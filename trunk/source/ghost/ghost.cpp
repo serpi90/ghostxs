@@ -519,6 +519,7 @@ CGHost :: CGHost( CConfig *CFG )
 	m_ShowServerOnJoin = CFG->GetInt( "bot_showserveronjoin", 0 ) == 0 ? false : true;
 	m_AdminClan = CFG->GetInt( "bot_adminclan", 0 ) == 0 ? false : true;
 	m_GameIDReplays = CFG->GetInt( "bot_gameidreplays", 1 ) == 0 ? false : true;
+    m_Verbose = CFG->GetInt( "bot_verbose", 1 ) == 0 ? false : true;
 	SetConfigs( CFG );
 
 	// load the battle.net connections
