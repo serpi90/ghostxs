@@ -513,7 +513,31 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 		m_LastRefreshTime = GetTime( );
 	}
-
+    
+    // advice players to spoof check every 5 seconds if they have not ben spoof checked yet.
+    
+    if( m_GHost->m_RequireSpoofChecks && GetTime( ) - m_LastSpoofCheckTime >= 5 )
+    {
+            m_LastSpoofCheckTime = GetTime( );
+            for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+            {
+                if( !(*i)->GetSpoofed( ) )
+                {
+                    for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
+                    {
+                        if( (*i)->GetJoinedRealm( ) == (*j)->GetServer( ) )
+                        {
+                            BYTEARRAY UniqueName = (*j)->GetUniqueName( );
+                            if( m_GameState == GAME_PUBLIC )
+                                SendChat( *i, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )) );
+                            else
+                                SendChat( *i, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )) );
+                        }
+                    }
+                }
+            }
+    }
+    
 	// send more map data
 
 	if( !m_GameLoading && !m_GameLoaded && GetTicks( ) - m_LastDownloadCounterResetTicks >= 1000 )
@@ -1333,8 +1357,8 @@ void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 	{
 		// default welcome message
 
-		if( m_HCLCommandString.empty( ) )
-			SendChat( player, " " );
+		//if( m_HCLCommandString.empty( ) )
+		//	SendChat( player, " " );
 
 		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-GHostXS-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 		SendChat( player, "     Game Name:                 " + m_GameName );
@@ -1342,6 +1366,7 @@ void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 		if( !m_HCLCommandString.empty( ) )
 			SendChat( player, "     HCL Command String:  " + m_HCLCommandString );
         SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+        SendChat( player, " " );
         
 	}
 	else
