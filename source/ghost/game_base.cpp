@@ -49,8 +49,9 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Protocol = new CGameProtocol( m_GHost );
 	m_Map = new CMap( *nMap );
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
-    m_Countries_Allow = false;
-    m_Countries_Allowed = "";
+    	m_Countries_Allow = false;
+	m_Countries_Allowed = "";
+	m_MapType = m_Map->GetMapType( );
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );	
@@ -175,7 +176,7 @@ CBaseGame :: ~CBaseGame( )
 			if(m_DatabaseID == 0) {
 				m_Replay->Save( m_GHost->m_TFT, m_GHost->m_ReplayPath + UTIL_FileSafeName( "GHost GameID " + string( Time ) + " " + m_GameName + " (" + MinString + "m" + SecString + "s).w3g" ) );
 			} else {
-						if (m_GetMapType == "dota")
+						if (m_MapType == "dota")
 						{
 							m_Replay->Save( m_GHost->m_TFT, m_GHost->m_ReplayPath + UTIL_FileSafeName( "GHost DotAID " + UTIL_ToString( m_DatabaseID ) + ".w3g" ) );
 						}
