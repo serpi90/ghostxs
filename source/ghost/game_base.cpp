@@ -517,7 +517,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
     
     // advice players to spoof check every 5 seconds if they have not ben spoof checked yet.
     
-    if( m_GHost->m_RequireSpoofChecks && GetTime( ) - m_LastSpoofCheckTime >= 5 )
+    if( m_GHost->m_RequireSpoofChecks && GetTime( ) - m_LastSpoofCheckTime >= 5 && !m_GameLoading && !m_GameLoaded )
     {
             m_LastSpoofCheckTime = GetTime( );
             for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
