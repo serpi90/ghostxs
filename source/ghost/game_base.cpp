@@ -4468,9 +4468,29 @@ void CBaseGame :: SaveGameData( )
 
 void CBaseGame :: StartCountDown( bool force )
 {
-	if( !m_CountDownStarted )
+    if( !m_CountDownStarted )
 	{
-		if( force )
+        // check if everyone is spoof checked
+
+        string NotSpoofChecked;
+
+        if( m_GHost->m_RequireSpoofChecks )
+        {
+                            for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+            {
+                if( !(*i)->GetSpoofed( ) )
+                {
+                    if( NotSpoofChecked.empty( ) )
+                        NotSpoofChecked = (*i)->GetName( );
+                    else
+                        NotSpoofChecked += ", " + (*i)->GetName( );
+                }
+            }
+        }
+
+        if( !NotSpoofChecked.empty( ) )
+                SendAllChat( m_GHost->m_Language->PlayersNotYetSpoofChecked( NotSpoofChecked ) );
+		else if( force )
 		{
 			m_CountDownStarted = true;
 			m_CountDownCounter = 10;
@@ -4508,26 +4528,7 @@ void CBaseGame :: StartCountDown( bool force )
 			if( !StillDownloading.empty( ) )
 				SendAllChat( m_GHost->m_Language->PlayersStillDownloading( StillDownloading ) );
 
-			// check if everyone is spoof checked
-
-			string NotSpoofChecked;
-
-			if( m_GHost->m_RequireSpoofChecks )
-			{
-                                for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
-				{
-					if( !(*i)->GetSpoofed( ) )
-					{
-						if( NotSpoofChecked.empty( ) )
-							NotSpoofChecked = (*i)->GetName( );
-						else
-							NotSpoofChecked += ", " + (*i)->GetName( );
-					}
-				}
-
-				if( !NotSpoofChecked.empty( ) )
-					SendAllChat( m_GHost->m_Language->PlayersNotYetSpoofChecked( NotSpoofChecked ) );
-			}
+			
 
 			// check if everyone has been pinged enough (3 times) that the autokicker would have kicked them by now
 			// see function EventPlayerPongToHost for the autokicker code
