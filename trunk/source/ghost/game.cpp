@@ -1653,7 +1653,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 				// if the player sent "!start force" skip the checks and start the countdown
 				// otherwise check that the game is ready to start
 
-				if( Payload == "force" && !m_GHost->m_RequireSpoofChecks )
+				if( Payload == "force" )
 					StartCountDown( true );
 				else
 				{
