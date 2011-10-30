@@ -35,6 +35,14 @@
 #include <mysql/mysql.h>
 #include <boost/thread.hpp>
 
+/*
+It's really ugly to define this two booleans here as globals, but i can not find another way to do it,
+because i'm not really getting the way the callables are being used, this may be because of my lack of experience.
+I'd appreciate it a lot if someone can put this in a cleaner prettier way.
+*/
+bool gUseAdminBotId;
+bool gUseBanBotId;
+
 //
 // CGHostDBMySQL
 //
@@ -49,6 +57,10 @@ CGHostDBMySQL :: CGHostDBMySQL( CConfig *CFG ) : CGHostDB( CFG )
 	m_BotID = CFG->GetInt( "db_mysql_botid", 0 );
 	m_NumConnections = 1;
 	m_OutstandingCallables = 0;
+	m_BotID = CFG->GetInt( "db_mysql_botid", 0 );
+	gUseAdminBotId = CFG->GetInt( "db_mysql_useAdminBotId", 1 ) == 0 ? false : true;
+	gUseBanBotId = CFG->GetInt( "db_mysql_useBanBotId", 1 ) == 0 ? false : true;
+
 
 	mysql_library_init( 0, NULL, NULL );
 
@@ -506,7 +518,8 @@ uint32_t MySQLAdminCount( void *conn, string *error, uint32_t botid, string serv
 	string EscServer = MySQLEscapeString( conn, server );
 	uint32_t Count = 0;
 	string Query = "SELECT COUNT(*) FROM admins WHERE server='" + EscServer + "'";
-
+	if( gUseAdminBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
 	else
@@ -538,6 +551,8 @@ bool MySQLAdminCheck( void *conn, string *error, uint32_t botid, string server, 
 	string EscUser = MySQLEscapeString( conn, user );
 	bool IsAdmin = false;
 	string Query = "SELECT * FROM admins WHERE server='" + EscServer + "' AND name='" + EscUser + "'";
+	if( gUseAdminBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -584,6 +599,8 @@ bool MySQLAdminRemove( void *conn, string *error, uint32_t botid, string server,
 	string EscUser = MySQLEscapeString( conn, user );
 	bool Success = false;
 	string Query = "DELETE FROM admins WHERE server='" + EscServer + "' AND name='" + EscUser + "'";
+	if( gUseAdminBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -598,6 +615,8 @@ vector<string> MySQLAdminList( void *conn, string *error, uint32_t botid, string
 	string EscServer = MySQLEscapeString( conn, server );
 	vector<string> AdminList;
 	string Query = "SELECT name FROM admins WHERE server='" + EscServer + "'";
+	if( gUseAdminBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -629,6 +648,8 @@ uint32_t MySQLBanCount( void *conn, string *error, uint32_t botid, string server
 	string EscServer = MySQLEscapeString( conn, server );
 	uint32_t Count = 0;
 	string Query = "SELECT COUNT(*) FROM bans WHERE server='" + EscServer + "'";
+	if( gUseBanBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -667,6 +688,8 @@ CDBBan *MySQLBanCheck( void *conn, string *error, uint32_t botid, string server,
 		Query = "SELECT name, ip, DATE(date), gamename, admin, reason FROM bans WHERE server='" + EscServer + "' AND name='" + EscUser + "'";
 	else
 		Query = "SELECT name, ip, DATE(date), gamename, admin, reason FROM bans WHERE (server='" + EscServer + "' AND name='" + EscUser + "') OR ip='" + EscIP + "'";
+	if( gUseBanBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -719,6 +742,8 @@ bool MySQLBanRemove( void *conn, string *error, uint32_t botid, string server, s
 	string EscUser = MySQLEscapeString( conn, user );
 	bool Success = false;
 	string Query = "DELETE FROM bans WHERE server='" + EscServer + "' AND name='" + EscUser + "'";
+	if( gUseBanBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -734,6 +759,8 @@ bool MySQLBanRemove( void *conn, string *error, uint32_t botid, string user )
 	string EscUser = MySQLEscapeString( conn, user );
 	bool Success = false;
 	string Query = "DELETE FROM bans WHERE name='" + EscUser + "'";
+	if( gUseBanBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -748,6 +775,8 @@ vector<CDBBan *> MySQLBanList( void *conn, string *error, uint32_t botid, string
 	string EscServer = MySQLEscapeString( conn, server );
 	vector<CDBBan *> BanList;
 	string Query = "SELECT name, ip, DATE(date), gamename, admin, reason FROM bans WHERE server='" + EscServer + "'";
+	if( gUseBanBotId )
+		Query = Query + " AND botid = " + UTIL_ToString( botid );
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );

@@ -1049,6 +1049,8 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 					if( IsBannedName( Victim ) )
 						QueueChatCommand( m_GHost->m_Language->UserIsAlreadyBanned( m_Server, Victim ), User, Whisper );
+                    else if( IsAdmin( Victim ) || IsRootAdmin( Victim ) )
+                        QueueChatCommand( m_GHost->m_Language->ErrorBanningAdmin( ) );
 					else
 						m_PairedBanAdds.push_back( PairedBanAdd( Whisper ? User : string( ), m_GHost->m_DB->ThreadedBanAdd( m_Server, Victim, string( ), string( ), User, Reason ) ) );
 				}
@@ -1380,7 +1382,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !COUNTBANS
 				//
 
-				else if( Command == "countbans" )
+				else if( Command == "countbans" || Command == "cbs" )
 					m_PairedBanCounts.push_back( PairedBanCount( Whisper ? User : string( ), m_GHost->m_DB->ThreadedBanCount( m_Server ) ) );
 
 				//
