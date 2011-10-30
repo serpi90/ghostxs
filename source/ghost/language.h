@@ -255,6 +255,7 @@ public:
 	string WasUnrecoverablyDroppedFromGProxy( );
 	string PlayerReconnectedWithGProxy( string name );
     string AutokickingPlayerForDeniedCountry( string victim, string country );
+    string ErrorBanningAdmin( );
 };
 
 #endif

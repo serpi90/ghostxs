@@ -1541,3 +1541,9 @@ string CLanguage :: AutokickingPlayerForDeniedCountry( string victim, string cou
 	UTIL_Replace( Out, "$COUNTRY$", country );
 	return Out;
 }
+
+string CLanguage :: ErrorBanningAdmin( )
+{
+	string Out = m_CFG->GetString( "lang_0222", "lang_0222" );
+	return Out;
+}
