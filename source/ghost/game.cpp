@@ -1774,12 +1774,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                 {
                     m_SyncLimit = UTIL_ToUInt32( Payload );
 
-                    if ( m_SyncLimit <= 10 )
-                    {
-                        m_SyncLimit = 10;
-                        SendAllChat( m_GHost->m_Language->SettingSyncLimitToMinimum( "10" ) );
-                    }
-                    else if ( m_SyncLimit >= 10000 )
+                    if ( m_SyncLimit <= 10 || m_SyncLimit >= 10000 )
                     {
                         m_SyncLimit = 10000;
                         SendAllChat( m_GHost->m_Language->SettingSyncLimitToMaximum( "10000" ) );
