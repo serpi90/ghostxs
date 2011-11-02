@@ -1285,7 +1285,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             {
                 if ( Payload.empty( ) )
                 {
-                    SendAllChat( "Country check disabled, allowing all countries"); //TODOXS: Add it to Language
+                    SendAllChat( m_GHost->m_Language->CountryCheckDisabled( ) );
                     m_Countries_Allow = false;
                     m_Countries_Allowed = "";
                 }
@@ -1294,7 +1294,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                     m_Countries_Allow = true;
                     m_Countries_Allowed = Payload;
                     transform( m_Countries_Allowed.begin( ), m_Countries_Allowed.end( ), m_Countries_Allowed.begin( ), (int(*)(int))toupper );
-                    SendAllChat( "Country check enabled, allowed countries: "+m_Countries_Allowed); //TODOXS: Add it to Language
+                    SendAllChat( m_GHost->m_Language->CountryCheckEnabled( m_Countries_Allowed) );
                     m_Countries_Allowed = m_Countries_Allowed + " ??";
 
                     for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
