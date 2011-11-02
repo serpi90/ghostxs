@@ -1534,16 +1534,29 @@ string CLanguage :: PlayerReconnectedWithGProxy( string name )
 	return Out;
 }
 
-string CLanguage :: AutokickingPlayerForDeniedCountry( string victim, string country )
+string CLanguage :: ErrorBanningAdmin( )
 {
 	string Out = m_CFG->GetString( "lang_0221", "lang_0221" );
+	return Out;
+}
+
+string CLanguage :: AutokickingPlayerForDeniedCountry( string victim, string country )
+{
+	string Out = m_CFG->GetString( "lang_0222", "lang_0222" );
 	UTIL_Replace( Out, "$VICTIM$", victim );
 	UTIL_Replace( Out, "$COUNTRY$", country );
 	return Out;
 }
 
-string CLanguage :: ErrorBanningAdmin( )
+string CLanguage :: CountryCheckDisabled( )
 {
-	string Out = m_CFG->GetString( "lang_0222", "lang_0222" );
+	string Out = m_CFG->GetString( "lang_0223", "lang_0223" );
+	return Out;
+}
+
+string CLanguage :: CountryCheckEnabled( string countries )
+{
+	string Out = m_CFG->GetString( "lang_0224", "lang_0224" );
+	UTIL_Replace( Out, "$COUNTRIES$", countries );
 	return Out;
 }

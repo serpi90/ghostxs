@@ -486,7 +486,7 @@ CGHost :: CGHost( CConfig *CFG )
 	m_Exiting = false;
 	m_ExitingNice = false;
 	m_Enabled = true;
-	m_Version = "17.1";
+	m_Version = "0.1";
 	m_HostCounter = 1;
 	m_AutoHostMaximumGames = CFG->GetInt( "autohost_maxgames", 0 );
 	m_AutoHostAutoStartPlayers = CFG->GetInt( "autohost_startplayers", 0 );
@@ -516,10 +516,6 @@ CGHost :: CGHost( CConfig *CFG )
 	m_LANWar3Version = CFG->GetInt( "lan_war3version", 26 );
 	m_ReplayWar3Version = CFG->GetInt( "replay_war3version", 26 );
 	m_ReplayBuildNumber = CFG->GetInt( "replay_buildnumber", 6059 );
-	m_ShowServerOnJoin = CFG->GetInt( "bot_showserveronjoin", 0 ) == 0 ? false : true;
-	m_AdminClan = CFG->GetInt( "bot_adminclan", 0 ) == 0 ? false : true;
-	m_GameIDReplays = CFG->GetInt( "bot_gameidreplays", 1 ) == 0 ? false : true;
-    m_Verbose = CFG->GetInt( "bot_verbose", 1 ) == 0 ? false : true;
 	SetConfigs( CFG );
 
 	// load the battle.net connections
@@ -688,9 +684,9 @@ CGHost :: CGHost( CConfig *CFG )
 		CONSOLE_Print( "[GHOST] warning - no battle.net connections found and no admin game created" );
 
 #ifdef GHOST_MYSQL
-	CONSOLE_Print( "[GHOST] GHost++ Version " + m_Version + " (with MySQL support)" );
+	CONSOLE_Print( "[GHOST] GHostXS Version " + m_Version + " (with MySQL support)" );
 #else
-	CONSOLE_Print( "[GHOST] GHost++ Version " + m_Version + " (without MySQL support)" );
+	CONSOLE_Print( "[GHOST] GHostXS Version " + m_Version + " (without MySQL support)" );
 #endif
 }
 
@@ -825,6 +821,7 @@ bool CGHost :: Update( long usecBlock )
 			m_ReconnectSocket = new CTCPServer( );
 
 			if( m_ReconnectSocket->Listen( m_BindAddress, m_ReconnectPort ) )
+
 				CONSOLE_Print( "[GHOST] listening for GProxy++ reconnects on port " + UTIL_ToString( m_ReconnectPort ) );
 			else
 			{
@@ -1389,6 +1386,10 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	m_TCPNoDelay = CFG->GetInt( "tcp_nodelay", 0 ) == 0 ? false : true;
 	m_MatchMakingMethod = CFG->GetInt( "bot_matchmakingmethod", 1 );
 	m_ApprovedCountries = CFG->GetString( "bot_approvedcountries", string( ));
+	m_ShowServerOnJoin = CFG->GetInt( "bot_showserveronjoin", 0 ) == 0 ? false : true;
+	m_AdminClan = CFG->GetInt( "bot_adminclan", 0 ) == 0 ? false : true;
+	m_GameIDReplays = CFG->GetInt( "bot_gameidreplays", 1 ) == 0 ? false : true;
+    m_Verbose = CFG->GetInt( "bot_verbose", 1 ) == 0 ? false : true;	
 }
 
 void CGHost :: ExtractScripts( )
