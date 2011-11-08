@@ -99,8 +99,8 @@ public:
 	string AutokickingPlayerForExcessivePing( string victim, string ping );
 	string SpoofCheckAcceptedFor( string server, string user );
 	string PlayersNotYetSpoofChecked( string notspoofchecked );
-	string ManuallySpoofCheckByWhispering( string hostname );
-	string SpoofCheckByWhispering( string hostname );
+	string ManuallySpoofCheckByWhispering( string hostname, uint32_t timeremaining );
+	string SpoofCheckByWhispering( string hostname, uint32_t timeremaining );
 	string EveryoneHasBeenSpoofChecked( );
 	string PlayersNotYetPinged( string notpinged );
 	string EveryoneHasBeenPinged( );
