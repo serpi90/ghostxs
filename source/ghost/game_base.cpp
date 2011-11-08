@@ -515,9 +515,10 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 		m_LastRefreshTime = GetTime( );
 	}
     
-    // advice players to spoof check every 5 seconds if they have not ben spoof checked yet.
+    // advice players to spoof check every 1 seconds if they have not ben spoof checked yet.
+	// was initially 5 seconds, but people seem not to read the advice . . . so SMASH THE ADVICE INTO THEIR FACES :D
     
-    if( m_GHost->m_RequireSpoofChecks && GetTime( ) - m_LastSpoofCheckTime >= 5 && !m_GameLoading && !m_GameLoaded )
+    if( m_GHost->m_RequireSpoofChecks && GetTime( ) - m_LastSpoofCheckTime >= 1 && !m_GameLoading && !m_GameLoaded )
     {
             m_LastSpoofCheckTime = GetTime( );
             for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
@@ -529,10 +530,10 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
                         if( (*i)->GetJoinedRealm( ) == (*j)->GetServer( ) )
                         {
                             BYTEARRAY UniqueName = (*j)->GetUniqueName( );
-                            if( m_GameState == GAME_PUBLIC )
-                                SendChat( *i, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )) );
-                            else
-                                SendChat( *i, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )) );
+                            if( m_GameState == GAME_PRIVATE )
+                                SendChat( *i, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) ), 60 - ( GetTime( ) - (*i)->GetJoinTime( ) ) ) );
+                            else if( m_GameState == GAME_PUBLIC )
+                                SendChat( *i, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) ), 60 - ( GetTime( ) - (*i)->GetJoinTime( ) ) ) );
                         }
                     }
                 }
@@ -1760,13 +1761,29 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
         }
 	}
 
+	// check if the player is an admin or root admin on any connected realm for determining reserved status
+	// we can't just use the spoof checked realm like in EventPlayerBotCommand because the player hasn't spoof checked yet
+
+	bool AnyAdminCheck = false;
+
+	for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
+	{
+		if( (*i)->IsAdmin( joinPlayer->GetName( ) ) || (*i)->IsRootAdmin( joinPlayer->GetName( ) ) )
+		{
+			AnyAdminCheck = true;
+			break;
+		}
+	}
+	
+	bool Reserved = IsReserved( joinPlayer->GetName( ) ) || ( m_GHost->m_ReserveAdmins && AnyAdminCheck ) || IsOwner( joinPlayer->GetName( ) );
+	
 	// check if the new player's name is banned but onlpotentialy if bot_banmethod is not 0
 	// this is because if bot_banmethod is 0 and we announce the ban here it's possible for the player to be rejected later because the game is full
 	// this would allow the player to spam the chat by attempting to join the game multiple times in a row
 
-	if( m_GHost->m_BanMethod != 0 )
+	if( m_GHost->m_BanMethod != 0 && !Reserved )
 	{
-                for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
+		for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
 			if( (*i)->GetServer( ) == JoinedRealm )
 			{
@@ -1881,22 +1898,6 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 			return;
 		}
 	}
-
-	// check if the player is an admin or root admin on any connected realm for determining reserved status
-	// we can't just use the spoof checked realm like in EventPlayerBotCommand because the player hasn't spoof checked yet
-
-	bool AnyAdminCheck = false;
-
-        for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
-	{
-		if( (*i)->IsAdmin( joinPlayer->GetName( ) ) || (*i)->IsRootAdmin( joinPlayer->GetName( ) ) )
-		{
-			AnyAdminCheck = true;
-			break;
-		}
-	}
-
-	bool Reserved = IsReserved( joinPlayer->GetName( ) ) || ( m_GHost->m_ReserveAdmins && AnyAdminCheck ) || IsOwner( joinPlayer->GetName( ) );
 
 	// try to find a slot
 
@@ -2156,8 +2157,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 	// if spoof checks are required and we won't automatically spoof check this player then tell them how to spoof check
 	// e.g. if automatic spoof checks are disabled, or if automatic spoof checks are done on admins only and this player isn't an admin
 
-	//if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
-    if( m_GHost->m_RequireSpoofChecks )
+	if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
 	{
         for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
@@ -2169,7 +2169,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 			BYTEARRAY UniqueName = (*i)->GetUniqueName( );
 
 			if( (*i)->GetServer( ) == JoinedRealm )
-				SendChat( Player, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
+				SendChat( Player, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) ), 60 - ( GetTime( ) - Player->GetJoinTime( ) ) ) );
 		}
 	}
 	// Show Player realm on join
@@ -2552,9 +2552,8 @@ void CBaseGame :: EventPlayerJoinedWithScore( CPotentialPlayer *potential, CInco
 	// if spoof checks are required and we won't automatically spoof check this player then tell them how to spoof check
 	// e.g. if automatic spoof checks are disabled, or if automatic spoof checks are done on admins only and this player isn't an admin
 
-	//if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
-    if( m_GHost->m_RequireSpoofChecks )
-	{
+	if( m_GHost->m_RequireSpoofChecks && !Player->GetWhoisShouldBeSent( ) )
+    {
                 for( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
 			// note: the following (commented out) line of code will crash because calling GetUniqueName( ) twice will result in two different return values
@@ -2565,7 +2564,7 @@ void CBaseGame :: EventPlayerJoinedWithScore( CPotentialPlayer *potential, CInco
 			BYTEARRAY UniqueName = (*i)->GetUniqueName( );
 
 			if( (*i)->GetServer( ) == JoinedRealm )
-				SendChat( Player, m_GHost->m_Language->ManuallySpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) )  ) );
+				SendChat( Player, m_GHost->m_Language->SpoofCheckByWhispering( string( UniqueName.begin( ), UniqueName.end( ) ) , 60 - ( GetTime( ) - Player->GetJoinTime( ) ) ) );
 		}
 	}
 

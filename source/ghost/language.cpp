@@ -515,17 +515,19 @@ string CLanguage :: PlayersNotYetSpoofChecked( string notspoofchecked )
 	return Out;
 }
 
-string CLanguage :: ManuallySpoofCheckByWhispering( string hostname )
+string CLanguage :: ManuallySpoofCheckByWhispering( string hostname, uint32_t timeremaining )
 {
 	string Out = m_CFG->GetString( "lang_0066", "lang_0066" );
 	UTIL_Replace( Out, "$HOSTNAME$", hostname );
+	UTIL_Replace( Out, "$TIMEREMAINING$", UTIL_ToString( timeremaining ) );
 	return Out;
 }
 
-string CLanguage :: SpoofCheckByWhispering( string hostname )
+string CLanguage :: SpoofCheckByWhispering( string hostname, uint32_t timeremaining )
 {
 	string Out = m_CFG->GetString( "lang_0067", "lang_0067" );
 	UTIL_Replace( Out, "$HOSTNAME$", hostname );
+	UTIL_Replace( Out, "$TIMEREMAINING$", UTIL_ToString( timeremaining ) );
 	return Out;
 }
 
