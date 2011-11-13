@@ -2171,10 +2171,10 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				}
 
 				//
-				// !VERSION
+				// !VERSION !V
 				//
 
-				else if( Command == "version" )
+				else if( Command == "version" || Command == "v" )
 				{
 					if( IsAdmin( User ) || IsRootAdmin( User ) )
 						QueueChatCommand( m_GHost->m_Language->VersionAdmin( m_GHost->m_Version ), User, Whisper );

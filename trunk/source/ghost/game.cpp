@@ -1984,7 +1984,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
     }
 
     //
-    // !VERSION
+    // !VERSION !V
     //
 
     else if ( Command == "version" || Command == "v" )

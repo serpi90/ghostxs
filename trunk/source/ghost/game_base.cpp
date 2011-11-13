@@ -48,7 +48,7 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Socket = new CTCPServer( );
 	m_Protocol = new CGameProtocol( m_GHost );
 	m_Map = new CMap( *nMap );
-	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
+	//uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
     	m_Countries_Allow = false;
 	m_Countries_Allowed = "";
 	m_MapType = m_Map->GetMapType( );
