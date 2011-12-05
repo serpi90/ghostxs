@@ -1290,7 +1290,10 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				//
 
 				else if( Command == "channel" && !Payload.empty( ) )
-					QueueChatCommand( "/join " + Payload );
+					if( IsRootAdmin( User ) )
+					{
+						QueueChatCommand( "/join " + Payload );
+					}
 
 				//
 				// !CHECKADMIN
@@ -1329,31 +1332,33 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "close" && !Payload.empty( ) && m_GHost->m_CurrentGame )
 				{
-					if( !m_GHost->m_CurrentGame->GetLocked( ) )
+					if( IsRootAdmin( User ) )
 					{
-						// close as many slots as specified, e.g. "5 10" closes slots 5 and 10
-
-						stringstream SS;
-						SS << Payload;
-
-						while( !SS.eof( ) )
+						if( !m_GHost->m_CurrentGame->GetLocked( ) )
 						{
-							uint32_t SID;
-							SS >> SID;
+							// close as many slots as specified, e.g. "5 10" closes slots 5 and 10
 
-							if( SS.fail( ) )
+							stringstream SS;
+							SS << Payload;
+
+							while( !SS.eof( ) )
 							{
-								CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input to close command" );
-								break;
-							}
-							else
-								m_GHost->m_CurrentGame->CloseSlot( (unsigned char)( SID - 1 ), true );
-						}
-					}
-					else
-						QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
-				}
+								uint32_t SID;
+								SS >> SID;
 
+								if( SS.fail( ) )
+								{
+									CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input to close command" );
+									break;
+								}
+								else
+									m_GHost->m_CurrentGame->CloseSlot( (unsigned char)( SID - 1 ), true );
+							}
+						}
+						else
+							QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
+					}
+				}
 				//
 				// !CLOSEALL
 				//
@@ -1438,23 +1443,26 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "downloads" && !Payload.empty( ) )
 				{
-					uint32_t Downloads = UTIL_ToUInt32( Payload );
+					if( IsRootAdmin( User ) )
+					{				
+						uint32_t Downloads = UTIL_ToUInt32( Payload );
 
-					if( Downloads == 0 )
-					{
-						QueueChatCommand( m_GHost->m_Language->MapDownloadsDisabled( ), User, Whisper );
-						m_GHost->m_AllowDownloads = 0;
-					}
-					else if( Downloads == 1 )
-					{
-						QueueChatCommand( m_GHost->m_Language->MapDownloadsEnabled( ), User, Whisper );
-						m_GHost->m_AllowDownloads = 1;
-					}
-					else if( Downloads == 2 )
-					{
-						QueueChatCommand( m_GHost->m_Language->MapDownloadsConditional( ), User, Whisper );
-						m_GHost->m_AllowDownloads = 2;
-					}
+						if( Downloads == 0 )
+						{
+							QueueChatCommand( m_GHost->m_Language->MapDownloadsDisabled( ), User, Whisper );
+							m_GHost->m_AllowDownloads = 0;
+						}
+						else if( Downloads == 1 )
+						{
+							QueueChatCommand( m_GHost->m_Language->MapDownloadsEnabled( ), User, Whisper );
+							m_GHost->m_AllowDownloads = 1;
+						}
+						else if( Downloads == 2 )
+						{
+							QueueChatCommand( m_GHost->m_Language->MapDownloadsConditional( ), User, Whisper );
+							m_GHost->m_AllowDownloads = 2;
+						}
+					}	
 				}
 
 				//
@@ -1478,25 +1486,28 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "end" && !Payload.empty( ) )
 				{
-					// todotodo: what if a game ends just as you're typing this command and the numbering changes?
+					if( IsRootAdmin( User ) )
+					{		
+						// todotodo: what if a game ends just as you're typing this command and the numbering changes?
 
-					uint32_t GameNumber = UTIL_ToUInt32( Payload ) - 1;
+						uint32_t GameNumber = UTIL_ToUInt32( Payload ) - 1;
 
-					if( GameNumber < m_GHost->m_Games.size( ) )
-					{
-						// if the game owner is still in the game only allow the root admin to end the game
-
-						if( m_GHost->m_Games[GameNumber]->GetPlayerFromName( m_GHost->m_Games[GameNumber]->GetOwnerName( ), false ) && !IsRootAdmin( User ) )
-							QueueChatCommand( m_GHost->m_Language->CantEndGameOwnerIsStillPlaying( m_GHost->m_Games[GameNumber]->GetOwnerName( ) ), User, Whisper );
-						else
+						if( GameNumber < m_GHost->m_Games.size( ) )
 						{
-							QueueChatCommand( m_GHost->m_Language->EndingGame( m_GHost->m_Games[GameNumber]->GetDescription( ) ), User, Whisper );
-							CONSOLE_Print( "[GAME: " + m_GHost->m_Games[GameNumber]->GetGameName( ) + "] is over (admin ended game)" );
-							m_GHost->m_Games[GameNumber]->StopPlayers( "was disconnected (admin ended game)" );
+							// if the game owner is still in the game only allow the root admin to end the game
+
+							if( m_GHost->m_Games[GameNumber]->GetPlayerFromName( m_GHost->m_Games[GameNumber]->GetOwnerName( ), false ) && !IsRootAdmin( User ) )
+								QueueChatCommand( m_GHost->m_Language->CantEndGameOwnerIsStillPlaying( m_GHost->m_Games[GameNumber]->GetOwnerName( ) ), User, Whisper );
+							else
+							{
+								QueueChatCommand( m_GHost->m_Language->EndingGame( m_GHost->m_Games[GameNumber]->GetDescription( ) ), User, Whisper );
+								CONSOLE_Print( "[GAME: " + m_GHost->m_Games[GameNumber]->GetGameName( ) + "] is over (admin ended game)" );
+								m_GHost->m_Games[GameNumber]->StopPlayers( "was disconnected (admin ended game)" );
+							}
 						}
+						else
+							QueueChatCommand( m_GHost->m_Language->GameNumberDoesntExist( Payload ), User, Whisper );
 					}
-					else
-						QueueChatCommand( m_GHost->m_Language->GameNumberDoesntExist( Payload ), User, Whisper );
 				}
 
 				//
@@ -1833,29 +1844,32 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "open" && !Payload.empty( ) && m_GHost->m_CurrentGame )
 				{
-					if( !m_GHost->m_CurrentGame->GetLocked( ) )
+					if( IsRootAdmin( User ) )
 					{
-						// open as many slots as specified, e.g. "5 10" opens slots 5 and 10
-
-						stringstream SS;
-						SS << Payload;
-
-						while( !SS.eof( ) )
+						if( !m_GHost->m_CurrentGame->GetLocked( ) )
 						{
-							uint32_t SID;
-							SS >> SID;
+							// open as many slots as specified, e.g. "5 10" opens slots 5 and 10
 
-							if( SS.fail( ) )
+							stringstream SS;
+							SS << Payload;
+
+							while( !SS.eof( ) )
 							{
-								CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input to open command" );
-								break;
+								uint32_t SID;
+								SS >> SID;
+
+								if( SS.fail( ) )
+								{
+									CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input to open command" );
+									break;
+								}
+								else
+									m_GHost->m_CurrentGame->OpenSlot( (unsigned char)( SID - 1 ), true );
 							}
-							else
-								m_GHost->m_CurrentGame->OpenSlot( (unsigned char)( SID - 1 ), true );
 						}
+						else
+							QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
 					}
-					else
-						QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
 				}
 
 				//
@@ -2020,13 +2034,16 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "sp" && m_GHost->m_CurrentGame && !m_GHost->m_CurrentGame->GetCountDownStarted( ) )
 				{
-					if( !m_GHost->m_CurrentGame->GetLocked( ) )
+					if( IsRootAdmin( User ) )
 					{
-						m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->ShufflingPlayers( ) );
-						m_GHost->m_CurrentGame->ShuffleSlots( );
-					}
-					else
-						QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
+						if( !m_GHost->m_CurrentGame->GetLocked( ) )
+						{
+							m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->ShufflingPlayers( ) );
+							m_GHost->m_CurrentGame->ShuffleSlots( );
+						}
+						else
+							QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
+					}		
 				}
 
 				//
@@ -2055,33 +2072,36 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "swap" && !Payload.empty( ) && m_GHost->m_CurrentGame )
 				{
-					if( !m_GHost->m_CurrentGame->GetLocked( ) )
+					if( IsRootAdmin( User ) )
 					{
-						uint32_t SID1;
-						uint32_t SID2;
-						stringstream SS;
-						SS << Payload;
-						SS >> SID1;
-
-						if( SS.fail( ) )
-							CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input #1 to swap command" );
-						else
+						if( !m_GHost->m_CurrentGame->GetLocked( ) )
 						{
-							if( SS.eof( ) )
-								CONSOLE_Print( "[BNET: " + m_ServerAlias + "] missing input #2 to swap command" );
+							uint32_t SID1;
+							uint32_t SID2;
+							stringstream SS;
+							SS << Payload;
+							SS >> SID1;
+
+							if( SS.fail( ) )
+								CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input #1 to swap command" );
 							else
 							{
-								SS >> SID2;
-
-								if( SS.fail( ) )
-									CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input #2 to swap command" );
+								if( SS.eof( ) )
+									CONSOLE_Print( "[BNET: " + m_ServerAlias + "] missing input #2 to swap command" );
 								else
-									m_GHost->m_CurrentGame->SwapSlots( (unsigned char)( SID1 - 1 ), (unsigned char)( SID2 - 1 ) );
+								{
+									SS >> SID2;
+
+									if( SS.fail( ) )
+										CONSOLE_Print( "[BNET: " + m_ServerAlias + "] bad input #2 to swap command" );
+									else
+										m_GHost->m_CurrentGame->SwapSlots( (unsigned char)( SID1 - 1 ), (unsigned char)( SID2 - 1 ) );
+								}
 							}
 						}
+						else
+							QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
 					}
-					else
-						QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
 				}
 
 				//

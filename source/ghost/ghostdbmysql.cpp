@@ -725,7 +725,7 @@ bool MySQLBanAdd( void *conn, string *error, uint32_t botid, string server, stri
 	string EscAdmin = MySQLEscapeString( conn, admin );
 	string EscReason = MySQLEscapeString( conn, reason );
 	bool Success = false;
-	string Query = "INSERT INTO bans ( botid, server, name, ip, date, gamename, admin, reason ) VALUES ( " + UTIL_ToString( botid ) + ", '" + EscServer + "', '" + EscUser + "', '" + EscIP + "', CURDATE( ), '" + EscGameName + "', '" + EscAdmin + "', '" + EscReason + "' )";
+	string Query = "INSERT INTO bans ( botid, server, name, ip, date, gamename, admin, reason ) VALUES ( " + UTIL_ToString( botid ) + ", '" + EscServer + "', '" + EscUser + "', '" + EscIP + "', CURRENT_TIMESTAMP(), '" + EscGameName + "', '" + EscAdmin + "', '" + EscReason + "' )";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
