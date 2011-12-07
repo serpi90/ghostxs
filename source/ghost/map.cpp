@@ -788,6 +788,10 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 	m_MapDefaultHCL = CFG->GetString( "map_defaulthcl", string( ) );
 	m_MapDefaultPlayerScore = CFG->GetInt( "map_defaultplayerscore", 1000 );
 	m_MapLoadInGame = CFG->GetInt( "map_loadingame", 0 ) == 0 ? false : true;
+	if (m_GHost->m_ForceLoadInGame)
+	{
+		m_MapLoadInGame = true;
+	}
 	m_TradeAllowed = CFG->GetInt( "map_trade_allowed", 1 ) == 0 ? false : true;
 	
 	if( MapNumPlayers == 0 )
