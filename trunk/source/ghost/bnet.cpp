@@ -1290,10 +1290,12 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				//
 
 				else if( Command == "channel" && !Payload.empty( ) )
+				{
 					if( IsRootAdmin( User ) )
 					{
 						QueueChatCommand( "/join " + Payload );
 					}
+				}
 
 				//
 				// !CHECKADMIN

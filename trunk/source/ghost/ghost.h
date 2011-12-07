@@ -138,6 +138,7 @@ public:
 	bool m_GameIDReplays;					// config value: save replays with database game id or not
 	string m_ApprovedCountries;				// config value: approved countries
     bool m_Verbose;                         // config value: display player reject messages
+	bool m_ForceLoadInGame;                 // custom value force loadingame
 	
 	CGHost( CConfig *CFG );
 	~CGHost( );
