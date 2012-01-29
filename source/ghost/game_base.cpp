@@ -390,6 +390,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 	if( !m_GameLoading && !m_GameLoaded && GetNumPlayers( ) < 12 )
 		CreateVirtualHost( );
 
+	
 	// unlock the game
 
 	if( m_Locked && !GetPlayerFromName( m_OwnerName, false ) )
@@ -970,21 +971,23 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 		m_StartedKickVoteTime = 0;
 	}
 
-	// start the gameover timer if there's only one player left
-
-	if( m_Players.size( ) == 1 && m_FakePlayerPID == 255 && m_GameOverTime == 0 && ( m_GameLoading || m_GameLoaded ) )
+	// start the gameover timer if number of players is under the minimum.
+	if( m_Players.size( ) > 0 && m_GameLoaded )
 	{
-		CONSOLE_Print( "[GAME: " + m_GameName + "] gameover timer started (one player left)" );
-		m_GameOverTime = GetTime( );
+		if( m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage / 100 && m_GHost->m_AutoEnd && m_FakePlayerPID == 255 && m_GameOverTime == 0 )
+		{
+			CONSOLE_Print( "[GAME: " + m_GameName + "] Number of players is under the minimum, autoending in 10s" );
+			m_GameOverTime = GetTime( );
+			SendAllChat("Number of players under the minimum, AutoEnding in 10s.");
+		}
 	}
-
 	// finish the gameover timer
 
-	if( m_GameOverTime != 0 && GetTime( ) - m_GameOverTime >= 60 )
+	if( m_GameOverTime != 0 && GetTime( ) - m_GameOverTime >= 10 )
 	{
 		bool AlreadyStopped = true;
 
-                for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+        for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
 		{
 			if( !(*i)->GetDeleteMe( ) )
 			{
@@ -1362,7 +1365,7 @@ void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 		//if( m_HCLCommandString.empty( ) )
 		//	SendChat( player, " " );
 
-		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-GHostXS-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-GHost++-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 		SendChat( player, "     Game Name:                 " + m_GameName );
 
 		if( !m_HCLCommandString.empty( ) )
@@ -1724,7 +1727,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 		}
 	}
 
-	// Check if the new player's country is allowed to join. GHOSTXS
+	// Check if the new player's country is allowed to join. 
 	if( m_Countries_Allow )
 	{
         bool isAdmin = false;

@@ -106,6 +106,8 @@ public:
 	bool m_RefreshMessages;					// config value: display refresh messages or not (by default)
 	bool m_AutoLock;						// config value: auto lock games when the owner is present
 	bool m_AutoSave;						// config value: auto save before someone disconnects
+	bool m_AutoEnd;						// config value: auto end game with less than X players or not.
+	uint32_t m_AutoEndPercentage;				// config value: percentage of remaining players to start AutoEnd.
 	uint32_t m_AllowDownloads;				// config value: allow map downloads or not
 	bool m_PingDuringDownloads;				// config value: ping during map downloads or not
 	uint32_t m_MaxDownloaders;				// config value: maximum number of map downloaders at the same time

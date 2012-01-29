@@ -125,7 +125,10 @@ protected:
 	bool m_AutoSave;								// if we should auto save the game before someone disconnects
 	bool m_MatchMaking;								// if matchmaking mode is enabled
 	bool m_LocalAdminMessages;						// if local admin messages should be relayed or not
-    	//GHostXS
+	bool m_AutoEnd;						// config value: auto end game with less than X players or not.
+	uint32_t m_AutoEndPercentage;				// config value: percentage of remaining players to start AutoEnd.
+
+	//GHost++
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
 	string m_MapType;				// map_type
    	bool m_Countries_Allow;                         // wether country filter is enabled or not
