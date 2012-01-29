@@ -128,7 +128,7 @@ protected:
 	bool m_AutoEnd;						// config value: auto end game with less than X players or not.
 	uint32_t m_AutoEndPercentage;				// config value: percentage of remaining players to start AutoEnd.
 
-	//GHost++
+	//GHostXS
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
 	string m_MapType;				// map_type
    	bool m_Countries_Allow;                         // wether country filter is enabled or not

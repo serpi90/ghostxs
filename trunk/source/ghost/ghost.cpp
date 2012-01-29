@@ -505,12 +505,12 @@ CGHost :: CGHost( CConfig *CFG )
 	else
 		CONSOLE_Print( "[GHOST] acting as Warcraft III: Reign of Chaos" );
 
-	m_HostPort = CFG->GetInt( "bot_hostport", 6125 );
+	m_HostPort = CFG->GetInt( "bot_hostport", 6112 );
 	m_Reconnect = CFG->GetInt( "bot_reconnect", 1 ) == 0 ? false : true;
-	m_ReconnectPort = CFG->GetInt( "bot_reconnectport", 6124 );
+	m_ReconnectPort = CFG->GetInt( "bot_reconnectport", 6114 );
 	m_DefaultMap = CFG->GetString( "bot_defaultmap", "map" );
 	m_AdminGameCreate = CFG->GetInt( "admingame_create", 0 ) == 0 ? false : true;
-	m_AdminGamePort = CFG->GetInt( "admingame_port", 6123 );
+	m_AdminGamePort = CFG->GetInt( "admingame_port", 6113 );
 	m_AdminGamePassword = CFG->GetString( "admingame_password", string( ) );
 	m_AdminGameMap = CFG->GetString( "admingame_map", string( ) );
 	m_LANWar3Version = CFG->GetInt( "lan_war3version", 26 );
@@ -685,9 +685,9 @@ CGHost :: CGHost( CConfig *CFG )
 		CONSOLE_Print( "[GHOST] warning - no battle.net connections found and no admin game created" );
 
 #ifdef GHOST_MYSQL
-	CONSOLE_Print( "Ghost ++ " + m_Version   );
+	CONSOLE_Print( "[GHOST] GHostXS Version " + m_Version + " (with MySQL support)" );
 #else
-	CONSOLE_Print( "Ghost ++ " + m_Version  );
+	CONSOLE_Print( "[GHOST] GHostXS Version " + m_Version + " (without MySQL support)" );
 #endif
 }
 
