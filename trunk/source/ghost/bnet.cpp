@@ -1289,7 +1289,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !CHANNEL (change channel)
 				//
 
-				else if( Command == "channel" && !Payload.empty( ) )
+				else if( ( Command == "channel" || Command == "cc" ) && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1301,7 +1301,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !CHECKADMIN
 				//
 
-				else if( Command == "checkadmin" && !Payload.empty( ) )
+				else if( (Command == "checkadmin" || Command == "ca") && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1318,7 +1318,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !CHECKBAN
 				//
 
-				else if( Command == "checkban" && !Payload.empty( ) )
+				else if( (Command == "checkban" || Command == "cb") && !Payload.empty( ) )
 				{
 					CDBBan *Ban = IsBannedName( Payload );
 
@@ -1332,12 +1332,10 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !CLOSE (close slot)
 				//
 
-				else if( Command == "close" && !Payload.empty( ) && m_GHost->m_CurrentGame )
+				else if( (Command == "close" || Command == "c") && !Payload.empty( ) && m_GHost->m_CurrentGame )
 				{
 					if( IsRootAdmin( User ) )
 					{
-						if( !m_GHost->m_CurrentGame->GetLocked( ) )
-						{
 							// close as many slots as specified, e.g. "5 10" closes slots 5 and 10
 
 							stringstream SS;
@@ -1356,28 +1354,32 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 								else
 									m_GHost->m_CurrentGame->CloseSlot( (unsigned char)( SID - 1 ), true );
 							}
-						}
-						else
-							QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
+						
 					}
+					else
+						QueueChatCommand( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ), User, Whisper );
 				}
 				//
 				// !CLOSEALL
 				//
 
-				else if( Command == "closeall" && m_GHost->m_CurrentGame )
+				else if( (Command == "closeall" || Command == "cla") && m_GHost->m_CurrentGame )
 				{
-					if( !m_GHost->m_CurrentGame->GetLocked( ) )
+					if( IsRootAdmin( User ) )
+					{				
 						m_GHost->m_CurrentGame->CloseAllSlots( );
+					}
 					else
-						QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
+					{
+						QueueChatCommand( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ), User, Whisper );
+					}
 				}
 
 				//
 				// !COUNTADMINS
 				//
 
-				else if( Command == "countadmins" )
+				else if( Command == "countadmins" || Command == "cas" )
 				{
 					if( IsRootAdmin( User ) )
 						m_PairedAdminCounts.push_back( PairedAdminCount( Whisper ? User : string( ), m_GHost->m_DB->ThreadedAdminCount( m_Server ) ) );
@@ -1443,7 +1445,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !DOWNLOADS
 				//
 
-				else if( Command == "downloads" && !Payload.empty( ) )
+				else if( (Command == "downloads" || Command == "dls") && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{				
@@ -1464,7 +1466,9 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 							QueueChatCommand( m_GHost->m_Language->MapDownloadsConditional( ), User, Whisper );
 							m_GHost->m_AllowDownloads = 2;
 						}
-					}	
+					}
+					else
+						QueueChatCommand( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ), User, Whisper );
 				}
 
 				//
@@ -1848,8 +1852,6 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				{
 					if( IsRootAdmin( User ) )
 					{
-						if( !m_GHost->m_CurrentGame->GetLocked( ) )
-						{
 							// open as many slots as specified, e.g. "5 10" opens slots 5 and 10
 
 							stringstream SS;
@@ -1868,10 +1870,9 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 								else
 									m_GHost->m_CurrentGame->OpenSlot( (unsigned char)( SID - 1 ), true );
 							}
-						}
-						else
-							QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
 					}
+					else
+						QueueChatCommand( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ), User, Whisper );
 				}
 
 				//
@@ -1880,10 +1881,12 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "openall" && m_GHost->m_CurrentGame )
 				{
-					if( !m_GHost->m_CurrentGame->GetLocked( ) )
+					if( IsRootAdmin( User ) )
+					{				
 						m_GHost->m_CurrentGame->OpenAllSlots( );
+					}
 					else
-						QueueChatCommand( m_GHost->m_Language->TheGameIsLockedBNET( ), User, Whisper );
+						QueueChatCommand( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ), User, Whisper );
 				}
 
 				//

@@ -437,7 +437,7 @@ void CGamePlayer :: ProcessPackets( )
 
 					// don't delete Action here because the game is going to store it in a queue and delete it later
 				
-					if( !m_Game->GetGameLoaded() || Action->GetLength( ) > 1452 )
+					if( !m_Game->GetGameLoaded() || !m_Game->GetLoadInGame() || Action->GetLength( ) > 1452 )
 					{
 						// either the game isn't loaded yet and player is sending an action,
 						// or the action is too large for us to relay
