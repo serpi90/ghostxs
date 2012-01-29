@@ -1365,7 +1365,7 @@ void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 		//if( m_HCLCommandString.empty( ) )
 		//	SendChat( player, " " );
 
-		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-GHost++-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
+		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-GHostXS-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
 		SendChat( player, "     Game Name:                 " + m_GameName );
 
 		if( !m_HCLCommandString.empty( ) )
@@ -1727,7 +1727,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 		}
 	}
 
-	// Check if the new player's country is allowed to join. 
+	// Check if the new player's country is allowed to join. GHOSTXS
 	if( m_Countries_Allow )
 	{
         bool isAdmin = false;
