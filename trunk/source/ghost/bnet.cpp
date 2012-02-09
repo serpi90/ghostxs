@@ -1492,8 +1492,6 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 
 				else if( Command == "end" && !Payload.empty( ) )
 				{
-					if( IsRootAdmin( User ) )
-					{		
 						// todotodo: what if a game ends just as you're typing this command and the numbering changes?
 
 						uint32_t GameNumber = UTIL_ToUInt32( Payload ) - 1;
@@ -1513,7 +1511,6 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 						}
 						else
 							QueueChatCommand( m_GHost->m_Language->GameNumberDoesntExist( Payload ), User, Whisper );
-					}
 				}
 
 				//
