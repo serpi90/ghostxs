@@ -3,7 +3,7 @@
 Last revision:
 - Author: Seven
 - Email: zabkar@gmail.com  (Subject CDP)
-- Date: 14.5.2011 (1.4.3)
+- Date: 14.5.2011 (1.4.4)
 ------------------------------------------------------------------------------
 Based on the works of:
 - Julas, Rush4Hire, esby and Rachmadi
@@ -1832,12 +1832,12 @@ function parseactions($actionblock, $data_length) {
         $spa = $this->players[$player['player_id']]['actions'];
 
         $this->players[$player['player_id']]['apm'] = count($spa);
-
+        
         $ni=30000;
         $ii=0;
         $apm = 0;
         $astr='';
-        $temp_time = $this->players[$player['player_id']]['time'];
+        @$temp_time = $this->players[$player['player_id']]['time'];
         $sum = 0;
         foreach ($spa as $atime) {
           $sum += strlen($atime);
