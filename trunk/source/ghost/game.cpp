@@ -398,10 +398,11 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
         if ( !m_Locked || RootAdminCheck || IsOwner( User ) )
         {
-            /*****************
-            * ADMIN COMMANDS *
-            ******************/
-            //
+            /**************************
+            * LOCKABLE ADMIN COMMANDS *
+            ***************************/
+            
+			//
             // !ADMINCHAT by Zephyrix improved by Metal_Koola
             //
             if ( Command == "ac" && !Payload.empty( ) )
@@ -465,7 +466,11 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                         Reason = Reason.substr( Start );
                 }
 
-                if ( m_GameLoaded )
+				if( (m_GHost->m_RequireBanReason) && Reason.empty( ) )
+				{
+					SendAllChat( m_GHost->m_Language->RequireBanReason( Victim ) );
+				}
+                else if ( m_GameLoaded )
                 {
                     string VictimLower = Victim;
                     transform( VictimLower.begin( ), VictimLower.end( ), VictimLower.begin( ), (int(*)(int))tolower );
@@ -650,9 +655,17 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
                 }
                 if ( isAdmin )
-                    SendChat( player, m_GHost->m_Language->ErrorBanningAdmin( ) );
+				{
+					SendChat( player, m_GHost->m_Language->ErrorBanningAdmin( ) );
+				}
+				else if( (m_GHost->m_RequireBanReason) && Payload.empty( ) )
+				{
+					SendAllChat( m_GHost->m_Language->RequireBanReason( User ) );
+				}
                 else
-                    m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( m_DBBanLast->GetServer( ), m_DBBanLast->GetName( ), m_DBBanLast->GetIP( ), m_GameName, User, Payload ) ) );
+				{
+					m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( m_DBBanLast->GetServer( ), m_DBBanLast->GetName( ), m_DBBanLast->GetIP( ), m_GameName, User, Payload ) ) );
+				}
             }
 
             //
@@ -1036,7 +1049,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             else if ( Command == "end" && m_GameLoaded )
             {
                 CONSOLE_Print( "[GAME: " + m_GameName + "] is over (admin ended game)" );
-                StopPlayers( "was disconnected (admin ended game)" );
+                StopPlayers( "was disconnected ("+User+" ended game)" );
             }
 
             //
@@ -1388,7 +1401,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             // !IPS
             //
 
-            if ( Command == "ips" )
+            else if ( Command == "ips" )
             {
                 string Froms;
 
@@ -1426,7 +1439,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                 if ( !m_GameLoading && !m_GameLoaded && !Payload.empty( ) )
                     KickPing = UTIL_ToUInt32( Payload );
 
-                if (!Payload.empty())
+                if ( !Payload.empty() )
                 {
                     CGamePlayer *LastMatch = NULL;
                     uint32_t Matches = GetPlayerFromNamePartial( Payload , &LastMatch );
@@ -1449,7 +1462,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                         Pings += " (";
                         Pings += ")";
                         SendAllChat(Pings);
-                        return HideCommand;
+						return HideCommand;
                     }
                     else
                         CONSOLE_Print("Found more than one match");
@@ -1607,18 +1620,6 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                     SendAllChat( m_GHost->m_Language->RefreshMessagesDisabled( ) );
                     m_RefreshMessages = false;
                 }
-            }
-
-            //
-            // !SAY
-            //
-
-            else if ( Command == "say" && !Payload.empty( ) )
-            {
-                for ( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
-                    (*i)->QueueChatCommand( Payload );
-
-                HideCommand = true;
             }
 
             //
@@ -1865,32 +1866,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                 SendAllChat( m_GHost->m_Language->VoteKickCancelled( m_KickVotePlayer ) );
                 m_KickVotePlayer.clear( );
                 m_StartedKickVoteTime = 0;
-            }
-
-            //
-            // !W
-            //
-
-            else if ( Command == "w" && !Payload.empty( ) )
-            {
-                // extract the name and the message
-                // e.g. "Varlock hello there!" -> name: "Varlock", message: "hello there!"
-
-                string Name;
-                string Message;
-                string :: size_type MessageStart = Payload.find( " " );
-
-                if ( MessageStart != string :: npos )
-                {
-                    Name = Payload.substr( 0, MessageStart );
-                    Message = Payload.substr( MessageStart + 1 );
-
-                    for ( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
-                        (*i)->QueueChatCommand( Message, Name, true );
-                }
-
-                HideCommand = true;
-            }
+			}
         }
         else
         {
@@ -1921,21 +1897,21 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
     // !GN !GAMENAME
     //
 
-    if ( Command == "gn" || Command == "gamename" )
-        SendAllChat( "[ " +  m_GameName + " ]");
+    else if ( Command == "gn" || Command == "gamename" )
+		SendAllChat( "Game Name: [ " +  m_GameName + " ]");
 
     //
     // !PING !P
     //
 
-    if ( ( Command == "ping" || Command == "p" ) && !ping_done )
+    else if ( ( Command == "ping" || Command == "p" ) && !ping_done )
         SendChat( player, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A" );
 
     //
     // !ROLL
     //
 
-    if ( Command == "roll" )
+    else if ( Command == "roll" )
     {
         int RandomNumber;
         int max = Payload.empty()? 100 : UTIL_ToUInt32( Payload );

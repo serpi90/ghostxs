@@ -1046,8 +1046,10 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 						if( Start != string :: npos )
 							Reason = Reason.substr( Start );
 					}
-
-					if( IsBannedName( Victim ) )
+					
+					if( (m_GHost->m_RequireBanReason) && Reason.empty( ) )
+						QueueChatCommand( m_GHost->m_Language->RequireBanReason( Victim ) );
+					else if( IsBannedName( Victim ) )
 						QueueChatCommand( m_GHost->m_Language->UserIsAlreadyBanned( m_Server, Victim ), User, Whisper );
                     else if( IsAdmin( Victim ) || IsRootAdmin( Victim ) )
                         QueueChatCommand( m_GHost->m_Language->ErrorBanningAdmin( ) );
@@ -1422,9 +1424,41 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !DELBAN
 				// !UNBAN
 				//
+				else if( ( Command == "delban" || Command == "unban" ) && !Payload.empty( ) ) 
+				{ 
+					bool doBan = false; 
+					CDBBan *Ban = IsBannedName( Payload ); 
 
-				else if( ( Command == "delban" || Command == "unban" ) && !Payload.empty( ) )
-					m_PairedBanRemoves.push_back( PairedBanRemove( Whisper ? User : string( ), m_GHost->m_DB->ThreadedBanRemove( Payload ) ) );
+					if ( !Ban ) //Not banned
+					{
+						return; 
+					}
+
+					if ( m_GHost->m_AdminsLimitedUnban && !IsRootAdmin( User ) ) 
+					{ 
+						if ( User == Ban->GetAdmin( ) ) 
+						{ 
+							doBan = true; 
+						} 
+						else //No permission
+						{
+							QueueChatCommand( m_GHost->m_Language->AdminsLimitedUnban( Payload, Ban->GetAdmin( )), User, Whisper); // Limited unban 
+						} 
+					} 
+					else //Ban owner or root
+					{ 
+						doBan = true; 
+					} 
+
+					if( doBan ) //succesfully unban player
+					{ 
+						m_PairedBanRemoves.push_back( PairedBanRemove( Whisper ? User : string( ), m_GHost->m_DB->ThreadedBanRemove( Payload ) ) ); 
+					} 
+				}
+				
+				
+				/*else if( ( Command == "delban" || Command == "unban" ) && !Payload.empty( ) )
+					m_PairedBanRemoves.push_back( PairedBanRemove( Whisper ? User : string( ), m_GHost->m_DB->ThreadedBanRemove( Payload ) ));*/ 
 
 				//
 				// !DISABLE

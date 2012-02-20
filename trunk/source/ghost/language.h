@@ -258,6 +258,8 @@ public:
 	string AutokickingPlayerForDeniedCountry( string victim, string country );
     string CountryCheckDisabled( );
     string CountryCheckEnabled( string countries );
+	string AdminsLimitedUnban( string victim, string admin );
+	string RequireBanReason( string victim );
     
 };
 
