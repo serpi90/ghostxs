@@ -517,6 +517,9 @@ CGHost :: CGHost( CConfig *CFG )
 	m_ReplayWar3Version = CFG->GetInt( "replay_war3version", 26 );
 	m_ReplayBuildNumber = CFG->GetInt( "replay_buildnumber", 6059 );
 	m_ForceLoadInGame = CFG->GetInt( "bot_forceloadingame", 0 ) == 0 ? false : true;
+	m_AdminsLimitedUnban = CFG->GetInt( "bot_adminslimitedunban", 0 ) == 0 ? false : true;
+	m_RequireBanReason = CFG->GetInt( "bot_requirebanreason", 0 ) == 0 ? false : true;
+	//m_RelayChatCommands = CFG->GetInt( "bot_relaychatcommands", 0 ) == 0 ? false : true;
 	SetConfigs( CFG );
 
 	// load the battle.net connections

@@ -1562,3 +1562,18 @@ string CLanguage :: CountryCheckEnabled( string countries )
 	UTIL_Replace( Out, "$COUNTRIES$", countries );
 	return Out;
 }
+
+string CLanguage :: AdminsLimitedUnban( string victim, string admin )
+{
+	string Out = m_CFG->GetString( "lang_0225", "lang_0225" );
+	UTIL_Replace( Out, "$USER$", victim );
+	UTIL_Replace( Out, "$ADMIN$", admin );
+	return Out;
+}
+
+string CLanguage :: RequireBanReason( string victim )
+{
+	string Out = m_CFG->GetString( "lang_0226", "lang_0226" );
+	UTIL_Replace( Out, "$USER$", victim );
+	return Out;
+}
