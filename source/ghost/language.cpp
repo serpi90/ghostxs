@@ -1577,3 +1577,16 @@ string CLanguage :: RequireBanReason( string victim )
 	UTIL_Replace( Out, "$USER$", victim );
 	return Out;
 }
+
+string CLanguage :: TradeHackDetected( string victim )
+{
+	string Out = m_CFG->GetString( "lang_0227", "lang_0227" );
+	UTIL_Replace( Out, "$USER$", victim );
+	return Out;
+}
+
+string CLanguage :: GameEndedDueToPlayerPercentage( )
+{
+	string Out = m_CFG->GetString( "lang_0228", "lang_0228" );
+	return Out;
+}

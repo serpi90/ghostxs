@@ -143,8 +143,10 @@ public:
 	bool m_ForceLoadInGame;                 // custom value force loadingame
 	bool m_AdminsLimitedUnban;				// config value: only the executor can remove ban
 	bool m_RequireBanReason;				// config value: .bl .ban in both game and bnet require a ban reason or it will not ban
-	//bool m_RelayChatCommands;				// config value: whether to relay admin commands to chat or not
-	
+	bool m_RelayChatCommands;				// config value: whether to relay admin commands to chat or not
+	bool m_BanBannedFromChannel;			// config value: kick a user from channel if it's banned
+	bool m_KickBannedFromChannel;			// config value: ban a user from channel if it's banned
+
 	CGHost( CConfig *CFG );
 	~CGHost( );
 

@@ -516,10 +516,6 @@ CGHost :: CGHost( CConfig *CFG )
 	m_LANWar3Version = CFG->GetInt( "lan_war3version", 26 );
 	m_ReplayWar3Version = CFG->GetInt( "replay_war3version", 26 );
 	m_ReplayBuildNumber = CFG->GetInt( "replay_buildnumber", 6059 );
-	m_ForceLoadInGame = CFG->GetInt( "bot_forceloadingame", 0 ) == 0 ? false : true;
-	m_AdminsLimitedUnban = CFG->GetInt( "bot_adminslimitedunban", 0 ) == 0 ? false : true;
-	m_RequireBanReason = CFG->GetInt( "bot_requirebanreason", 0 ) == 0 ? false : true;
-	//m_RelayChatCommands = CFG->GetInt( "bot_relaychatcommands", 0 ) == 0 ? false : true;
 	SetConfigs( CFG );
 
 	// load the battle.net connections
@@ -1378,6 +1374,10 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	m_VoteKickPercentage = CFG->GetInt( "bot_votekickpercentage", 100 );
 	m_AutoEnd = CFG->GetInt( "bot_autoend", 0 ) == 0 ? false : true;
 	m_AutoEndPercentage = CFG->GetInt( "bot_autoendpercentage", 60);
+	m_ForceLoadInGame = CFG->GetInt( "bot_forceloadingame", 0 ) == 0 ? false : true;
+	m_AdminsLimitedUnban = CFG->GetInt( "bot_adminslimitedunban", 0 ) == 0 ? false : true;
+	m_RequireBanReason = CFG->GetInt( "bot_requirebanreason", 0 ) == 0 ? false : true;
+	m_RelayChatCommands = CFG->GetInt( "bot_relaychatcommands", 0 ) == 0 ? false : true;
 	
 	if( m_VoteKickPercentage > 100 )
 	{
@@ -1401,7 +1401,9 @@ void CGHost :: SetConfigs( CConfig *CFG )
 	m_ShowServerOnJoin = CFG->GetInt( "bot_showserveronjoin", 0 ) == 0 ? false : true;
 	m_AdminClan = CFG->GetInt( "bot_adminclan", 0 ) == 0 ? false : true;
 	m_GameIDReplays = CFG->GetInt( "bot_gameidreplays", 1 ) == 0 ? false : true;
-    m_Verbose = CFG->GetInt( "bot_verbose", 1 ) == 0 ? false : true;	
+    m_Verbose = CFG->GetInt( "bot_verbose", 1 ) == 0 ? false : true;
+	m_BanBannedFromChannel = CFG->GetInt( "bot_banbannedfromchannel", 0 ) == 0 ? false : true;
+	m_KickBannedFromChannel = CFG->GetInt( "bot_kickbannedfromchannel", 0 ) == 0 ? false : true;
 }
 
 void CGHost :: ExtractScripts( )
