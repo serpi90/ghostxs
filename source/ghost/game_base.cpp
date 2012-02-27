@@ -50,8 +50,8 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Protocol = new CGameProtocol( m_GHost );
 	m_Map = new CMap( *nMap );
 	//uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
-    	m_Countries_Allow = false;
-	m_Countries_Allowed = "";
+	m_Countries_Allowed = m_GHost->m_ApprovedCountries;
+	m_Countries_Allow = !m_Countries_Allowed.empty(); //If empty disable country check.
 	m_MapType = m_Map->GetMapType( );
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
@@ -1750,7 +1750,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
         }
         
         if (IsReserved (joinPlayer->GetName()))
-            isAdmin=true;
+            isAdmin = true;
 
         
         if( !isAdmin )
@@ -1868,48 +1868,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 		m_ScoreChecks.push_back( m_GHost->m_DB->ThreadedScoreCheck( m_Map->GetMapMatchMakingCategory( ), joinPlayer->GetName( ), JoinedRealm ) );
 		return;
 	}
-	// [FROMENFORCER]
-	//Make sure from checking is enabled and config values are clean
-	if(!m_GHost->m_ApprovedCountries.empty( ) || m_GHost->m_ApprovedCountries.length() % 2 != 0)
-	{
-		int num;
-		vector<string> ApprovedLocations;
-		string PlayerLocation;
-		bool playerIsApproved;
-
-		if(m_GHost->m_ApprovedCountries.length() == 2)
-			num = 1;
-		else
-			num = m_GHost->m_ApprovedCountries.length() / 2;
-
-		//Loop through approved countries and construct an array
-		for(int i = 0; i < m_GHost->m_ApprovedCountries.length(); i += 2)
-			ApprovedLocations.push_back(m_GHost->m_ApprovedCountries.substr(i,2));
-
-		//Get their location
-		PlayerLocation = m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( potential->GetExternalIP( ), true ));
-
-		//Kick if not from an allowed location, ignore if their location is approved or cannot be found "??"
-		playerIsApproved = false;
-
-		//Try to make a match
-		for(int x = 0; x < num; x++)
-		{
-			//Approve the player if their country is approved
-			if(PlayerLocation == ApprovedLocations[x])
-				playerIsApproved = true;
-		}
-
-		if(!playerIsApproved && PlayerLocation != "??")
-		{
-			//Player location has been found and is invalid, deny them entry
-			CONSOLE_Print("[FROMENFORCER] Player [" + joinPlayer->GetName() + "] tried to join the game but is not from an approved location (" + PlayerLocation + ")");
-			SendAllChat("[" + joinPlayer->GetName() + "] tried to join the game but is not from an approved location (" + PlayerLocation + ")");
-			potential->SetDeleteMe(true);
-			return;
-		}
-	}
-
+	
 	// try to find a slot
 
 	unsigned char SID = 255;

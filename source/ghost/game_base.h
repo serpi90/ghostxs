@@ -132,7 +132,7 @@ protected:
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
 	string m_MapType;				// map_type
    	bool m_Countries_Allow;                         // wether country filter is enabled or not
-    	string m_Countries_Allowed;                     // list of countries allowed to join the game
+    string m_Countries_Allowed;                     // list of countries allowed to join the game
 	uint32_t m_LastSpoofCheckTime;                  // GetTime when the last game spoof check advice was sent
 
 public:
