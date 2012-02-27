@@ -176,7 +176,7 @@ bool CGame :: Update( void *fd, void *send_fd )
                         (*j)->AddBan( i->second->GetUser( ), i->second->GetIP( ), i->second->GetGameName( ), i->second->GetAdmin( ), i->second->GetReason( ) );
                 }
 
-                SendAllChat( m_GHost->m_Language->PlayerWasBannedByPlayer( i->second->GetServer( ), i->second->GetUser( ), i->first ) );
+                //SendAllChat( m_GHost->m_Language->PlayerWasBannedByPlayer( i->second->GetServer( ), i->second->GetUser( ), i->first ) );
             }
 
             m_GHost->m_DB->RecoverCallable( i->second );
@@ -350,7 +350,7 @@ void CGame :: EventPlayerAction( CGamePlayer *player, CIncomingAction *action )
         if ( (*ActionData)[0] == 0x51 )
         {
             CONSOLE_Print( "[GAME: " + m_GameName + "] tradehack detected by [" + player->GetName( ) + "]" );
-            SendAllChat( "Tradehack detected by [" + player->GetName( ) + "] !" );
+            SendAllChat( m_GHost->m_Language->TradeHackDetected( player->GetName( ) ) );
             m_PairedBanAdds.push_back( PairedBanAdd( string( ), m_GHost->m_DB->ThreadedBanAdd( player->GetJoinedRealm( ), player->GetName( ), player->GetExternalIPString( ), m_GameName, "AUTO BAN" , "[AUTOBAN] Tradehack detected" ) ) );
             player->SetDeleteMe( true );
             player->SetLeftReason( m_GHost->m_Language->WasKickedByPlayer( "Anti-tradehack" ) );
@@ -392,42 +392,49 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
         }
     }
 
+	bool CommandExecuted = true;
+	
     if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
     {
         CONSOLE_Print( "[GAME: " + m_GameName + "] admin [" + User + "] sent command [" + Command + "] with payload [" + Payload + "]" );
+        
+		//
+		// !ADMINCHAT by Zephyrix improved by Metal_Koola
+		//
+		if ( Command == "ac" && !Payload.empty( ) )
+		{
+			for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+			{
+				if ((*i)->GetSpoofed( ))
+				{
+					bool IsAdmin = false;
+					string Name = (*i)->GetName( );
+					for ( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
+					{
+						if ( (*j)->GetServer( ) == player->GetSpoofedRealm( ) && ( (*j)->IsRootAdmin( Name ) || (*j)->IsAdmin( Name ) ) )
+						{
+							IsAdmin = true;
+							break;
+						}
+					}
 
-        if ( !m_Locked || RootAdminCheck || IsOwner( User ) )
+					if ( IsAdmin )
+						SendChat( player->GetPID( ), (*i)->GetPID( ), "[ACHAT]-[" + User + "]: " + Payload );
+				}
+			}
+			HideCommand = true;
+		}
+		else
+		{
+			CommandExecuted = false;
+		}
+		if ( !CommandExecuted && (!m_Locked || RootAdminCheck || IsOwner( User ) ) )
         {
+			CommandExecuted = true; // Goes to false if no command is executed. ( final else )
             /**************************
             * LOCKABLE ADMIN COMMANDS *
             ***************************/
             
-			//
-            // !ADMINCHAT by Zephyrix improved by Metal_Koola
-            //
-            if ( Command == "ac" && !Payload.empty( ) )
-            {
-                for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
-                {
-                    if ((*i)->GetSpoofed( ))
-                    {
-                        bool IsAdmin = false;
-                        string Name = (*i)->GetName( );
-                        for ( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
-                        {
-                            if ( (*j)->GetServer( ) == player->GetSpoofedRealm( ) && ( (*j)->IsRootAdmin( Name ) || (*j)->IsAdmin( Name ) ) )
-                            {
-                                IsAdmin = true;
-                                break;
-                            }
-                        }
-
-                        if ( IsAdmin )
-                            SendChat( player->GetPID( ), (*i)->GetPID( ), "[ACHAT]-[" + User + "]: " + Payload );
-                    }
-                }
-                HideCommand = true;
-            }
             //
             // !ABORT (abort countdown)
             // !A
@@ -435,7 +442,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
             // we use "!a" as an alias for abort because you don't have much time to abort the countdown so it's useful for the abort command to be easy to type
 
-            else if ( ( Command == "abort" || Command == "a" ) && m_CountDownStarted && !m_GameLoading && !m_GameLoaded )
+            if ( ( Command == "abort" || Command == "a" ) && m_CountDownStarted && !m_GameLoading && !m_GameLoaded )
             {
                 SendAllChat( m_GHost->m_Language->CountDownAborted( ) );
                 m_CountDownStarted = false;
@@ -505,12 +512,14 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                     else if ( Matches == 1 )
                     {
                         bool isAdmin = false;
+						string server;
                         for ( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); j++ )
                         {
                             if ( LastMatch->GetServer( ) == (*j)->GetServer( ) )
                             {
                                 if ( (*j)->IsAdmin( LastMatch->GetName( ) ) || (*j)->IsRootAdmin( LastMatch->GetName( ) ) )
                                     isAdmin = true;
+									server = (*j)->GetServerAlias( );
                                 break;
                             }
 
@@ -519,6 +528,8 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                             SendChat( player, m_GHost->m_Language->ErrorBanningAdmin( ) );
                         else
                             m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( LastMatch->GetServer( ), LastMatch->GetName( ), LastMatch->GetIP( ), m_GameName, User, Reason ) ) );
+							SendAllChat( m_GHost->m_Language->PlayerWasBannedByPlayer( server, Victim, User ) );
+							SendAllChat ("Ban Reason: " + Reason);
                     }
                     else
                         SendAllChat( m_GHost->m_Language->UnableToBanFoundMoreThanOneMatch( Victim ) );
@@ -533,12 +544,14 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                     else if ( Matches == 1 )
                     {
                         bool isAdmin = false;
+						string server;
                         for ( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); j++ )
                         {
                             if ( LastMatch->GetJoinedRealm( ) == (*j)->GetServer( ) )
                             {
                                 if ( (*j)->IsAdmin( LastMatch->GetName( ) ) || (*j)->IsRootAdmin( LastMatch->GetName( ) ) )
                                     isAdmin = true;
+									server = (*j)->GetServerAlias( );
                                 break;
                             }
 
@@ -547,6 +560,8 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                             SendChat( player, m_GHost->m_Language->ErrorBanningAdmin( ) );
                         else
                             m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( LastMatch->GetJoinedRealm( ), LastMatch->GetName( ), LastMatch->GetExternalIPString( ), m_GameName, User, Reason ) ) );
+							SendAllChat( m_GHost->m_Language->PlayerWasBannedByPlayer( server, Victim, User ) );
+							SendAllChat ("Ban Reason: " + Reason);
                     }
                     else
                         SendAllChat( m_GHost->m_Language->UnableToBanFoundMoreThanOneMatch( Victim ) );
@@ -644,10 +659,12 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             else if ( ( Command == "banlast" || Command == "bl" ) && m_GameLoaded && !m_GHost->m_BNETs.empty( ) && m_DBBanLast )
             {
                 bool isAdmin = false;
+				string server;
                 for ( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); j++ )
                 {
                     if ( m_DBBanLast->GetServer( ) == (*j)->GetServer( ) )
                     {
+						server = (*j)->GetServerAlias( );
                         if ( (*j)->IsAdmin( m_DBBanLast->GetName( ) ) || (*j)->IsRootAdmin( m_DBBanLast->GetName( ) ) )
                             isAdmin = true;
                         break;
@@ -665,6 +682,8 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                 else
 				{
 					m_PairedBanAdds.push_back( PairedBanAdd( User, m_GHost->m_DB->ThreadedBanAdd( m_DBBanLast->GetServer( ), m_DBBanLast->GetName( ), m_DBBanLast->GetIP( ), m_GameName, User, Payload ) ) );
+					SendAllChat( m_GHost->m_Language->PlayerWasBannedByPlayer( server, m_DBBanLast->GetName( ), User ) );
+					SendAllChat ("Ban Reason: " + Payload);
 				}
             }
 
@@ -1838,7 +1857,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             // !VB
             //
 
-            if ( Command == "verbose" || Command == "vb" )
+            else if ( Command == "verbose" || Command == "vb" )
             {
                 m_GHost->m_Verbose = !m_GHost->m_Verbose;
                 if (m_GHost->m_Verbose)
@@ -1867,8 +1886,12 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                 m_KickVotePlayer.clear( );
                 m_StartedKickVoteTime = 0;
 			}
+			else
+			{
+				CommandExecuted = false;
+			}
         }
-        else
+        else if ( CommandExecuted )
         {
             CONSOLE_Print( "[GAME: " + m_GameName + "] admin command ignored, the game is locked" );
             SendChat( player, m_GHost->m_Language->TheGameIsLocked( ) );
@@ -1885,179 +1908,185 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
     /*********************
     * NON ADMIN COMMANDS *
     *********************/
+	if ( !CommandExecuted )
+	{
+		CommandExecuted = true;
+		//
+		// !CHECKME
+		//
+		if ( Command == "checkme" )
+			SendChat( player, m_GHost->m_Language->CheckedPlayer( User, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A", m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( player->GetExternalIP( ), true ) ), AdminCheck || RootAdminCheck ? "Yes" : "No", IsOwner( User ) ? "Yes" : "No", player->GetSpoofed( ) ? "Yes" : "No", player->GetSpoofedRealm( ).empty( ) ? "N/A" : player->GetSpoofedRealm( ), player->GetReserved( ) ? "Yes" : "No" ) );
 
-    //
-    // !CHECKME
-    //
+		//
+		// !GN !GAMENAME
+		//
 
-    if ( Command == "checkme" )
-        SendChat( player, m_GHost->m_Language->CheckedPlayer( User, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A", m_GHost->m_DBLocal->FromCheck( UTIL_ByteArrayToUInt32( player->GetExternalIP( ), true ) ), AdminCheck || RootAdminCheck ? "Yes" : "No", IsOwner( User ) ? "Yes" : "No", player->GetSpoofed( ) ? "Yes" : "No", player->GetSpoofedRealm( ).empty( ) ? "N/A" : player->GetSpoofedRealm( ), player->GetReserved( ) ? "Yes" : "No" ) );
+		else if ( Command == "gn" || Command == "gamename" )
+			SendAllChat( "Game Name: [ " +  m_GameName + " ]");
 
-    //
-    // !GN !GAMENAME
-    //
+		//
+		// !PING !P
+		//
 
-    else if ( Command == "gn" || Command == "gamename" )
-		SendAllChat( "Game Name: [ " +  m_GameName + " ]");
+		else if ( ( Command == "ping" || Command == "p" ) && !ping_done )
+			SendChat( player, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A" );
 
-    //
-    // !PING !P
-    //
+		//
+		// !ROLL
+		//
 
-    else if ( ( Command == "ping" || Command == "p" ) && !ping_done )
-        SendChat( player, player->GetNumPings( ) > 0 ? UTIL_ToString( player->GetPing( m_GHost->m_LCPings ) ) + "ms" : "N/A" );
+		else if ( Command == "roll" )
+		{
+			int RandomNumber;
+			int max = Payload.empty()? 100 : UTIL_ToUInt32( Payload );
+			srand((unsigned)time(0));
+			RandomNumber = (rand()%(max-1))+1;
+			SendAllChat(User + " rolled "+UTIL_ToString(RandomNumber) + " of " + UTIL_ToString( max ) );
+		}
 
-    //
-    // !ROLL
-    //
+		//
+		// !STATS
+		//
 
-    else if ( Command == "roll" )
-    {
-        int RandomNumber;
-        int max = Payload.empty()? 100 : UTIL_ToUInt32( Payload );
-        srand((unsigned)time(0));
-        RandomNumber = (rand()%(max-1))+1;
-        SendAllChat(User + " rolled "+UTIL_ToString(RandomNumber) + " of " + UTIL_ToString( max ) );
-    }
+		else if ( Command == "stats" && GetTime( ) - player->GetStatsSentTime( ) >= 5 )
+		{
+			string StatsUser = User;
 
-    //
-    // !STATS
-    //
+			if ( !Payload.empty( ) )
+				StatsUser = Payload;
 
-    else if ( Command == "stats" && GetTime( ) - player->GetStatsSentTime( ) >= 5 )
-    {
-        string StatsUser = User;
+			if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
+				m_PairedGPSChecks.push_back( PairedGPSCheck( string( ), m_GHost->m_DB->ThreadedGamePlayerSummaryCheck( StatsUser ) ) );
+			else
+				m_PairedGPSChecks.push_back( PairedGPSCheck( User, m_GHost->m_DB->ThreadedGamePlayerSummaryCheck( StatsUser ) ) );
 
-        if ( !Payload.empty( ) )
-            StatsUser = Payload;
+			player->SetStatsSentTime( GetTime( ) );
+		}
 
-        if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-            m_PairedGPSChecks.push_back( PairedGPSCheck( string( ), m_GHost->m_DB->ThreadedGamePlayerSummaryCheck( StatsUser ) ) );
-        else
-            m_PairedGPSChecks.push_back( PairedGPSCheck( User, m_GHost->m_DB->ThreadedGamePlayerSummaryCheck( StatsUser ) ) );
+		//
+		// !STATSDOTA
+		// !SD
+		//
 
-        player->SetStatsSentTime( GetTime( ) );
-    }
+		else if ( (Command == "statsdota" || Command == "sd") && GetTime( ) - player->GetStatsDotASentTime( ) >= 5 )
+		{
+			string StatsUser = User;
 
-    //
-    // !STATSDOTA
-    // !SD
-    //
+			if ( !Payload.empty( ) )
+				StatsUser = Payload;
 
-    else if ( (Command == "statsdota" || Command == "sd") && GetTime( ) - player->GetStatsDotASentTime( ) >= 5 )
-    {
-        string StatsUser = User;
+			if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
+				m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser ) ) );
+			else
+				m_PairedDPSChecks.push_back( PairedDPSCheck( User, m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser ) ) );
 
-        if ( !Payload.empty( ) )
-            StatsUser = Payload;
+			player->SetStatsDotASentTime( GetTime( ) );
+		}
 
-        if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-            m_PairedDPSChecks.push_back( PairedDPSCheck( string( ), m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser ) ) );
-        else
-            m_PairedDPSChecks.push_back( PairedDPSCheck( User, m_GHost->m_DB->ThreadedDotAPlayerSummaryCheck( StatsUser ) ) );
+		//
+		// !VERSION !V
+		//
 
-        player->SetStatsDotASentTime( GetTime( ) );
-    }
+		else if ( Command == "version" || Command == "v" )
+		{
+			if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
+				SendChat( player, m_GHost->m_Language->VersionAdmin( m_GHost->m_Version ) );
+			else
+				SendChat( player, m_GHost->m_Language->VersionNotAdmin( m_GHost->m_Version ) );
+		}
 
-    //
-    // !VERSION !V
-    //
+		//
+		// !VOTEKICK
+		//
 
-    else if ( Command == "version" || Command == "v" )
-    {
-        if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
-            SendChat( player, m_GHost->m_Language->VersionAdmin( m_GHost->m_Version ) );
-        else
-            SendChat( player, m_GHost->m_Language->VersionNotAdmin( m_GHost->m_Version ) );
-    }
+		else if ( Command == "votekick" && m_GHost->m_VoteKickAllowed && !Payload.empty( ) )
+		{
+			if ( !m_KickVotePlayer.empty( ) )
+				SendChat( player, m_GHost->m_Language->UnableToVoteKickAlreadyInProgress( ) );
+			else if ( m_Players.size( ) == 2 )
+				SendChat( player, m_GHost->m_Language->UnableToVoteKickNotEnoughPlayers( ) );
+			else
+			{
+				CGamePlayer *LastMatch = NULL;
+				uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
 
-    //
-    // !VOTEKICK
-    //
+				if ( Matches == 0 )
+					SendChat( player, m_GHost->m_Language->UnableToVoteKickNoMatchesFound( Payload ) );
+				else if ( Matches == 1 )
+				{
+					if ( LastMatch->GetReserved( ) )
+						SendChat( player, m_GHost->m_Language->UnableToVoteKickPlayerIsReserved( LastMatch->GetName( ) ) );
+					else
+					{
+						m_KickVotePlayer = LastMatch->GetName( );
+						m_StartedKickVoteTime = GetTime( );
 
-    else if ( Command == "votekick" && m_GHost->m_VoteKickAllowed && !Payload.empty( ) )
-    {
-        if ( !m_KickVotePlayer.empty( ) )
-            SendChat( player, m_GHost->m_Language->UnableToVoteKickAlreadyInProgress( ) );
-        else if ( m_Players.size( ) == 2 )
-            SendChat( player, m_GHost->m_Language->UnableToVoteKickNotEnoughPlayers( ) );
-        else
-        {
-            CGamePlayer *LastMatch = NULL;
-            uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
+						for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+							(*i)->SetKickVote( false );
 
-            if ( Matches == 0 )
-                SendChat( player, m_GHost->m_Language->UnableToVoteKickNoMatchesFound( Payload ) );
-            else if ( Matches == 1 )
-            {
-                if ( LastMatch->GetReserved( ) )
-                    SendChat( player, m_GHost->m_Language->UnableToVoteKickPlayerIsReserved( LastMatch->GetName( ) ) );
-                else
-                {
-                    m_KickVotePlayer = LastMatch->GetName( );
-                    m_StartedKickVoteTime = GetTime( );
+						player->SetKickVote( true );
+						CONSOLE_Print( "[GAME: " + m_GameName + "] votekick against player [" + m_KickVotePlayer + "] started by player [" + User + "]" );
+						SendAllChat( m_GHost->m_Language->StartedVoteKick( LastMatch->GetName( ), User, UTIL_ToString( (uint32_t)ceil( ( GetNumHumanPlayers( ) - 1 ) * (float)m_GHost->m_VoteKickPercentage / 100 ) - 1 ) ) );
+						SendAllChat( m_GHost->m_Language->TypeYesToVote( string( 1, m_GHost->m_CommandTrigger ) ) );
+					}
+				}
+				else
+					SendChat( player, m_GHost->m_Language->UnableToVoteKickFoundMoreThanOneMatch( Payload ) );
+			}
+		}
 
-                    for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
-                        (*i)->SetKickVote( false );
+		//
+		// !YES
+		//
 
-                    player->SetKickVote( true );
-                    CONSOLE_Print( "[GAME: " + m_GameName + "] votekick against player [" + m_KickVotePlayer + "] started by player [" + User + "]" );
-                    SendAllChat( m_GHost->m_Language->StartedVoteKick( LastMatch->GetName( ), User, UTIL_ToString( (uint32_t)ceil( ( GetNumHumanPlayers( ) - 1 ) * (float)m_GHost->m_VoteKickPercentage / 100 ) - 1 ) ) );
-                    SendAllChat( m_GHost->m_Language->TypeYesToVote( string( 1, m_GHost->m_CommandTrigger ) ) );
-                }
-            }
-            else
-                SendChat( player, m_GHost->m_Language->UnableToVoteKickFoundMoreThanOneMatch( Payload ) );
-        }
-    }
+		else if ( Command == "yes" && !m_KickVotePlayer.empty( ) && player->GetName( ) != m_KickVotePlayer && !player->GetKickVote( ) )
+		{
+			player->SetKickVote( true );
+			uint32_t VotesNeeded = (uint32_t)ceil( ( GetNumHumanPlayers( ) - 1 ) * (float)m_GHost->m_VoteKickPercentage / 100 );
+			uint32_t Votes = 0;
 
-    //
-    // !YES
-    //
+			for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+			{
+				if ( (*i)->GetKickVote( ) )
+					++Votes;
+			}
 
-    else if ( Command == "yes" && !m_KickVotePlayer.empty( ) && player->GetName( ) != m_KickVotePlayer && !player->GetKickVote( ) )
-    {
-        player->SetKickVote( true );
-        uint32_t VotesNeeded = (uint32_t)ceil( ( GetNumHumanPlayers( ) - 1 ) * (float)m_GHost->m_VoteKickPercentage / 100 );
-        uint32_t Votes = 0;
+			if ( Votes >= VotesNeeded )
+			{
+				CGamePlayer *Victim = GetPlayerFromName( m_KickVotePlayer, true );
 
-        for ( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
-        {
-            if ( (*i)->GetKickVote( ) )
-                ++Votes;
-        }
+				if ( Victim )
+				{
+					Victim->SetDeleteMe( true );
+					Victim->SetLeftReason( m_GHost->m_Language->WasKickedByVote( ) );
 
-        if ( Votes >= VotesNeeded )
-        {
-            CGamePlayer *Victim = GetPlayerFromName( m_KickVotePlayer, true );
+					if ( !m_GameLoading && !m_GameLoaded )
+						Victim->SetLeftCode( PLAYERLEAVE_LOBBY );
+					else
+						Victim->SetLeftCode( PLAYERLEAVE_LOST );
 
-            if ( Victim )
-            {
-                Victim->SetDeleteMe( true );
-                Victim->SetLeftReason( m_GHost->m_Language->WasKickedByVote( ) );
+					if ( !m_GameLoading && !m_GameLoaded )
+						OpenSlot( GetSIDFromPID( Victim->GetPID( ) ), false );
 
-                if ( !m_GameLoading && !m_GameLoaded )
-                    Victim->SetLeftCode( PLAYERLEAVE_LOBBY );
-                else
-                    Victim->SetLeftCode( PLAYERLEAVE_LOST );
+					CONSOLE_Print( "[GAME: " + m_GameName + "] votekick against player [" + m_KickVotePlayer + "] passed with " + UTIL_ToString( Votes ) + "/" + UTIL_ToString( GetNumHumanPlayers( ) ) + " votes" );
+					SendAllChat( m_GHost->m_Language->VoteKickPassed( m_KickVotePlayer ) );
+				}
+				else
+					SendAllChat( m_GHost->m_Language->ErrorVoteKickingPlayer( m_KickVotePlayer ) );
 
-                if ( !m_GameLoading && !m_GameLoaded )
-                    OpenSlot( GetSIDFromPID( Victim->GetPID( ) ), false );
-
-                CONSOLE_Print( "[GAME: " + m_GameName + "] votekick against player [" + m_KickVotePlayer + "] passed with " + UTIL_ToString( Votes ) + "/" + UTIL_ToString( GetNumHumanPlayers( ) ) + " votes" );
-                SendAllChat( m_GHost->m_Language->VoteKickPassed( m_KickVotePlayer ) );
-            }
-            else
-                SendAllChat( m_GHost->m_Language->ErrorVoteKickingPlayer( m_KickVotePlayer ) );
-
-            m_KickVotePlayer.clear( );
-            m_StartedKickVoteTime = 0;
-        }
-        else
-            SendAllChat( m_GHost->m_Language->VoteKickAcceptedNeedMoreVotes( m_KickVotePlayer, User, UTIL_ToString( VotesNeeded - Votes ) ) );
-    }
-
-    return HideCommand;
+				m_KickVotePlayer.clear( );
+				m_StartedKickVoteTime = 0;
+			}
+			else
+				SendAllChat( m_GHost->m_Language->VoteKickAcceptedNeedMoreVotes( m_KickVotePlayer, User, UTIL_ToString( VotesNeeded - Votes ) ) );
+		}
+		else
+		{
+			CommandExecuted = false;
+		}
+	}
+	
+    return ( HideCommand && CommandExecuted );
 }
 
 void CGame :: EventGameStarted( )

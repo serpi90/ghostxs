@@ -260,7 +260,8 @@ public:
     string CountryCheckEnabled( string countries );
 	string AdminsLimitedUnban( string victim, string admin );
 	string RequireBanReason( string victim );
-    
+	string TradeHackDetected( string victim );
+    string GameEndedDueToPlayerPercentage( );
 };
 
 #endif

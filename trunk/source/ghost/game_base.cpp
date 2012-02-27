@@ -1,3 +1,4 @@
+
 /*
 
    Copyright [2008] [Trevor Hogan]
@@ -970,15 +971,22 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 		m_KickVotePlayer.clear( );
 		m_StartedKickVoteTime = 0;
 	}
-
-	// start the gameover timer if number of players is under the minimum.
-	if( m_Players.size( ) > 0 && m_GameLoaded )
+	
+	// start the gameover timer if there's only one player left
+	if( m_Players.size( ) == 1 && m_FakePlayerPID == 255 && m_GameOverTime == 0 && ( m_GameLoading || m_GameLoaded ) )
 	{
-		if( m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage / 100 && m_GHost->m_AutoEnd && m_FakePlayerPID == 255 && m_GameOverTime == 0 )
+		CONSOLE_Print( "[GAME: " + m_GameName + "] gameover timer started (one player left)" );
+		m_GameOverTime = GetTime( );
+	}
+ 	
+	// start the gameover timer if number of players is under the minimum.
+	if( m_GHost->m_AutoEnd && m_Players.size( ) > 0 && m_GameLoaded )
+	{
+		if( m_GameOverTime == 0 && m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage / 100 && m_FakePlayerPID == 255  )
 		{
 			CONSOLE_Print( "[GAME: " + m_GameName + "] Number of players is under the minimum, autoending in 10s" );
 			m_GameOverTime = GetTime( );
-			SendAllChat("Number of players under the minimum, AutoEnding in 10s.");
+			SendAllChat( m_GHost->m_Language->GameEndedDueToPlayerPercentage( ) );
 		}
 	}
 	// finish the gameover timer
@@ -2996,7 +3004,7 @@ bool CBaseGame :: EventPlayerBotCommand( CGamePlayer *player, string command, st
 {
 	// return true if the command itself should be hidden from other players
 
-	return false;
+	return m_GHost->m_RelayChatCommands;
 }
 
 void CBaseGame :: EventPlayerChangeTeam( CGamePlayer *player, unsigned char team )

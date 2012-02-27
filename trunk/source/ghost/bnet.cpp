@@ -933,6 +933,26 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 	string User = chatEvent->GetUser( );
 	string Message = chatEvent->GetMessage( );
 
+	if( Event == CBNETProtocol :: EID_JOIN )
+	{
+		CONSOLE_Print( "[BNET: " + m_ServerAlias + "] " + User + " joined the channel." );
+		if( m_GHost->m_KickBannedFromChannel || m_GHost->m_BanBannedFromChannel ) 
+		{
+			if( IsBannedName( User ) )
+			{
+				if( m_GHost->m_KickBannedFromChannel )
+				{
+					QueueChatCommand( "/kick " + User );
+				}
+				if( m_GHost->m_BanBannedFromChannel )
+				{
+					QueueChatCommand( "/ban " + User );
+				}
+			}
+		}
+	}
+
+
 	if( Event == CBNETProtocol :: EID_WHISPER || Event == CBNETProtocol :: EID_TALK )
 	{
 		if( Event == CBNETProtocol :: EID_WHISPER )
