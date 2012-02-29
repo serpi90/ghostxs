@@ -1590,3 +1590,51 @@ string CLanguage :: GameEndedDueToPlayerPercentage( )
 	string Out = m_CFG->GetString( "lang_0228", "lang_0228" );
 	return Out;
 }
+
+string CLanguage :: UnableToTransferOwnershipFoundMoreThanOneMatch( )
+{
+	string Out = m_CFG->GetString( "lang_0229", "lang_0229" );
+	return Out;
+}
+
+string CLanguage :: AdminStoppedEndCountdown( )
+{
+	string Out = m_CFG->GetString( "lang_0230", "lang_0230" );
+	return Out;
+}
+
+string CLanguage :: GameWillEndInSeconds( uint32_t time )
+{
+	string Out = m_CFG->GetString( "lang_0231", "lang_0231" );
+	UTIL_Replace( Out, "$TIME$", UTIL_ToString( time ) );
+	return Out;
+}
+
+string CLanguage :: PlayerHasJoinedFromServer( string user, string server )
+{
+	string Out = m_CFG->GetString( "lang_0232", "lang_0232" );
+	UTIL_Replace( Out, "$USER$", user );
+	UTIL_Replace( Out, "$SERVER$", server );
+	return Out;
+}
+
+string CLanguage :: PlayersAreFromServer( string server )
+{
+	string Out = m_CFG->GetString( "lang_0233", "lang_0233" );
+	UTIL_Replace( Out, "$SERVER$", server );
+	return Out;
+}
+
+string CLanguage :: GenericNoMatchesFound( string victim )
+{
+	string Out = m_CFG->GetString( "lang_0234", "lang_0234" );
+	UTIL_Replace( Out, "$VICTIM$", victim );
+	return Out;
+}
+
+string CLanguage :: GenericFoundMoreThanOneMatch( string victim )
+{
+	string Out = m_CFG->GetString( "lang_0235", "lang_0235" );
+	UTIL_Replace( Out, "$VICTIM$", victim );
+	return Out;
+}

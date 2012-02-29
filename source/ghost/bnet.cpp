@@ -1558,9 +1558,11 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 								QueueChatCommand( m_GHost->m_Language->CantEndGameOwnerIsStillPlaying( m_GHost->m_Games[GameNumber]->GetOwnerName( ) ), User, Whisper );
 							else
 							{
-								QueueChatCommand( m_GHost->m_Language->EndingGame( m_GHost->m_Games[GameNumber]->GetDescription( ) ), User, Whisper );
 								CONSOLE_Print( "[GAME: " + m_GHost->m_Games[GameNumber]->GetGameName( ) + "] is over (admin ended game)" );
-								m_GHost->m_Games[GameNumber]->StopPlayers( "was disconnected (admin ended game)" );
+								m_GHost->m_Games[GameNumber]->SendAllChat(m_GHost->m_Language->GameWillEndInSeconds( 5 ) );
+ 								m_GHost->m_Games[GameNumber]->m_GameEndCountDownStarted = true;
+ 								m_GHost->m_Games[GameNumber]->m_GameEndCountDownCounter = 5;
+								QueueChatCommand( m_GHost->m_Language->EndingGame( m_GHost->m_Games[GameNumber]->GetDescription( ) ), User, Whisper );
 							}
 						}
 						else
