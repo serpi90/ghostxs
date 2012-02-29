@@ -140,7 +140,7 @@ Keep in mind that for the APM value it is not important, which consequences
 within the game an action has. It is only significant *how often* it is used.
 If a player executes a specific action once every minute, it only results in
 a 1 APM difference at the end.
-Do you really need a APM precision better than say ±5 APMs ?
+Do you really need a APM precision better than say Â±5 APMs ?
 
 Note:
  o If you decide to develop your own APM system (e.g. by filtering some user

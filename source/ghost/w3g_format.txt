@@ -407,7 +407,7 @@ o Following is a list for all localized strings (encoded in plain ASCII) used
   (see war3.mpq\UI\FrameDef\GlobalStrings.fdf: GAMENAME, LOCAL_GAME):
 
   English        : "%s's Game"         : "local game"
-  Czech    (1029): "Hra %s"            : "Místní hra"
+  Czech    (1029): "Hra %s"            : "MÃ­stnÃ­ hra"
   German   (1031): "Spiel von %s"      : "Lokales Spiel"
   Spanish  (1034): "Partida de %s"     : "Partida local"
   French   (1036): "Partie de %s"      : "Partie locale"
@@ -787,7 +787,7 @@ of each block (including the one byte block ID).
   o Until now we have not found a robust winner detection algorithm that
     works for every replay :(
     We checked about 6000 replays. Normal ladder games works well,
-    but especially FFA games saved by an observer are very &§*#$.
+    but especially FFA games saved by an observer are very &Â§*#$.
     So here is still work to do...
 
  Notes:

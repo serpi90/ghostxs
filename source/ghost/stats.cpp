@@ -25,7 +25,7 @@
 // CStats
 //
 
-CStats :: CStats( CBaseGame *nGame ) : m_Game( nGame )
+CStats :: CStats ( CBaseGame *nGame ) : m_Game ( nGame )
 {
 
 }
@@ -35,12 +35,12 @@ CStats :: ~CStats( )
 
 }
 
-bool CStats :: ProcessAction( CIncomingAction *Action )
+bool CStats :: ProcessAction ( CIncomingAction *Action )
 {
 	return false;
 }
 
-void CStats :: Save( CGHost *GHost, CGHostDB *DB, uint32_t GameID )
+void CStats :: Save ( CGHost *GHost, CGHostDB *DB, uint32_t GameID )
 {
 
 }

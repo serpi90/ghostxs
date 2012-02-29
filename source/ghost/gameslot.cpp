@@ -25,9 +25,9 @@
 // CGameSlot
 //
 
-CGameSlot :: CGameSlot( BYTEARRAY &n ) : m_PID( 0 ), m_DownloadStatus( 255 ), m_SlotStatus( SLOTSTATUS_OPEN ), m_Computer( 0 ), m_Team( 0 ), m_Colour( 1 ), m_Race( SLOTRACE_RANDOM ), m_ComputerType( SLOTCOMP_NORMAL ), m_Handicap( 100 )
+CGameSlot :: CGameSlot ( BYTEARRAY &n ) : m_PID ( 0 ), m_DownloadStatus ( 255 ), m_SlotStatus ( SLOTSTATUS_OPEN ), m_Computer ( 0 ), m_Team ( 0 ), m_Colour ( 1 ), m_Race ( SLOTRACE_RANDOM ), m_ComputerType ( SLOTCOMP_NORMAL ), m_Handicap ( 100 )
 {
-	if( n.size( ) >= 7 )
+	if ( n.size( ) >= 7 )
 	{
 		m_PID = n[0];
 		m_DownloadStatus = n[1];
@@ -37,16 +37,16 @@ CGameSlot :: CGameSlot( BYTEARRAY &n ) : m_PID( 0 ), m_DownloadStatus( 255 ), m_
 		m_Colour = n[5];
 		m_Race = n[6];
 
-		if( n.size( ) >= 8 )
+		if ( n.size( ) >= 8 )
 			m_ComputerType = n[7];
 
-		if( n.size( ) >= 9 )
+		if ( n.size( ) >= 9 )
 			m_Handicap = n[8];
 	}
 }
 
-CGameSlot :: CGameSlot( unsigned char nPID, unsigned char nDownloadStatus, unsigned char nSlotStatus, unsigned char nComputer, unsigned char nTeam, unsigned char nColour, unsigned char nRace, unsigned char nComputerType, unsigned char nHandicap )
-    : m_PID( nPID ), m_DownloadStatus( nDownloadStatus ), m_SlotStatus( nSlotStatus ), m_Computer( nComputer ), m_Team( nTeam ), m_Colour( nColour ), m_Race( nRace ), m_ComputerType( nComputerType ), m_Handicap( nHandicap )
+CGameSlot :: CGameSlot ( unsigned char nPID, unsigned char nDownloadStatus, unsigned char nSlotStatus, unsigned char nComputer, unsigned char nTeam, unsigned char nColour, unsigned char nRace, unsigned char nComputerType, unsigned char nHandicap )
+		: m_PID ( nPID ), m_DownloadStatus ( nDownloadStatus ), m_SlotStatus ( nSlotStatus ), m_Computer ( nComputer ), m_Team ( nTeam ), m_Colour ( nColour ), m_Race ( nRace ), m_ComputerType ( nComputerType ), m_Handicap ( nHandicap )
 {
 
 }
@@ -59,14 +59,14 @@ CGameSlot :: ~CGameSlot( )
 BYTEARRAY CGameSlot :: GetByteArray( ) const
 {
 	BYTEARRAY b;
-	b.push_back( m_PID );
-	b.push_back( m_DownloadStatus );
-	b.push_back( m_SlotStatus );
-	b.push_back( m_Computer );
-	b.push_back( m_Team );
-	b.push_back( m_Colour );
-	b.push_back( m_Race );
-	b.push_back( m_ComputerType );
-	b.push_back( m_Handicap );
+	b.push_back ( m_PID );
+	b.push_back ( m_DownloadStatus );
+	b.push_back ( m_SlotStatus );
+	b.push_back ( m_Computer );
+	b.push_back ( m_Team );
+	b.push_back ( m_Colour );
+	b.push_back ( m_Race );
+	b.push_back ( m_ComputerType );
+	b.push_back ( m_Handicap );
 	return b;
 }
