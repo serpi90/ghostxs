@@ -53,6 +53,9 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Countries_Allowed = m_GHost->m_ApprovedCountries;
 	m_Countries_Allow = !m_Countries_Allowed.empty(); //If empty disable country check.
 	m_MapType = m_Map->GetMapType( );
+	m_GameEndCountDownStarted = false;
+	m_AutoEnd = m_GHost->m_AutoEnd;
+	m_AutoEnded = false;
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );	
@@ -663,6 +666,29 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 		m_LastCountDownTicks = GetTicks( );
 	}
+	
+	// end game countdown every 1000 ms
+	if( m_GameEndCountDownStarted && GetTicks( ) - m_GameEndLastCountDownTicks >= 1000 )
+	{
+		if( m_GameEndCountDownCounter > 0 )
+		{
+			SendAllChat( UTIL_ToString( m_GameEndCountDownCounter ) + ". . ." );
+			m_GameEndCountDownCounter--;
+		}
+		else if( !m_GameLoading && m_GameLoaded )
+		{
+			m_GameEndCountDownStarted = false;
+			if ( m_AutoEnded )
+			{
+				StopPlayers( "was disconnected (autoend)" );
+			}
+			else
+			{
+				StopPlayers( "was disconnected (admin ended game)" );
+			}
+		}
+		m_GameEndLastCountDownTicks = GetTicks( );
+	}
 
 	// check if the lobby is "abandoned" and needs to be closed since it will never start
 
@@ -980,18 +1006,22 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 	}
  	
 	// start the gameover timer if number of players is under the minimum.
-	if( m_GHost->m_AutoEnd && m_Players.size( ) > 0 && m_GameLoaded )
+	if( m_AutoEnd && m_GameLoaded && m_GameOverTime == 0 && m_Players.size( ) > 0 && !m_GameEndCountDownStarted && !m_AutoEnded )
 	{
-		if( m_GameOverTime == 0 && m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage / 100 && m_FakePlayerPID == 255  )
+		if( m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage / 100 && m_FakePlayerPID == 255  )
 		{
+			m_AutoEnded = true;
 			CONSOLE_Print( "[GAME: " + m_GameName + "] Number of players is under the minimum, autoending in 10s" );
-			m_GameOverTime = GetTime( );
 			SendAllChat( m_GHost->m_Language->GameEndedDueToPlayerPercentage( ) );
+			SendAllChat( m_GHost->m_Language->GameWillEndInSeconds( 10 ) );
+			m_GameEndCountDownStarted = true;
+			m_GameEndCountDownCounter = 10;
+			m_GameEndLastCountDownTicks = GetTicks();
 		}
 	}
 	// finish the gameover timer
 
-	if( m_GameOverTime != 0 && GetTime( ) - m_GameOverTime >= 10 )
+	if( m_GameOverTime != 0 && GetTime( ) - m_GameOverTime >= 15 )
 	{
 		bool AlreadyStopped = true;
 
@@ -2089,7 +2119,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 	BlankIP.push_back( 0 );
 	BlankIP.push_back( 0 );
 
-        for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
+    for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); ++i )
 	{
 		if( !(*i)->GetLeftMessageSent( ) && *i != Player )
 		{
@@ -2145,9 +2175,20 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 	// Show Player realm on join
 	if (m_GHost->m_ShowServerOnJoin)
 	{	
-		SendAllChat( "Bienvenido [" + joinPlayer->GetName( ) + "] Realm: [" + ( JoinedRealm == string( ) ? "LAN" : JoinedRealm ) + "]" );
+		string ServerAlias = Player->GetJoinedRealm( );
+		if( ServerAlias.empty( ) )
+			ServerAlias = "LAN";
+		else
+			for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
+			{
+				if( (*j)->GetServer( ) == ServerAlias )
+				{
+					ServerAlias = (*j)->GetServerAlias( );
+					break;
+				}
+			}
+		SendAllChat( m_GHost->m_Language->PlayerHasJoinedFromServer( Player->GetName( ), ServerAlias ) );
 	}
-	//TODO : Make language for this.
 
 	// check for multiple IP usage
 

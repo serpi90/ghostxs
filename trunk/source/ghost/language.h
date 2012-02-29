@@ -262,6 +262,13 @@ public:
 	string RequireBanReason( string victim );
 	string TradeHackDetected( string victim );
     string GameEndedDueToPlayerPercentage( );
+    string UnableToTransferOwnershipFoundMoreThanOneMatch( );
+    string GameWillEndInSeconds( uint32_t time );
+    string AdminStoppedEndCountdown( );
+    string PlayerHasJoinedFromServer ( string user, string server );
+	string PlayersAreFromServer ( string server );
+	string GenericNoMatchesFound( string victim );
+	string GenericFoundMoreThanOneMatch( string victim );
 };
 
 #endif

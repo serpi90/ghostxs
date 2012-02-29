@@ -125,17 +125,21 @@ protected:
 	bool m_AutoSave;								// if we should auto save the game before someone disconnects
 	bool m_MatchMaking;								// if matchmaking mode is enabled
 	bool m_LocalAdminMessages;						// if local admin messages should be relayed or not
-	bool m_AutoEnd;						// config value: auto end game with less than X players or not.
-	uint32_t m_AutoEndPercentage;				// config value: percentage of remaining players to start AutoEnd.
-
+	
 	//GHostXS
 	uint32_t m_DatabaseID;                          // the ID number from the database, which we'll use to save replay
 	string m_MapType;				// map_type
    	bool m_Countries_Allow;                         // wether country filter is enabled or not
     string m_Countries_Allowed;                     // list of countries allowed to join the game
 	uint32_t m_LastSpoofCheckTime;                  // GetTime when the last game spoof check advice was sent
+	bool m_AutoEnd;									// config value: auto end game with less than X players or not.
+	bool m_AutoEnded;								// true if the game is about to end due to autoend.
+	uint32_t m_GameEndLastCountDownTicks;		    // GetTicks when the last countdown message was sent
 
 public:
+	bool m_GameEndCountDownStarted;				    // if the game end countdown has started or not
+	uint32_t m_GameEndCountDownCounter;			    // the countdown is finished when this reaches zero
+	
 	CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer );
 	virtual ~CBaseGame( );
 

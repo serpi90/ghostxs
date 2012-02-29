@@ -436,16 +436,30 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             ***************************/
             
             //
-            // !ABORT (abort countdown)
+            // !ABORT (abort countdown, this includes start, end and autoend countdown)
             // !A
             //
 
             // we use "!a" as an alias for abort because you don't have much time to abort the countdown so it's useful for the abort command to be easy to type
 
-            if ( ( Command == "abort" || Command == "a" ) && m_CountDownStarted && !m_GameLoading && !m_GameLoaded )
+            if ( Command == "abort" || Command == "a" )
             {
-                SendAllChat( m_GHost->m_Language->CountDownAborted( ) );
-                m_CountDownStarted = false;
+				if ( m_CountDownStarted && !m_GameLoading && !m_GameLoaded ) // abort start
+				{
+					SendAllChat( m_GHost->m_Language->CountDownAborted( ) );
+					m_CountDownStarted = false;
+				}
+				else if ( m_GameEndCountDownStarted ) // abort end or autoend
+				{
+					if ( m_AutoEnded )
+					{
+						m_AutoEnd = false;
+						m_AutoEnded = false;
+					}
+					CONSOLE_Print( "[GAME: " + m_GameName + "] game end aborted." );
+					SendAllChat( m_GHost->m_Language->AdminStoppedEndCountdown( ) );
+					m_GameEndCountDownStarted = false;
+				}
             }
 
             //
@@ -1061,11 +1075,24 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             else if ( Command == "drop" && m_GameLoaded )
                 StopLaggers( "lagged out (dropped by admin)" );
 
-            //
+			//
             // !END
             //
 
-            else if ( Command == "end" && m_GameLoaded )
+            else if ( Command == "end" && m_GameLoaded && !m_GameEndCountDownStarted && m_GameOverTime == 0 )
+            {
+                CONSOLE_Print( "[GAME: " + m_GameName + "] is over (admin ended game)" );
+                SendAllChat( m_GHost->m_Language->GameWillEndInSeconds( 5 ) );
+                m_GameEndCountDownStarted = true;
+                m_GameEndCountDownCounter = 5;
+                m_GameEndLastCountDownTicks = GetTicks();
+            }
+
+            //
+            // !ENDN
+            //
+
+            else if ( Command == "endn" && m_GameLoaded && m_GameOverTime == 0 )
             {
                 CONSOLE_Print( "[GAME: " + m_GameName + "] is over (admin ended game)" );
                 StopPlayers( "was disconnected ("+User+" ended game)" );
@@ -1403,8 +1430,25 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                 {
                     if ( !Payload.empty( ) )
                     {
-                        SendAllChat( m_GHost->m_Language->SettingGameOwnerTo( Payload ) );
-                        m_OwnerName = Payload;
+                        string PlayerName = Payload; 
+						CGamePlayer *LastMatch = NULL;
+						uint32_t Matches = GetPlayerFromNamePartial( Payload , &LastMatch );
+						if (Matches == 1)
+						{
+							PlayerName = LastMatch->GetName();
+							SendAllChat( m_GHost->m_Language->SettingGameOwnerTo( PlayerName ) );
+							m_OwnerName = PlayerName;
+						}
+						else if ( Matches == 0 )
+						{
+							SendAllChat( m_GHost->m_Language->SettingGameOwnerTo( PlayerName ) );
+							m_OwnerName = PlayerName;
+						}
+						else
+						{
+							SendAllChat( m_GHost->m_Language->UnableToTransferOwnershipFoundMoreThanOneMatch( ) );
+						}
+						
                     }
                     else
                     {
@@ -1704,6 +1748,94 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                     }
                 }
             }
+            			
+			//
+			// !Servers
+			// !sv
+			// !realm
+			//
+			
+			else if( Command == "servers" || Command == "sv" || Command == "realm" )
+			{
+				string Froms;
+				string Froms2;
+				string SNL;
+				string SN;
+				bool samerealm=true;
+				if( !Payload.empty( ) )
+				{
+					CGamePlayer *LastMatch = NULL;
+					uint32_t Matches = GetPlayerFromNamePartial( Payload , &LastMatch );
+
+					if( Matches == 0 )
+						CONSOLE_Print("No matches");
+
+					else if( Matches == 1 )
+					{
+						Froms = LastMatch->GetName( );
+						Froms += ": (";
+						SN = LastMatch->GetJoinedRealm( );
+						if( SN.empty( ) )
+							SN = "LAN";
+						else
+							for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
+							{
+								if( (*j)->GetServer( ) == SN )
+								{
+									SN = (*j)->GetServerAlias( );
+									break;
+								}
+							}
+						Froms += SN;
+						Froms += ")";
+						SendAllChat(Froms);
+					}
+					else
+						CONSOLE_Print("Found more than one match");
+				}
+				else
+				{
+					for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
+					{
+						// we reverse the byte order on the IP because it's stored in network byte order
+
+						Froms2 += (*i)->GetName( );
+						Froms += (*i)->GetName( );
+						Froms += ": (";
+						SN = (*i)->GetJoinedRealm( );
+						if( SN.empty( ) )
+							SN = "LAN";
+						else
+							for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); ++j )
+							{
+								if( (*j)->GetServer( ) == SN )
+								{
+									SN = (*j)->GetServerAlias( );
+									break;
+								}
+							}
+						Froms += SN;
+						Froms += ")";
+
+						if (SNL=="")
+							SNL=SN;
+						else if (SN!=SNL)
+							samerealm=false;
+
+						if( i != m_Players.end( ) - 1 )
+						{
+							Froms += ", ";
+							Froms2 += ", ";
+						}
+					}
+					Froms2 += " "+ m_GHost->m_Language->PlayersAreFromServer( SNL );
+
+					if (samerealm)
+						SendAllChat( Froms2 );
+					else
+						SendAllChat( Froms );
+				}
+			}
 
             //
             // !SP
