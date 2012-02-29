@@ -31,39 +31,43 @@ class CCommandPacket;
 
 class CBNLSClient
 {
-private:
-	CTCPClient *m_Socket;							// the connection to the BNLS server
-	CBNLSProtocol *m_Protocol;						// battle.net protocol
-	queue<CCommandPacket *> m_Packets;				// queue of incoming packets
-	bool m_WasConnected;
-	string m_Server;
-	uint16_t m_Port;
-	uint32_t m_LastNullTime;
-	uint32_t m_WardenCookie;						// the warden cookie
-	queue<BYTEARRAY> m_OutPackets;					// queue of outgoing packets to be sent
-	queue<BYTEARRAY> m_WardenResponses;				// the warden responses to be sent to battle.net
-	uint32_t m_TotalWardenIn;
-	uint32_t m_TotalWardenOut;
+	private:
+		CTCPClient *m_Socket;							// the connection to the BNLS server
+		CBNLSProtocol *m_Protocol;						// battle.net protocol
+		queue<CCommandPacket *> m_Packets;				// queue of incoming packets
+		bool m_WasConnected;
+		string m_Server;
+		uint16_t m_Port;
+		uint32_t m_LastNullTime;
+		uint32_t m_WardenCookie;						// the warden cookie
+		queue<BYTEARRAY> m_OutPackets;					// queue of outgoing packets to be sent
+		queue<BYTEARRAY> m_WardenResponses;				// the warden responses to be sent to battle.net
+		uint32_t m_TotalWardenIn;
+		uint32_t m_TotalWardenOut;
 
-public:
-	CBNLSClient( string nServer, uint16_t nPort, uint32_t nWardenCookie );
-	~CBNLSClient( );
+	public:
+		CBNLSClient ( string nServer, uint16_t nPort, uint32_t nWardenCookie );
+		~CBNLSClient( );
 
-	BYTEARRAY GetWardenResponse( );
-	uint32_t GetTotalWardenIn( )		{ return m_TotalWardenIn; }
-	uint32_t GetTotalWardenOut( )		{ return m_TotalWardenOut; }
+		BYTEARRAY GetWardenResponse( );
+		uint32_t GetTotalWardenIn( )		{
+			return m_TotalWardenIn;
+		}
+		uint32_t GetTotalWardenOut( )		{
+			return m_TotalWardenOut;
+		}
 
-	// processing functions
+		// processing functions
 
-	unsigned int SetFD( void *fd, void *send_fd, int *nfds );
-	bool Update( void *fd, void *send_fd );
-	void ExtractPackets( );
-	void ProcessPackets( );
+		unsigned int SetFD ( void *fd, void *send_fd, int *nfds );
+		bool Update ( void *fd, void *send_fd );
+		void ExtractPackets( );
+		void ProcessPackets( );
 
-	// other functions
+		// other functions
 
-	void QueueWardenSeed( uint32_t seed );
-	void QueueWardenRaw( BYTEARRAY wardenRaw );
+		void QueueWardenSeed ( uint32_t seed );
+		void QueueWardenRaw ( BYTEARRAY wardenRaw );
 };
 
 #endif

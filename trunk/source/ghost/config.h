@@ -27,18 +27,18 @@
 
 class CConfig
 {
-private:
-	map<string, string> m_CFG;
+	private:
+		map<string, string> m_CFG;
 
-public:
-	CConfig( );
-	~CConfig( );
+	public:
+		CConfig( );
+		~CConfig( );
 
-	void Read( string file );
-	bool Exists( string key );
-	int GetInt( string key, int x );
-	string GetString( string key, string x );
-	void Set( string key, string x );
+		void Read ( string file );
+		bool Exists ( string key );
+		int GetInt ( string key, int x );
+		string GetString ( string key, string x );
+		void Set ( string key, string x );
 };
 
 #endif
