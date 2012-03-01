@@ -393,6 +393,7 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 	}
 
 	bool CommandExecuted = true;
+	bool NonLockableCommandExecuted = true;
 
 	if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner ( User ) ) )
 	{
@@ -427,6 +428,7 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 		else
 		{
 			CommandExecuted = false;
+			NonLockableCommandExecuted = false;
 		}
 		if ( !CommandExecuted && (!m_Locked || RootAdminCheck || IsOwner ( User ) ) )
 		{
@@ -2023,7 +2025,7 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 				CommandExecuted = false;
 			}
 		}
-		else if ( CommandExecuted )
+		else if ( CommandExecuted && !NonLockableCommandExecuted )
 		{
 			CONSOLE_Print ( "[GAME: " + m_GameName + "] admin command ignored, the game is locked" );
 			SendChat ( player, m_GHost->m_Language->TheGameIsLocked( ) );

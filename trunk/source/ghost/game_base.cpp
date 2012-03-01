@@ -1007,7 +1007,7 @@ bool CBaseGame :: Update ( void *fd, void *send_fd )
 	// start the gameover timer if number of players is under the minimum.
 	if ( m_AutoEnd && m_GameLoaded && m_GameOverTime == 0 && m_Players.size( ) > 0 && !m_GameEndCountDownStarted && !m_AutoEnded )
 	{
-		if ( m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage / 100 && m_FakePlayerPID == 255  )
+		if ( 100 * m_Players.size( ) / m_StartPlayers <= m_GHost->m_AutoEndPercentage && m_FakePlayerPID == 255  )
 		{
 			m_AutoEnded = true;
 			CONSOLE_Print ( "[GAME: " + m_GameName + "] Number of players is under the minimum, autoending in 10s" );
