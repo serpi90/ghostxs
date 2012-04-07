@@ -2211,8 +2211,9 @@ void CBNET :: ProcessChatEvent ( CIncomingChatEvent *chatEvent )
 			// in some cases the queue may be full of legitimate messages but we don't really care if the bot ignores one of these commands once in awhile
 			// e.g. when several users join a game at the same time and cause multiple /whois messages to be queued at once
 
-			if ( IsAdmin ( User ) || IsRootAdmin ( User ) || ( m_PublicCommands && m_OutPackets.size( ) <= 3 ) )
+			if ( ( IsAdmin ( User ) || IsRootAdmin ( User ) || ( m_PublicCommands && m_OutPackets.size( ) <= 3 ) ) && !IsBannedName ( User ) ) //TODO-TODO Config
 			{
+				
 				//
 				// !STATS
 				//

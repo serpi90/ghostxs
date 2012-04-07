@@ -269,6 +269,10 @@ class CLanguage
 		string PlayersAreFromServer ( string server );
 		string GenericNoMatchesFound ( string victim );
 		string GenericFoundMoreThanOneMatch ( string victim );
+		string UnableToMutePlayersAllFoundMoreThanOneMatch( string victim );
+		string UnableToMutePlayersAllNoMatchesFound( string victim );
+		string MutedPlayersAll( string victim, string user );
+		string UnmutedPlayersAll( string victim, string user );
 };
 
 #endif
