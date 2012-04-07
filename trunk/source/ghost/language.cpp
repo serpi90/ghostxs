@@ -1638,3 +1638,32 @@ string CLanguage :: GenericFoundMoreThanOneMatch ( string victim )
 	UTIL_Replace ( Out, "$VICTIM$", victim );
 	return Out;
 }
+string CLanguage :: UnableToMutePlayersAllNoMatchesFound( string victim )
+{
+    string Out = m_CFG->GetString( "lang_0236", "lang_0236" );
+    UTIL_Replace( Out, "$VICTIM$", victim );
+    return Out;
+}
+
+string CLanguage :: MutedPlayersAll( string victim, string user )
+{
+    string Out = m_CFG->GetString( "lang_0237", "lang_0237" );
+    UTIL_Replace( Out, "$VICTIM$", victim );
+    UTIL_Replace( Out, "$USER$", user );
+    return Out;
+}
+
+string CLanguage :: UnableToMutePlayersAllFoundMoreThanOneMatch( string victim )
+{
+    string Out = m_CFG->GetString( "lang_0238", "lang_0238" );
+    UTIL_Replace( Out, "$VICTIM$", victim );
+    return Out;
+}
+
+string CLanguage :: UnmutedPlayersAll( string victim, string user )
+{
+    string Out = m_CFG->GetString( "lang_0239", "lang_0239" );
+    UTIL_Replace( Out, "$VICTIM$", victim );
+    UTIL_Replace( Out, "$USER$", user );
+    return Out;
+}

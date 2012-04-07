@@ -392,11 +392,13 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 		}
 	}
 
-	bool CommandExecuted = true;
+	bool CommandExecuted = false;
 	bool NonLockableCommandExecuted = true;
 
 	if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner ( User ) ) )
 	{
+		CommandExecuted = true;
+
 		CONSOLE_Print ( "[GAME: " + m_GameName + "] admin [" + User + "] sent command [" + Command + "] with payload [" + Payload + "]" );
 
 		//
@@ -463,7 +465,58 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 					m_GameEndCountDownStarted = false;
 				}
 			}
+			
+			//
+			// SameIp
+			//
+			else if( Command == "sameip" || Command == "sip" )
+			{
+				
+				SendAllChat( "Multiple IP address usage result" ); //TODO-TODO Language
+				SendAllChat( "=====================================" );
 
+				bool found = false;
+				vector<bool> CheckedIp(m_Players.size(), false);
+				string result;
+				string s;
+
+				for (size_t i = 0; i < m_Players.size(); i++) {
+					if (CheckedIp[i])
+						continue;
+					CheckedIp[i] = true;
+					s = m_Players[i]->GetName();
+					bool found2 = false;
+					for (size_t j = 0; j < m_Players.size(); j++) {
+						if (!CheckedIp[j] && m_Players[i]->GetExternalIPString() == m_Players[j]->GetExternalIPString()) {
+							s += ", " + m_Players[j]->GetName();
+							CheckedIp[j] = true;
+							found2 = true;
+						}
+					}
+					if (found2) {
+						result += "(" + s + ") ";
+						found = true;
+					}
+				}
+				if (found) {
+					SendAllChat(result);
+				} else {
+					SendAllChat("No matches.");
+				}
+			}
+
+			//
+			// !No Reserved
+			//
+
+			else if ( (Command == "nr" || Command == "noreserved") && Payload.empty() && !m_GameLoaded )
+			{
+				m_GHost->m_ReserveAdmins = !m_GHost->m_ReserveAdmins;
+				if ( m_GHost->m_ReserveAdmins == true )
+					SendAllChat ("Reservando slots para administradores"); //TODO-TODO Language
+				else
+					SendAllChat ("Sin reservas de slots para administradores");
+			}
 			//
 			// !ADDBAN
 			// !BAN
@@ -544,7 +597,7 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 							SendChat ( player, m_GHost->m_Language->ErrorBanningAdmin( ) );
 						else
 							m_PairedBanAdds.push_back ( PairedBanAdd ( User, m_GHost->m_DB->ThreadedBanAdd ( LastMatch->GetServer( ), LastMatch->GetName( ), LastMatch->GetIP( ), m_GameName, User, Reason ) ) );
-						SendAllChat ( m_GHost->m_Language->PlayerWasBannedByPlayer ( server, Victim, User ) );
+						SendAllChat ( m_GHost->m_Language->PlayerWasBannedByPlayer ( server, LastMatch->GetName( ), User ) );
 						SendAllChat ("Ban Reason: " + Reason);
 					}
 					else
@@ -1334,8 +1387,30 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 
 			else if ( Command == "muteall" && m_GameLoaded )
 			{
-				SendAllChat ( m_GHost->m_Language->GlobalChatMuted( ) );
-				m_MuteAll = true;
+				if ( Payload.empty( ) )
+				{
+					SendAllChat ( m_GHost->m_Language->GlobalChatMuted( ) );
+					m_MuteAll = true;
+				}
+				else
+				{ 
+					CGamePlayer *LastMatch = NULL;
+					uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
+					
+					if ( Matches == 0 )
+					{
+						SendAllChat( m_GHost->m_Language->UnableToMutePlayersAllNoMatchesFound( Payload ) );
+					}
+					else if ( Matches == 1 )
+					{
+						SendAllChat( m_GHost->m_Language->MutedPlayersAll( LastMatch->GetName( ), User ) );
+						LastMatch->SetAllMuted( true );
+					}
+					else
+					{
+						SendAllChat( m_GHost->m_Language->UnableToMutePlayersAllFoundMoreThanOneMatch( Payload ) );
+					}
+				}
 			}
 
 			//
@@ -1981,8 +2056,26 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 
 			else if ( Command == "unmuteall" && m_GameLoaded )
 			{
-				SendAllChat ( m_GHost->m_Language->GlobalChatUnmuted( ) );
-				m_MuteAll = false;
+				if (Payload.empty ( ) )
+				{
+					SendAllChat ( m_GHost->m_Language->GlobalChatUnmuted( ) );
+					m_MuteAll = false;
+				}
+				else
+				{
+					CGamePlayer *LastMatch = NULL;
+					uint32_t Matches = GetPlayerFromNamePartial( Payload, &LastMatch );
+
+					if ( Matches == 0 )
+						SendAllChat( m_GHost->m_Language->UnableToMutePlayersAllNoMatchesFound( Payload ) );
+					else if ( Matches == 1 )
+					{
+						SendAllChat( m_GHost->m_Language->UnmutedPlayersAll( LastMatch->GetName( ), User ) );
+						LastMatch->SetAllMuted( false );
+					}
+					else
+						SendAllChat( m_GHost->m_Language->UnableToMutePlayersAllFoundMoreThanOneMatch( Payload ) );
+				}
 			}
 
 

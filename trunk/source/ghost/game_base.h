@@ -206,7 +206,6 @@ class CBaseGame
 		virtual bool GetLoadInGame( )					{
 			return m_LoadInGame;
 		}
-
 		virtual void SetEnforceSlots ( vector<CGameSlot> nEnforceSlots )		{
 			m_EnforceSlots = nEnforceSlots;
 		}

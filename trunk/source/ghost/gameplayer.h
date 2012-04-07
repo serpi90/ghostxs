@@ -136,6 +136,7 @@ class CGamePlayer : public CPotentialPlayer
 		bool m_DropVote;							// if the player voted to drop the laggers or not (on the lag screen)
 		bool m_KickVote;							// if the player voted to kick a player or not
 		bool m_Muted;								// if the player is muted or not
+		bool m_MutedAll;							// if the player's all chat is muted or not
 		bool m_LeftMessageSent;						// if the playerleave message has been sent or not
 		bool m_GProxy;								// if the player is using GProxy++
 		bool m_GProxyDisconnectNoticeSent;			// if a disconnection notice has been sent or not when using GProxy++
@@ -271,6 +272,9 @@ class CGamePlayer : public CPotentialPlayer
 		uint32_t GetGProxyReconnectKey( )			{
 			return m_GProxyReconnectKey;
 		}
+		bool GetAllMuted( )							{ //GHOSTXS
+			return m_MutedAll; 
+		}
 
 		void SetLeftReason ( string nLeftReason )										{
 			m_LeftReason = nLeftReason;
@@ -346,6 +350,9 @@ class CGamePlayer : public CPotentialPlayer
 		}
 		void SetMuted ( bool nMuted )													{
 			m_Muted = nMuted;
+		}
+		void SetAllMuted ( bool nMuted )												{ //GHOSTXS
+			m_MutedAll = nMuted;
 		}
 		void SetLeftMessageSent ( bool nLeftMessageSent )								{
 			m_LeftMessageSent = nLeftMessageSent;

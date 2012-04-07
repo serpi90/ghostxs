@@ -1422,7 +1422,37 @@ void CBaseGame :: SendWelcomeMessage ( CGamePlayer *player )
 		while ( !in.eof( ) && Count < 8 )
 		{
 			getline ( in, Line );
-
+		
+			// Shadeo script
+		UTIL_Replace( Line, "$OWNERNAME$", m_OwnerName );			// The ownder of the game
+		UTIL_Replace( Line, "$GAMENAME$", m_GameName );				// The name of the game
+		UTIL_Replace( Line, "$GAMENAME1$", m_LastGameName );		// last game name (the previous game name before it was rehosted)
+		UTIL_Replace( Line, "$VERSION$", m_GHost->m_Version );		// Will show the version number of ghost++
+		UTIL_Replace( Line, "$USER$", player->GetName( ) );			// Player Player who joined, everyone sees there own name
+		UTIL_Replace( Line, "$TRIGGER$", UTIL_ToString(m_GHost->m_CommandTrigger) );		// Will show the trigger of the bot
+		UTIL_Replace( Line, "$STATE$", UTIL_ToString(m_GameState) );				// Tells you if game is Public or Private
+		UTIL_Replace( Line, "$HOSTSERVER$", m_CreatorServer );		// Server that game was made on
+		UTIL_Replace( Line, "$LAT$", UTIL_ToString(m_Latency) );					// Game latency
+		UTIL_Replace( Line, "$SYNC$", UTIL_ToString(m_SyncLimit) );				// Game synclimit
+		UTIL_Replace( Line, "$BOTNAME$", m_VirtualHostName );		// Name of the bot
+		UTIL_Replace( Line, "$CREATORNAME$", m_CreatorName );		// The name of who made the game (for pubby/privby)
+		
+		// Below are commands that will show if there is anythign to show, else will be blank
+		if( !m_HCLCommandString.empty( ) )
+		UTIL_Replace( Line, "$HCL$", m_HCLCommandString );		// HCL game mode
+		else 
+		UTIL_Replace( Line, "$HCL$", "" );						// Removes empty field
+		
+		if( m_GHost->m_VoteKickAllowed == 1 )
+		{
+		UTIL_Replace( Line, "$VOTE%$", UTIL_ToString(m_GHost->m_VoteKickPercentage) );	// Shows the % for a votekick to work
+		UTIL_Replace( Line, "$VOTEK$", "Votekick is on" );		// Tells the user Votekick is on
+		}
+		else
+		{
+		UTIL_Replace( Line, "$VOTE%$", "" );					// Removes empty field
+		UTIL_Replace( Line, "$VOTEK$", "" );					// Removes empty field
+		}
 			if ( Line.empty( ) )
 			{
 				if ( !in.eof( ) )
@@ -2924,7 +2954,7 @@ void CBaseGame :: EventPlayerChatToHost ( CGamePlayer *player, CIncomingChatPlay
 					// don't relay ingame messages targeted for all players if we're currently muting all
 					// note that commands will still be processed even when muting all because we only stop relaying the messages, the rest of the function is unaffected
 
-					if ( m_MuteAll )
+					if ( m_MuteAll || player->GetAllMuted( ) ) //GHOSTXS
 						Relay = false;
 				}
 				else if ( ExtraFlags[0] == 2 )
