@@ -55,6 +55,9 @@ CBaseGame :: CBaseGame ( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint1
 	m_GameEndCountDownStarted = false;
 	m_AutoEnd = m_GHost->m_AutoEnd;
 	m_AutoEnded = false;
+	m_ReserveAdmins = m_GHost->m_ReserveAdmins;
+	m_KickBanned = m_GHost->m_BanMethod != 0;
+	m_Downloads = m_GHost->m_AllowDownloads;
 
 	if ( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );
@@ -1845,13 +1848,13 @@ void CBaseGame :: EventPlayerJoined ( CPotentialPlayer *potential, CIncomingJoin
 		}
 	}
 
-	bool Reserved = IsReserved ( joinPlayer->GetName( ) ) || ( m_GHost->m_ReserveAdmins && AnyAdminCheck ) || IsOwner ( joinPlayer->GetName( ) );
+	bool Reserved = IsReserved ( joinPlayer->GetName( ) ) || ( m_ReserveAdmins && AnyAdminCheck ) || IsOwner ( joinPlayer->GetName( ) );
 
-	// check if the new player's name is banned but onlpotentialy if bot_banmethod is not 0
+	// check if the new player's name is banned but only if bot_banmethod is not 0
 	// this is because if bot_banmethod is 0 and we announce the ban here it's possible for the player to be rejected later because the game is full
 	// this would allow the player to spam the chat by attempting to join the game multiple times in a row
 
-	if ( m_GHost->m_BanMethod != 0 && !Reserved )
+	if ( m_KickBanned && !Reserved )
 	{
 		for ( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
@@ -2043,7 +2046,7 @@ void CBaseGame :: EventPlayerJoined ( CPotentialPlayer *potential, CIncomingJoin
 	// this is because if bot_banmethod is 0 we need to wait to announce the ban until now because they could have been rejected because the game was full
 	// this would have allowed the player to spam the chat by attempting to join the game multiple times in a row
 
-	if ( m_GHost->m_BanMethod == 0 )
+	if ( !m_KickBanned )
 	{
 		for ( vector<CBNET *> :: iterator i = m_GHost->m_BNETs.begin( ); i != m_GHost->m_BNETs.end( ); ++i )
 		{
