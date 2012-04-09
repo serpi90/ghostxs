@@ -506,18 +506,81 @@ bool CGame :: EventPlayerBotCommand ( CGamePlayer *player, string command, strin
 			}
 
 			//
-			// !No Reserved
+			// !NORESERVER !NR
 			//
 
 			else if ( (Command == "nr" || Command == "noreserved") && Payload.empty() && !m_GameLoaded )
 			{
-				m_GHost->m_ReserveAdmins = !m_GHost->m_ReserveAdmins;
-				if ( m_GHost->m_ReserveAdmins == true )
+				m_ReserveAdmins = !m_ReserveAdmins;
+				if ( m_ReserveAdmins == true )
 					SendAllChat ("Reservando slots para administradores"); //TODO-TODO Language
 				else
 					SendAllChat ("Sin reservas de slots para administradores");
 			}
+			
 			//
+			// !BANS
+			//
+
+			else if ( Command == "bans" && !m_GameLoaded )
+			{
+				if ( Payload.empty() )
+					m_KickBanned = !m_KickBanned;
+				else if ( Payload == "on" )
+					m_KickBanned = true;
+				else if ( Payload == "off" )
+					m_KickBanned = false;
+
+				if ( m_KickBanned == true )
+					SendAllChat ("Banned players kick enabled"); //TODO-TODO Language
+				else
+					SendAllChat ("Banned players kick disabled");
+			}
+			
+			//
+			// !Downloads
+			//
+
+			else if ( (Command == "downloads" || Command == "dls") && !m_GameLoaded )
+			{
+				if ( RootAdminCheck )
+				{
+					bool error = false;
+					if( Payload.empty() )
+					{
+						if( m_Downloads == 0 )
+							m_Downloads = 1;
+						else
+							m_Downloads = 0;
+					} 
+					else
+					{
+						uint32_t dl = UTIL_ToUInt32( Payload );
+						if ( dl < 0 || dl > 2 )
+							error = true;
+						else
+							m_Downloads = dl;
+					}
+
+					if( !error )
+					{
+						if ( m_Downloads == 0 )
+						{
+							SendAllChat ( m_GHost->m_Language->MapDownloadsDisabled( ) );
+							m_Downloads = 0;
+						}
+						else if ( m_Downloads == 1 )
+						{
+							SendAllChat ( m_GHost->m_Language->MapDownloadsEnabled( ) );
+							m_Downloads = 1;
+						}
+					}
+				}
+				else
+					SendAllChat ( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ) );
+			}	
+
+			//	
 			// !ADDBAN
 			// !BAN
 			//

@@ -135,6 +135,9 @@ class CBaseGame
 		bool m_AutoEnd;									// config value: auto end game with less than X players or not.
 		bool m_AutoEnded;								// true if the game is about to end due to autoend.
 		uint32_t m_GameEndLastCountDownTicks;		    // GetTicks when the last countdown message was sent
+		bool m_ReserveAdmins;							// Reserve admins in lobby or not.
+		bool m_KickBanned;								// Wether to kick or not banned people.
+		bool m_Downloads;								// Allow download in lobby or not
 
 	public:
 		bool m_GameEndCountDownStarted;				    // if the game end countdown has started or not
