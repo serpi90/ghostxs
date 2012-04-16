@@ -2766,8 +2766,14 @@ void CBaseGame :: EventPlayerLoaded ( CGamePlayer *player )
 		SendAll ( m_Protocol->SEND_W3GS_GAMELOADED_OTHERS ( player->GetPID( ) ) );
 }
 
-void CBaseGame :: EventPlayerAction ( CGamePlayer *player, CIncomingAction *action )
+bool CBaseGame :: EventPlayerAction ( CGamePlayer *player, CIncomingAction *action )
 {
+	if( !m_GameLoaded || action->GetLength( ) > 1452 )
+	{
+		delete action;
+		return false;
+	}
+	
 	m_Actions.push ( action );
 
 	// check for players saving the game and notify everyone
@@ -2777,10 +2783,14 @@ void CBaseGame :: EventPlayerAction ( CGamePlayer *player, CIncomingAction *acti
 		CONSOLE_Print ( "[GAME: " + m_GameName + "] player [" + player->GetName( ) + "] is saving the game" );
 		SendAllChat ( m_GHost->m_Language->PlayerIsSavingTheGame ( player->GetName( ) ) );
 	}
+	
+	return true;
 }
 
 void CBaseGame :: EventPlayerKeepAlive ( CGamePlayer *player, uint32_t checkSum )
 {
+	if( !m_GameLoaded )
+		return;
 	// check for desyncs
 	// however, it's possible that not every player has sent a checksum for this frame yet
 	// first we verify that we have enough checksums to work with otherwise we won't know exactly who desynced
@@ -2948,7 +2958,9 @@ void CBaseGame :: EventPlayerChatToHost ( CGamePlayer *player, CIncomingChatPlay
 
 			if ( !ExtraFlags.empty( ) )
 			{
-				if ( ExtraFlags[0] == 0 )
+				if( !m_GameLoaded )
+					Relay = false;
+				else if ( ExtraFlags[0] == 0 )
 				{
 					// this is an ingame [All] message, print it to the console
 
@@ -2978,12 +2990,17 @@ void CBaseGame :: EventPlayerChatToHost ( CGamePlayer *player, CIncomingChatPlay
 			}
 			else
 			{
-				// this is a lobby message, print it to the console
-
-				CONSOLE_Print ( "[GAME: " + m_GameName + "] [Lobby] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage( ) );
-
-				if ( m_MuteLobby )
+				if( m_GameLoading || m_GameLoaded )
 					Relay = false;
+				else
+				{
+					// this is a lobby message, print it to the console
+
+					CONSOLE_Print ( "[GAME: " + m_GameName + "] [Lobby] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage( ) );
+
+					if ( m_MuteLobby )
+						Relay = false;
+				}
 			}
 
 			// handle bot commands
@@ -3254,7 +3271,7 @@ void CBaseGame :: EventPlayerMapSize ( CGamePlayer *player, CIncomingMapSize *ma
 	}
 	else
 	{
-		if ( player->GetDownloadStarted( ) )
+		if( player->GetDownloadStarted( ) && !player->GetDownloadFinished( ) )
 		{
 			// calculate download rate
 
