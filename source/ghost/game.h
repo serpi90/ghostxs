@@ -61,7 +61,7 @@ class CGame : public CBaseGame
 
 		virtual bool Update ( void *fd, void *send_fd );
 		virtual void EventPlayerDeleted ( CGamePlayer *player );
-		virtual void EventPlayerAction ( CGamePlayer *player, CIncomingAction *action );
+		virtual bool EventPlayerAction ( CGamePlayer *player, CIncomingAction *action );
 		virtual bool EventPlayerBotCommand ( CGamePlayer *player, string command, string payload );
 		virtual void EventGameStarted( );
 		virtual bool IsGameDataSaved( );
