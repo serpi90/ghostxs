@@ -434,9 +434,7 @@ void CGamePlayer :: ProcessPackets( )
 
 					if ( Action )
 					{
-
 						// don't delete Action here because the game is going to store it in a queue and delete it later
-
 						m_Game->EventPlayerAction ( this, Action );
 					}
 
