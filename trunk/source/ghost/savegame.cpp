@@ -27,7 +27,7 @@
 // CSaveGame
 //
 
-CSaveGame :: CSaveGame( ) : CPacked( ), m_NumSlots ( 0 ), m_RandomSeed ( 0 )
+CSaveGame :: CSaveGame( ) : CPacked( ), m_NumSlots( 0 ), m_RandomSeed( 0 )
 {
 
 }
@@ -49,14 +49,14 @@ void CSaveGame :: ParseSaveGame( )
 	m_RandomSeed = 0;
 	m_MagicNumber.clear( );
 
-	if ( m_Flags != 0 )
+	if( m_Flags != 0 )
 	{
-		CONSOLE_Print ( "[SAVEGAME] invalid replay (flags mismatch)" );
+		CONSOLE_Print( "[SAVEGAME] invalid replay (flags mismatch)" );
 		m_Valid = false;
 		return;
 	}
 
-	istringstream ISS ( m_Decompressed );
+	istringstream ISS( m_Decompressed );
 
 	// savegame format figured out by Varlock:
 	// string		-> map path
@@ -76,42 +76,42 @@ void CSaveGame :: ParseSaveGame( )
 	string GarbageString;
 	uint32_t MagicNumber;
 
-	READSTR ( ISS, m_MapPath );				// map path
-	READSTR ( ISS, GarbageString );			// ???
-	READSTR ( ISS, m_GameName );				// game name
-	READSTR ( ISS, GarbageString );			// ???
-	READSTR ( ISS, GarbageString );			// stat string
-	READB ( ISS, &Garbage4, 4 );				// ???
-	READB ( ISS, &Garbage4, 4 );				// ???
-	READB ( ISS, &Garbage2, 2 );				// ???
-	READB ( ISS, &m_NumSlots, 1 );			// number of slots
+	READSTR( ISS, m_MapPath );				// map path
+	READSTR( ISS, GarbageString );			// ???
+	READSTR( ISS, m_GameName );				// game name
+	READSTR( ISS, GarbageString );			// ???
+	READSTR( ISS, GarbageString );			// stat string
+	READB( ISS, &Garbage4, 4 );				// ???
+	READB( ISS, &Garbage4, 4 );				// ???
+	READB( ISS, &Garbage2, 2 );				// ???
+	READB( ISS, &m_NumSlots, 1 );			// number of slots
 
-	if ( m_NumSlots > 12 )
+	if( m_NumSlots > 12 )
 	{
-		CONSOLE_Print ( "[SAVEGAME] invalid savegame (too many slots)" );
+		CONSOLE_Print( "[SAVEGAME] invalid savegame (too many slots)" );
 		m_Valid = false;
 		return;
 	}
 
-	for ( unsigned char i = 0; i < m_NumSlots; i++ )
+	for( unsigned char i = 0; i < m_NumSlots; i++ )
 	{
 		unsigned char SlotData[9];
-		READB ( ISS, SlotData, 9 );			// slot data
-		m_Slots.push_back ( CGameSlot ( SlotData[0], SlotData[1], SlotData[2], SlotData[3], SlotData[4], SlotData[5], SlotData[6], SlotData[7], SlotData[8] ) );
+		READB( ISS, SlotData, 9 );			// slot data
+		m_Slots.push_back( CGameSlot( SlotData[0], SlotData[1], SlotData[2], SlotData[3], SlotData[4], SlotData[5], SlotData[6], SlotData[7], SlotData[8] ) );
 	}
 
-	READB ( ISS, &m_RandomSeed, 4 );			// random seed
-	READB ( ISS, &Garbage1, 1 );				// GameType
-	READB ( ISS, &Garbage1, 1 );				// number of player slots (non observer)
-	READB ( ISS, &MagicNumber, 4 );			// magic number
+	READB( ISS, &m_RandomSeed, 4 );			// random seed
+	READB( ISS, &Garbage1, 1 );				// GameType
+	READB( ISS, &Garbage1, 1 );				// number of player slots (non observer)
+	READB( ISS, &MagicNumber, 4 );			// magic number
 
-	if ( ISS.eof( ) || ISS.fail( ) )
+	if( ISS.eof( ) || ISS.fail( ) )
 	{
-		CONSOLE_Print ( "[SAVEGAME] failed to parse savegame header" );
+		CONSOLE_Print( "[SAVEGAME] failed to parse savegame header" );
 		m_Valid = false;
 		return;
 	}
 
-	m_MagicNumber = UTIL_CreateByteArray ( MagicNumber, false );
+	m_MagicNumber = UTIL_CreateByteArray( MagicNumber, false );
 	m_Valid = true;
 }

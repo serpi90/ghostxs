@@ -37,15 +37,15 @@ class CGHostDB;
 
 class CStats
 {
-	protected:
-		CBaseGame *m_Game;
+protected:
+	CBaseGame *m_Game;
 
-	public:
-		CStats ( CBaseGame *nGame );
-		virtual ~CStats( );
+public:
+	CStats( CBaseGame *nGame );
+	virtual ~CStats( );
 
-		virtual bool ProcessAction ( CIncomingAction *Action );
-		virtual void Save ( CGHost *GHost, CGHostDB *DB, uint32_t GameID );
+	virtual bool ProcessAction( CIncomingAction *Action );
+	virtual void Save( CGHost *GHost, CGHostDB *DB, uint32_t GameID );
 };
 
 #endif

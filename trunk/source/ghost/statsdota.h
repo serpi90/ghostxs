@@ -29,18 +29,18 @@ class CDBDotAPlayer;
 
 class CStatsDOTA : public CStats
 {
-	private:
-		CDBDotAPlayer *m_Players[12];
-		uint32_t m_Winner;
-		uint32_t m_Min;
-		uint32_t m_Sec;
+private:
+	CDBDotAPlayer *m_Players[12];
+	uint32_t m_Winner;
+	uint32_t m_Min;
+	uint32_t m_Sec;
 
-	public:
-		CStatsDOTA ( CBaseGame *nGame );
-		virtual ~CStatsDOTA( );
+public:
+	CStatsDOTA( CBaseGame *nGame );
+	virtual ~CStatsDOTA( );
 
-		virtual bool ProcessAction ( CIncomingAction *Action );
-		virtual void Save ( CGHost *GHost, CGHostDB *DB, uint32_t GameID );
+	virtual bool ProcessAction( CIncomingAction *Action );
+	virtual void Save( CGHost *GHost, CGHostDB *DB, uint32_t GameID );
 };
 
 #endif
