@@ -24,9 +24,9 @@
 // standard integer sizes for 64 bit compatibility
 
 #ifdef WIN32
-#include "ms_stdint.h"
+ #include "ms_stdint.h"
 #else
-#include <stdint.h>
+ #include <stdint.h>
 #endif
 
 // STL
@@ -45,7 +45,7 @@
 using namespace std;
 
 typedef vector<unsigned char> BYTEARRAY;
-typedef pair<unsigned char, string> PIDPlayer;
+typedef pair<unsigned char,string> PIDPlayer;
 
 // time
 
@@ -53,9 +53,9 @@ uint32_t GetTime( );		// seconds
 uint32_t GetTicks( );		// milliseconds
 
 #ifdef WIN32
-#define MILLISLEEP( x ) Sleep( x )
+ #define MILLISLEEP( x ) Sleep( x )
 #else
-#define MILLISLEEP( x ) usleep( ( x ) * 1000 )
+ #define MILLISLEEP( x ) usleep( ( x ) * 1000 )
 #endif
 
 // network
@@ -65,8 +65,8 @@ uint32_t GetTicks( );		// milliseconds
 
 // output
 
-void CONSOLE_Print ( string message );
-void DEBUG_Print ( string message );
-void DEBUG_Print ( BYTEARRAY b );
+void CONSOLE_Print( string message );
+void DEBUG_Print( string message );
+void DEBUG_Print( BYTEARRAY b );
 
 #endif
