@@ -4,7 +4,13 @@ C++ = g++
 CC = gcc
 DFLAGS = -DGHOST_MYSQL
 OFLAGS = -O3
+
+ifeq ($(SYSTEM),Linux)
+LFLAGS = -L. -L../bncsutil/src/bncsutil/ -L../StormLib/stormlib/ -L../boost/lib/ -lbncsutil -lpthread -ldl -lz -lStorm -lmysqlclient_r -lboost_date_time -lboost_thread -lboost_system -lboost_filesystem
+else
 LFLAGS = -L. -L../bncsutil/src/bncsutil/ -L../StormLib/stormlib/ -lbncsutil -lpthread -ldl -lz -lStorm -lmysqlclient_r -lboost_date_time-mt -lboost_thread-mt -lboost_system-mt -lboost_filesystem-mt
+endif
+
 CFLAGS =
 
 ifeq ($(SYSTEM),Darwin)
@@ -36,7 +42,7 @@ PROGS = ./ghost++
 all: $(OBJS) $(COBJS) $(PROGS)
 
 ./ghost++: $(OBJS) $(COBJS)
-	$(C++) -o ./ghost++ $(OBJS) $(COBJS) $(LFLAGS)
+	$(C++) -o ../../runfiles/ghost++ $(OBJS) $(COBJS) $(LFLAGS)
 
 clean:
 	rm -f $(OBJS) $(COBJS) $(PROGS)
