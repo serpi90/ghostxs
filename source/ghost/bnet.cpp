@@ -123,6 +123,7 @@ CBNET :: CBNET( CGHost *nGHost, string nServer, string nServerAlias, string nBNL
 	m_LastNullTime = 0;
 	m_LastOutPacketTicks = 0;
 	m_LastOutPacketSize = 0;
+	m_FrequencyDelayTimes = 0;
 	m_LastAdminRefreshTime = GetTime( );
 	m_LastBanRefreshTime = GetTime( );
 	m_FirstConnect = true;
@@ -2462,6 +2463,8 @@ void CBNET :: QueueGameRefresh( unsigned char state, string gameName, string hos
 		{
 			uint32_t MapGameType = map->GetMapGameType( );
 			MapGameType |= MAPGAMETYPE_UNKNOWN0;
+			//Apply overwrite if not equal to 0
+			MapGameType = ( m_GHost->m_MapGameType != 0 ) ? MapGameType : m_GHost->m_MapGameType;
 
 			if( state == GAME_PRIVATE )
 				MapGameType |= MAPGAMETYPE_PRIVATEGAME;
