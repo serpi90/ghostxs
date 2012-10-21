@@ -59,6 +59,8 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_ReserveAdmins = m_GHost->m_ReserveAdmins;
 	m_KickBanned = m_GHost->m_BanMethod != 0;
 	m_Downloads = m_GHost->m_AllowDownloads;
+        m_LastSpoofCheckTime = GetTime( );
+
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );	
