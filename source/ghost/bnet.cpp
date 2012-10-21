@@ -37,7 +37,7 @@ CODE PORTED FROM THE ORIGINAL GHOST PROJECT: http://ghost.pwner.org/
 #include "game_base.h"
 
 #include <boost/filesystem.hpp>
-
+#include <boost/regex.hpp>
 using namespace boost :: filesystem;
 
 //
@@ -521,30 +521,53 @@ bool CBNET :: Update( void *fd, void *send_fd )
 			WaitTicks = 3900;
 		else
 			WaitTicks = 5500;
-		
+
 		// add on frequency delay
-		
+
 		WaitTicks += m_FrequencyDelayTimes * 60;
 
-		if( !m_OutPackets.empty( ) && GetTicks( ) - m_LastOutPacketTicks >= WaitTicks )
+		if( m_UseChatQueue )
 		{
-			if( m_OutPackets.size( ) > 7 )
-				CONSOLE_Print( "[BNET: " + m_ServerAlias + "] packet queue warning - there are " + UTIL_ToString( m_OutPackets.size( ) ) + " packets waiting to be sent" );
+			if( !m_OutPackets.empty( ) && GetTicks( ) - m_LastOutPacketTicks >= WaitTicks )
+			{
+				if( m_OutPackets.size( ) > 7 )
+					CONSOLE_Print( "[BNET: " + m_ServerAlias + "] packet queue warning - there are " + UTIL_ToString( m_OutPackets.size( ) ) + " packets waiting to be sent" );
 
-			m_Socket->PutBytes( m_OutPackets.front( ) );
-			m_LastOutPacketSize = m_OutPackets.front( ).size( );
-			m_OutPackets.pop( );
+				m_Socket->PutBytes( m_OutPackets.front( ) );
+				m_LastOutPacketSize = m_OutPackets.front( ).size( );
+				m_OutPackets.pop( );
 
-			// reset frequency delay (or increment it)
-			
-			if( m_FrequencyDelayTimes >= 100 || GetTicks( ) > m_LastOutPacketTicks + WaitTicks + 500 )
-				m_FrequencyDelayTimes = 0;
-			else
-				m_FrequencyDelayTimes++;
-			
-			m_LastOutPacketTicks = GetTicks( );
+				// reset frequency delay (or increment it)
+
+				if( m_FrequencyDelayTimes >= 100 || GetTicks( ) > m_LastOutPacketTicks + WaitTicks + 500 )
+					m_FrequencyDelayTimes = 0;
+				else
+					m_FrequencyDelayTimes++;
+
+				m_LastOutPacketTicks = GetTicks( );
+			}
 		}
+		else // If we are not using the queue ( WARNING: unless we have permission, the server will kick us by flooding
+		{
+			if( !m_OutPackets.empty( ) && GetTicks( ) - m_LastOutPacketTicks >= 45 )
+			{
+				if( m_OutPackets.size( ) > 7 )
+					CONSOLE_Print( "[BNET: " + m_ServerAlias + "] packet queue warning - there are " + UTIL_ToString( m_OutPackets.size( ) ) + " packets waiting to be sent (lie)" );
 
+				uint32_t y = m_OutPackets.size()-1;
+
+				if ( y > 2 )
+					y = 2;
+
+				for ( uint32_t i = 0 ; i <= y ; i++ )
+				{
+					m_Socket->PutBytes( m_OutPackets.front( ) );
+					m_OutPackets.pop( );
+				}
+
+				m_LastOutPacketTicks = GetTicks( );
+			}
+		}
 		// send a null packet every 60 seconds to detect disconnects
 
 		if( GetTime( ) - m_LastNullTime >= 60 && GetTicks( ) - m_LastOutPacketTicks >= 60000 )
@@ -2305,36 +2328,82 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 		// this case covers whois results which are used when hosting a public game (we send out a "/whois [player]" for each player)
 		// at all times you can still /w the bot with "spoofcheck" to manually spoof check
 
-		if( m_GHost->m_CurrentGame && m_GHost->m_CurrentGame->GetPlayerFromName( UserName, true ) )
+		if( m_GHost->m_CurrentGame && m_GHost->m_CurrentGame->GetPlayerFromName( UserName, false ) )
 		{
-			if( Message.find( "is away" ) != string :: npos )
+			boost::cmatch matches;
+			boost::regex away ( ".* away \\(.*\\)", boost::regex::extended | boost::regex::icase );
+			boost::regex unavailable( ".* is unavailable \\(.*\\)", boost::regex::extended | boost::regex::icase );
+			boost::regex refusing( ".* is refusing messages \\(.*\\)", boost::regex::extended | boost::regex::icase );
+			boost::regex channel ( ".* is using Warcraft III [a-Z\\ ]*Frozen Throne.* channel .*", boost::regex::extended | boost::regex::icase );
+			boost::regex privatechannel ( ".* is using Warcraft III [a-Z\\ ]*Frozen Throne.* private channel .*", boost::regex::extended | boost::regex::icase );
+			boost::regex ingame ( ".* is using Warcraft III [a-Z\\ ]*Frozen Throne [a-Z\\ ]*game \".*\".", boost::regex::extended | boost::regex::icase );
+			bool doPing = false;
+			if( boost::regex_match( Message.c_str(), matches, away ) )
+			{
 				m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofPossibleIsAway( UserName ) );
-			else if( Message.find( "is unavailable" ) != string :: npos )
+				doPing = true;
+			}
+			else if( boost::regex_match( Message.c_str(), matches, unavailable ) )
+			{
 				m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofPossibleIsUnavailable( UserName ) );
-			else if( Message.find( "is refusing messages" ) != string :: npos )
+				doPing = true;
+			}
+			else if( boost::regex_match( Message.c_str(), matches, refusing ) )
+			{
 				m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofPossibleIsRefusingMessages( UserName ) );
-			else if( Message.find( "is using Warcraft III The Frozen Throne in the channel" ) != string :: npos )
+				doPing = true;
+			}
+			else if( boost::regex_match( Message.c_str(), matches, channel ) )
+			{
 				m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofDetectedIsNotInGame( UserName ) );
-			else if( Message.find( "is using Warcraft III The Frozen Throne in channel" ) != string :: npos )
-				m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofDetectedIsNotInGame( UserName ) );
-			else if( Message.find( "is using Warcraft III The Frozen Throne in a private channel" ) != string :: npos )
+ 				doPing = true;
+			}
+			else if( boost::regex_match( Message.c_str(), matches, privatechannel ) )
+			{
 				m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofDetectedIsInPrivateChannel( UserName ) );
-
-			if( Message.find( "is using Warcraft III The Frozen Throne in game" ) != string :: npos || Message.find( "is using Warcraft III Frozen Throne and is currently in  game" ) != string :: npos )
+				doPing = true;
+			}
+			else if( boost::regex_match( Message.c_str(), matches, ingame ) )
 			{
 				// check both the current game name and the last game name against the /whois response
 				// this is because when the game is rehosted, players who joined recently will be in the previous game according to battle.net
 				// note: if the game is rehosted more than once it is possible (but unlikely) for a false positive because only two game names are checked
 
-				if( Message.find( m_GHost->m_CurrentGame->GetGameName( ) ) != string :: npos || Message.find( m_GHost->m_CurrentGame->GetLastGameName( ) ) != string :: npos )
+
+				if( Message.find( m_GHost->m_CurrentGame->GetGameName( ) ) != string::npos || Message.find( m_GHost->m_CurrentGame->GetLastGameName( ) ) != string::npos )
+				{
 					m_GHost->m_CurrentGame->AddToSpoofed( m_Server, UserName, false );
+				}
 				else
+				{
 					m_GHost->m_CurrentGame->SendAllChat( m_GHost->m_Language->SpoofDetectedIsInAnotherGame( UserName ) );
+					doPing = true;
+				}
+			}
+			
+			if( doPing )
+				QueueChatCommand( "/p" );
+		}
+		else if ( m_GHost->m_CurrentGame && Message.find("latency:") != string::npos )
+		{
+			string lowerBotName = m_UserName;
+			transform( UserName.begin( ), UserName.end( ), UserName.begin( ), (int(*)(int))tolower );
+			transform( lowerBotName.begin( ), lowerBotName.end( ), lowerBotName.begin( ), (int(*)(int))tolower );
+			if ( UserName != lowerBotName && m_GHost->m_CurrentGame->GetPlayerFromName( UserName, false ) == NULL )
+			{
+				//TODO: language file
+				m_GHost->m_CurrentGame->SendAllChat( "Spoof: " + UserName + " esta en la lista de /p pero no ingame" );
 			}
 		}
 	}
 	else if( Event == CBNETProtocol :: EID_ERROR )
+	{
 		CONSOLE_Print( "[ERROR: " + m_ServerAlias + "] " + Message );
+		if ( m_GHost->m_CurrentGame && Message == "Unknown user." )
+		{
+			QueueChatCommand( "/p" );
+		}
+	}
 	else if( Event == CBNETProtocol :: EID_EMOTE )
 	{
 		CONSOLE_Print( "[EMOTE: " + m_ServerAlias + "] [" + User + "] " + Message );

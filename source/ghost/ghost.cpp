@@ -571,6 +571,7 @@ CGHost :: CGHost( CConfig *CFG )
 		string PasswordHashType = CFG->GetString( Prefix + "custom_passwordhashtype", string( ) );
 		string PVPGNRealmName = CFG->GetString( Prefix + "custom_pvpgnrealmname", "PvPGN Realm" );
 		uint32_t MaxMessageLength = CFG->GetInt( Prefix + "custom_maxmessagelength", 200 );
+		bool UseChatQueue = CFG->GetInt( Prefix + "usechatqueue", 1 ) == 0 ? false : true;
 
 		if( Server.empty( ) )
 			break;
@@ -611,6 +612,7 @@ CGHost :: CGHost( CConfig *CFG )
 		}
 
 		m_BNETs.push_back( new CBNET( this, Server, ServerAlias, BNLSServer, (uint16_t)BNLSPort, (uint32_t)BNLSWardenCookie, CDKeyROC, CDKeyTFT, CountryAbbrev, Country, LocaleID, UserName, UserPassword, FirstChannel, RootAdmin, BNETCommandTrigger[0], HoldFriends, HoldClan, PublicCommands, War3Version, EXEVersion, EXEVersionHash, PasswordHashType, PVPGNRealmName, MaxMessageLength, i ) );
+		(m_BNETs.back())->setUseChatQueue( UseChatQueue );
 	}
 
 	if( m_BNETs.empty( ) )
