@@ -2,7 +2,7 @@
 <C3G_XML_FILE>
   <FormatVersion>1</FormatVersion>
   <SvnID>N/A</SvnID>
-  <MapName>DotA Allstars v6.73.w3x</MapName>
+  <MapName>DotA Allstars v6.74.w3x</MapName>
   <MapVersion>N/A</MapVersion>
   <MapImgName/>
   <AltMapNameList/>
@@ -20,6 +20,16 @@
       <Name>Skywrath Mage</Name>
       <ProperNames>Dragonus</ProperNames>
       <RelatedTo>Aamk,A2BE,A2HN,A2BG,A2IT</RelatedTo>
+      <Type>HERO</Type>
+    </Item>
+    <Item>
+      <Art>images/ember_spirit.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>N0M0</Id>
+      <Name>Ember Spirit</Name>
+      <ProperNames>Xin</ProperNames>
+      <RelatedTo>Aamk,A2H0,A2H3,A2HS,A2JK</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -661,7 +671,7 @@
       <Id>HC49</Id>
       <Name>Naga Siren</Name>
       <ProperNames>Slithice</ProperNames>
-      <RelatedTo>Aamk,A23Y,A24D,A063,A07U</RelatedTo>
+      <RelatedTo>Aamk,A2KU,A24D,A063,A07U</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -721,7 +731,7 @@
       <Id>Hmkg</Id>
       <Name>Ogre Magi</Name>
       <ProperNames>Aggron Stonebreaker</ProperNames>
-      <RelatedTo>A011,A04W,A083,A088,Aamk,A089,A007,A08F,A08A,A01T,A08G,A08D,A00F,A08I</RelatedTo>
+      <RelatedTo>A011,A04W,A083,A088,Aamk,A089,A007,A08F,A08A,A01T,A08G,A08D,A00F,A08I,A2KQ</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1101,7 +1111,7 @@
       <Id>O016</Id>
       <Name>Batrider</Name>
       <ProperNames>Jin'zakk</ProperNames>
-      <RelatedTo>A1EL,A19V,A19Z,A19O</RelatedTo>
+      <RelatedTo>A1EL,A19V,A19Z,A19O,A0NR</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1111,7 +1121,7 @@
       <Id>O017</Id>
       <Name>Batrider</Name>
       <ProperNames>Jin'zakk</ProperNames>
-      <RelatedTo>A1EL,A19V,A19Z,A19O</RelatedTo>
+      <RelatedTo>A1EL,A19V,A19Z,A19O,A0NR</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1141,7 +1151,7 @@
       <Id>Opgh</Id>
       <Name>Axe</Name>
       <ProperNames>Mogul Kahn</ProperNames>
-      <RelatedTo>Aamk,A0I6,A0S1,A0C6,A0E2</RelatedTo>
+      <RelatedTo>Aamk,A0I6,A0S1,A0C6,A0E2,A1MR</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1171,7 +1181,7 @@
       <Id>Otch</Id>
       <Name>Earthshaker</Name>
       <ProperNames>Raigor Stonehoof</ProperNames>
-      <RelatedTo>A0DH,A0DL,A0SK,A0DJ,Aamk</RelatedTo>
+      <RelatedTo>A0DH,A0DL,A0SK,A0DJ,Aamk,A1OB</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1181,7 +1191,7 @@
       <Id>U000</Id>
       <Name>Nerubian Assassin</Name>
       <ProperNames>Anubarak</ProperNames>
-      <RelatedTo>Aamk,A0X7,A09U,A1H5,A00T</RelatedTo>
+      <RelatedTo>Aamk,A0X7,A09U,A1H5,A2KO</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1814,14 +1824,12 @@
       <ProperNames/>
       <RelatedTo/>
       <Type>SKILL</Type>
-    </Item>
-    
-    
+    </Item>       
     <Item>
       <Art>images/rip_tide.jpg</Art>
       <Comment/>
       <Cost/>
-      <Id>A23Y</Id>
+      <Id>A2KU</Id>
       <Name>Rip Tide</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -1868,7 +1876,7 @@
       <Type>SKILL</Type>
     </Item>
     <Item>
-      <Art>images/living_armor.jpg</Art>
+      <Art>images/roof_living_armor.jpg</Art>
       <Comment/>
       <Cost/>
       <Id>A24O</Id>
@@ -2483,7 +2491,7 @@
       <Art>images/BTNUrnaSwarm.jpg</Art>
       <Comment/>
       <Cost/>
-      <Id>A00T</Id>
+      <Id>A2KO</Id>
       <Name>Urna Swarm</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -5853,7 +5861,7 @@
       <Type>SKILL</Type>
     </Item>
     <Item>
-      <Art>images/BTNStaffOfPreservation.gif</Art>
+      <Art>images/test_of_faith.gif</Art>
       <Comment/>
       <Cost/>
       <Id>A0LV</Id>
@@ -10129,6 +10137,46 @@
       <Cost>3100</Cost>
       <Id>I0OL</Id>
       <Name>Rod of Atos</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTN_QuellingBlade.jpg</Art>
+      <Comment/>
+      <Cost>225</Cost>
+      <Id>I0HR</Id>
+      <Name>Quelling Blade</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I0L7</Id>
+      <Name>Aghanim's Scepter (Earthshaker)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	  <Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I0LA</Id>
+      <Name>Aghanim's Scepter (Earthshaker)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I0L2</Id>
+      <Name>Aghanim's Scepter (Earthshaker)</Name>
       <ProperNames/>
       <RelatedTo/>
       <Type>ITEM</Type>
@@ -14488,7 +14536,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0M0</Id>
       <Name>Aghanims Scepter (Warlock)</Name>
       <ProperNames/>
@@ -14498,7 +14546,7 @@
 	<Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0MP</Id>
       <Name>Aghanims Scepter (Enchantress)</Name>
       <ProperNames/>
@@ -14508,7 +14556,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0M7</Id>
       <Name>Aghanims Scepter (Viper)</Name>
       <ProperNames/>
@@ -14518,7 +14566,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0MG</Id>
       <Name>Aghanims Scepter (Tiny)</Name>
       <ProperNames/>
@@ -14528,7 +14576,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0M4</Id>
       <Name>Aghanims Scepter (Razor)</Name>
       <ProperNames/>
@@ -14538,7 +14586,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0ML</Id>
       <Name>Aghanims Scepter (Obsidian Destroyer)</Name>
       <ProperNames/>
@@ -14548,7 +14596,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IN</Id>
       <Name>Aghanims Scepter (Invoker)</Name>
       <ProperNames/>
@@ -14558,7 +14606,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IR</Id>
       <Name>Aghanims Scepter (Juggernaut)</Name>
       <ProperNames/>
@@ -14568,7 +14616,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JS</Id>
       <Name>Aghanims Scepter (Pudge)</Name>
       <ProperNames/>
@@ -14578,7 +14626,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JY</Id>
       <Name>Aghanims Scepter (Lord of Avernus)</Name>
       <ProperNames/>
@@ -14588,7 +14636,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JV</Id>
       <Name>Aghanims Scepter (Bane Elemental)</Name>
       <ProperNames/>
@@ -14598,7 +14646,27 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
+      <Id>I0FE</Id>
+      <Name>Aghanims Scepter (Ogre)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+    <Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I00I</Id>
+      <Name>Aghanims Scepter (Ogre)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+    <Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
       <Id>I0IK</Id>
       <Name>Aghanims Scepter (Holy Knight)</Name>
       <ProperNames/>
@@ -14608,7 +14676,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IU</Id>
       <Name>Aghanims Scepter (Clockwerk)</Name>
       <ProperNames/>
@@ -14618,7 +14686,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JX</Id>
       <Name>Aghanims Scepter (Shadow Priest)</Name>
       <ProperNames/>
@@ -14628,7 +14696,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IO</Id>
       <Name>Aghanims Scepter (Huskar)</Name>
       <ProperNames/>
@@ -14638,7 +14706,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IL</Id>
       <Name>Aghanims Scepter (Night Stalker)</Name>
       <ProperNames/>
@@ -14648,7 +14716,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0I7</Id>
       <Name>Aghanims Scepter (Pandaren Brewmaster)</Name>
       <ProperNames/>
@@ -14658,7 +14726,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IP</Id>
       <Name>Aghanims Scepter (Sand King)</Name>
       <ProperNames/>
@@ -14668,7 +14736,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JW</Id>
       <Name>Aghanims Scepter (Spiritbreaker)</Name>
       <ProperNames/>
@@ -14678,7 +14746,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0KH</Id>
       <Name>Aghanims Scepter (Goblin Techies)</Name>
       <ProperNames/>
@@ -14688,7 +14756,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IM</Id>
       <Name>Aghanims Scepter (Twin Head Dragon)</Name>
       <ProperNames/>
@@ -14698,7 +14766,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IS</Id>
       <Name>Aghanims Scepter (Vengeful Spirit)</Name>
       <ProperNames/>
@@ -14708,7 +14776,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JU</Id>
       <Name>Aghanims Scepter (Void)</Name>
       <ProperNames/>
@@ -14718,7 +14786,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JT</Id>
       <Name>Aghanims Scepter (Windrunner)</Name>
       <ProperNames/>
@@ -14728,7 +14796,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I000</Id>
       <Name>Aghanims Scepter (Rylai)</Name>
       <ProperNames/>
@@ -14738,7 +14806,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I001</Id>
       <Name>Aghanims Scepter (Necro)</Name>
       <ProperNames/>
@@ -14748,7 +14816,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I002</Id>
       <Name>Aghanims Scepter (Luna)</Name>
       <ProperNames/>
@@ -14758,7 +14826,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I003</Id>
       <Name>Aghanims Scepter (Lucifer)</Name>
       <ProperNames/>
@@ -14768,7 +14836,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I004</Id>
       <Name>Aghanims Scepter (Lion)</Name>
       <ProperNames/>
@@ -14778,7 +14846,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I005</Id>
       <Name>Aghanims Scepter (Lich)</Name>
       <ProperNames/>

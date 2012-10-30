@@ -2,7 +2,7 @@
 <C3G_XML_FILE>
   <FormatVersion>1</FormatVersion>
   <SvnID>N/A</SvnID>
-  <MapName>DotA Allstars v6.73.w3x</MapName>
+  <MapName>DotA v6.76.w3x</MapName>
   <MapVersion>N/A</MapVersion>
   <MapImgName/>
   <AltMapNameList/>
@@ -12,6 +12,26 @@
   <MaxLevelHero>25</MaxLevelHero>
   <UseCustomUnits>0</UseCustomUnits>
   <ItemList>
+	 <Item>
+      <Art>images/arc_warden.gif</Art>
+      <Comment/>
+      <Cost/>
+      <Id>N0MK</Id>
+      <Name>Arc Warden</Name>
+      <ProperNames>Zet</ProperNames>
+      <RelatedTo>Aamk,A2LL,A2LM,A2M0,A2M1</RelatedTo>
+      <Type>HERO</Type>
+    </Item>
+    <Item>
+      <Art>images/winter_wyvern.gif</Art>
+      <Comment/>
+      <Cost/>
+      <Id>N0M7</Id>
+      <Name>Winter Wyvern</Name>
+      <ProperNames>Auroth</ProperNames>
+      <RelatedTo>Aamk,A2LA,A2LB,A0Z0,A2NE</RelatedTo>
+      <Type>HERO</Type>
+    </Item>
   	<Item>
       <Art>images/skywrath_mage.jpg</Art>
       <Comment/>
@@ -20,6 +40,16 @@
       <Name>Skywrath Mage</Name>
       <ProperNames>Dragonus</ProperNames>
       <RelatedTo>Aamk,A2BE,A2HN,A2BG,A2IT</RelatedTo>
+      <Type>HERO</Type>
+    </Item>
+    <Item>
+      <Art>images/ember_spirit.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>N0M0</Id>
+      <Name>Ember Spirit</Name>
+      <ProperNames>Xin</ProperNames>
+      <RelatedTo>Aamk,A2H0,A2H3,A2HS,A2JK</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -71,7 +101,7 @@
       <Id>E02F</Id>
       <Name>Phoenix</Name>
       <ProperNames>Icarus</ProperNames>
-      <RelatedTo>Aamk,A1RJ,A20N,A1YX,A1Z2,A1YY,A1RK</RelatedTo>
+      <RelatedTo>Aamk,A1YX,A1Z2,A1RK,A1RJ</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -321,7 +351,7 @@
       <Id>Eevi</Id>
       <Name>Soul Keeper</Name>
       <ProperNames>Terrorblade</ProperNames>
-      <RelatedTo>A27A,Aamk,A275,A07Q,A0MV</RelatedTo>
+	  <RelatedTo>Aamk,A07Q,A1RI,A2KZ,A0H4</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -341,7 +371,7 @@
       <Id>Ekee</Id>
       <Name>Tormented Soul</Name>
       <ProperNames>Leshrac the Malicious</ProperNames>
-      <RelatedTo>Aamk,A20T,A06W,A06V,A21F,A21G</RelatedTo>
+      <RelatedTo>Aamk,A035,A06W,A06V,A21F,A21G</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -381,7 +411,7 @@
       <Id>H000</Id>
       <Name>Centaur Warchief</Name>
       <ProperNames>Bradwarden</ProperNames>
-      <RelatedTo>Aamk,A01L,A00L,A00V,A00S</RelatedTo>
+      <RelatedTo>Aamk,A2O6,A00L,A00V,A00S</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -631,7 +661,7 @@
       <Id>Hamg</Id>
       <Name>Treant Protector</Name>
       <ProperNames>Rooftrellen</ProperNames>
-      <RelatedTo>A07Z,A01Z,A26N,Aamk,A24O</RelatedTo>
+      <RelatedTo>A07Z,A01Z,A26N,Aamk,A2ML</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -661,7 +691,7 @@
       <Id>HC49</Id>
       <Name>Naga Siren</Name>
       <ProperNames>Slithice</ProperNames>
-      <RelatedTo>Aamk,A23Y,A24D,A063,A07U</RelatedTo>
+      <RelatedTo>Aamk,A2KU,A24D,A063,A07U</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -721,7 +751,7 @@
       <Id>Hmkg</Id>
       <Name>Ogre Magi</Name>
       <ProperNames>Aggron Stonebreaker</ProperNames>
-      <RelatedTo>A011,A04W,A083,A088,Aamk,A089,A007,A08F,A08A,A01T,A08G,A08D,A00F,A08I</RelatedTo>
+      <RelatedTo>A011,A04W,A083,A088,Aamk,A089,A007,A08F,A08A,A01T,A08G,A08D,A00F,A08I,A2KQ</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -791,7 +821,7 @@
       <Id>N00R</Id>
       <Name>Pit Lord</Name>
       <ProperNames>Azgalor</ProperNames>
-      <RelatedTo>Aamk,A288,A0RA,A26O,A0R0</RelatedTo>
+	  <RelatedTo>Aamk,A0RA,A01I,A0R0,AIcd</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -851,7 +881,7 @@
       <Id>N01A</Id>
       <Name>Silencer</Name>
       <ProperNames>Nortrom</ProperNames>
-      <RelatedTo>A0LZ,A0MC,A14L,A0L3,Aamk</RelatedTo>
+      <RelatedTo>A0LZ,A14L,A0L3,Aamk,A2NT</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1011,7 +1041,7 @@
       <Id>Nbrn</Id>
       <Name>Drow Ranger</Name>
       <ProperNames>Traxex</ProperNames>
-      <RelatedTo>A0QB,Aamk,A029,A026,A0VC</RelatedTo>
+      <RelatedTo>A0QB,Aamk,A2O2,A026,A0VC</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1101,7 +1131,7 @@
       <Id>O016</Id>
       <Name>Batrider</Name>
       <ProperNames>Jin'zakk</ProperNames>
-      <RelatedTo>A1EL,A19V,A19Z,A19O</RelatedTo>
+      <RelatedTo>A1EL,A19V,A19Z,A19O,A0NR</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1111,7 +1141,7 @@
       <Id>O017</Id>
       <Name>Batrider</Name>
       <ProperNames>Jin'zakk</ProperNames>
-      <RelatedTo>A1EL,A19V,A19Z,A19O</RelatedTo>
+      <RelatedTo>A1EL,A19V,A19Z,A19O,A0NR</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1141,7 +1171,7 @@
       <Id>Opgh</Id>
       <Name>Axe</Name>
       <ProperNames>Mogul Kahn</ProperNames>
-      <RelatedTo>Aamk,A0I6,A0S1,A0C6,A0E2</RelatedTo>
+      <RelatedTo>Aamk,A0I6,A0S1,A0C6,A0E2,A1MR</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1171,7 +1201,7 @@
       <Id>Otch</Id>
       <Name>Earthshaker</Name>
       <ProperNames>Raigor Stonehoof</ProperNames>
-      <RelatedTo>A0DH,A0DL,A0SK,A0DJ,Aamk</RelatedTo>
+      <RelatedTo>A0DH,A0DL,A0SK,A0DJ,Aamk,A1OB</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1181,7 +1211,7 @@
       <Id>U000</Id>
       <Name>Nerubian Assassin</Name>
       <ProperNames>Anubarak</ProperNames>
-      <RelatedTo>Aamk,A0X7,A09U,A1H5,A00T</RelatedTo>
+      <RelatedTo>Aamk,A0X7,A09U,A1H5,A2KO</RelatedTo>
       <Type>HERO</Type>
     </Item>
     <Item>
@@ -1624,7 +1654,97 @@
       <ProperNames/>
       <RelatedTo/>
       <Type>ULTIMATE</Type>
-    </Item>  
+    </Item>
+	<Item>
+      <Art>images/tempest_double.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2M0</Id>
+      <Name>Tempest Double</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ULTIMATE</Type>
+    </Item>
+	<Item>
+      <Art>images/winters_curse.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A0Z0</Id>
+      <Name>Winter's Curse</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ULTIMATE</Type>
+    </Item>
+	<Item>
+      <Art>images/spark_wraith.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2LL</Id>
+      <Name>Spark Wraith</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	<Item>
+      <Art>images/magnetic_field.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2LM</Id>
+      <Name>Magnetic Field</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	<Item>
+      <Art>images/spark.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2M1</Id>
+      <Name>Spark</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	<Item>
+      <Art>images/splinter_blast.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2LA</Id>
+      <Name>Splinter Blast</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	<Item>
+      <Art>images/cold_embrace.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2LB</Id>
+      <Name>Cold Embrace</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	<Item>
+      <Art>images/arctic_siege.jpg</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2NE</Id>
+      <Name>Arctic Siege</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	<Item>
+      <Art>images/atrophy_aura.png</Art>
+      <Comment/>
+      <Cost/>
+      <Id>AIcd</Id>
+      <Name>Atrophy Aura</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
     <Item>
       <Art>images/concussive_shot.jpg</Art>
       <Comment/>
@@ -1814,14 +1934,12 @@
       <ProperNames/>
       <RelatedTo/>
       <Type>SKILL</Type>
-    </Item>
-    
-    
+    </Item>       
     <Item>
       <Art>images/rip_tide.jpg</Art>
       <Comment/>
       <Cost/>
-      <Id>A23Y</Id>
+      <Id>A2KU</Id>
       <Name>Rip Tide</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -1857,6 +1975,16 @@
       <RelatedTo/>
       <Type>SKILL</Type>
     </Item>
+	  <Item>
+      <Art>images/firestorm.gif</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A01I</Id>
+      <Name>Firestorm</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
     <Item>
       <Art>images/leech_seed.jpg</Art>
       <Comment/>
@@ -1868,10 +1996,10 @@
       <Type>SKILL</Type>
     </Item>
     <Item>
-      <Art>images/living_armor.jpg</Art>
+      <Art>images/roof_living_armor.jpg</Art>
       <Comment/>
       <Cost/>
-      <Id>A24O</Id>
+      <Id>A2ML</Id>
       <Name>Living Armor</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -1883,6 +2011,16 @@
       <Cost/>
       <Id>A275</Id>
       <Name>Zeal</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	  <Item>
+      <Art>images/reflection.png</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A2KZ</Id>
+      <Name>Reflection</Name>
       <ProperNames/>
       <RelatedTo/>
       <Type>SKILL</Type>
@@ -1998,9 +2136,9 @@
       <ProperNames/>
       <RelatedTo/>
       <Type>SKILL</Type>
-    </Item> 
-    <Item>
-      <Art>images/BTNSnowball.jpg</Art>
+    </Item>
+	<Item>
+      <Art>images/sun_ray.jpg</Art>
       <Comment/>
       <Cost/>
       <Id>A1YY</Id>
@@ -2008,7 +2146,7 @@
       <ProperNames/>
       <RelatedTo/>
       <Type>SKILL</Type>
-    </Item>  
+    </Item>
     <Item>
       <Art>images/BTNTether.gif</Art>
       <Comment/>
@@ -2483,7 +2621,7 @@
       <Art>images/BTNUrnaSwarm.jpg</Art>
       <Comment/>
       <Cost/>
-      <Id>A00T</Id>
+      <Id>A2KO</Id>
       <Name>Urna Swarm</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -2783,7 +2921,7 @@
       <Art>images/PASBTNTrueShot.gif</Art>
       <Comment/>
       <Cost/>
-      <Id>A029</Id>
+      <Id>A2O2</Id>
       <Name>Trueshot Aura</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -5853,7 +5991,7 @@
       <Type>SKILL</Type>
     </Item>
     <Item>
-      <Art>images/BTNStaffOfPreservation.gif</Art>
+      <Art>images/test_of_faith.gif</Art>
       <Comment/>
       <Cost/>
       <Id>A0LV</Id>
@@ -5916,7 +6054,7 @@
       <Art>images/BTNLastWord.gif</Art>
       <Comment/>
       <Cost/>
-      <Id>A0MC</Id>
+      <Id>A2NT</Id>
       <Name>Last Word</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -6047,6 +6185,16 @@
       <Comment/>
       <Cost/>
       <Id>A0MV</Id>
+      <Name>Metamorphosis</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>SKILL</Type>
+    </Item>
+	  <Item>
+      <Art>images/BTNMetamorphosis.gif</Art>
+      <Comment/>
+      <Cost/>
+      <Id>A1RI</Id>
       <Name>Metamorphosis</Name>
       <ProperNames/>
       <RelatedTo/>
@@ -8234,11 +8382,11 @@
       <Type>ULTIMATE</Type>
     </Item>
     <Item>
-      <Art>images/BTNcentaur.gif</Art>
+      <Art>images/stampede.jpg</Art>
       <Comment/>
       <Cost/>
-      <Id>A01L</Id>
-      <Name>Great Fortitude</Name>
+      <Id>A2O6</Id>
+      <Name>Stampede</Name>
       <ProperNames/>
       <RelatedTo/>
       <Type>ULTIMATE</Type>
@@ -9934,16 +10082,6 @@
       <Type>ULTIMATE</Type>
     </Item>
     <Item>
-      <Art>images/BTNHornOfFog.gif</Art>
-      <Comment/>
-      <Cost/>
-      <Id>A0Z0</Id>
-      <Name>Winters Call</Name>
-      <ProperNames/>
-      <RelatedTo/>
-      <Type>ULTIMATE</Type>
-    </Item>
-    <Item>
       <Art>images/BTNStrengthOfTheMoon.gif</Art>
       <Comment/>
       <Cost/>
@@ -10122,6 +10260,56 @@
       <ProperNames/>
       <RelatedTo/>
       <Type>ULTIMATE</Type>
+    </Item>
+	<Item>
+      <Art>images/shadow_amulet.jpg</Art>
+      <Comment/>
+      <Cost>1600</Cost>
+      <Id>I0PB</Id>
+      <Name>Shadow Amulet</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTN_QuellingBlade.jpg</Art>
+      <Comment/>
+      <Cost>225</Cost>
+      <Id>I0HR</Id>
+      <Name>Quelling Blade</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I0L7</Id>
+      <Name>Aghanim's Scepter (Earthshaker)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	  <Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I0LA</Id>
+      <Name>Aghanim's Scepter (Earthshaker)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I0L2</Id>
+      <Name>Aghanim's Scepter (Earthshaker)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
     </Item>
     <Item>
       <Art>images/rod_of_atos.jpg</Art>
@@ -10466,7 +10654,7 @@
     <Item>
       <Art>images/BTNEtherealBlade.jpg</Art>
       <Comment/>
-      <Cost>5260</Cost>
+      <Cost>4900</Cost>
       <Id>I0LT</Id>
       <Name>Ethereal Blade</Name>
       <ProperNames/>
@@ -14488,7 +14676,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0M0</Id>
       <Name>Aghanims Scepter (Warlock)</Name>
       <ProperNames/>
@@ -14498,7 +14686,7 @@
 	<Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0MP</Id>
       <Name>Aghanims Scepter (Enchantress)</Name>
       <ProperNames/>
@@ -14508,7 +14696,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0M7</Id>
       <Name>Aghanims Scepter (Viper)</Name>
       <ProperNames/>
@@ -14518,7 +14706,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0MG</Id>
       <Name>Aghanims Scepter (Tiny)</Name>
       <ProperNames/>
@@ -14528,7 +14716,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0M4</Id>
       <Name>Aghanims Scepter (Razor)</Name>
       <ProperNames/>
@@ -14538,7 +14726,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0ML</Id>
       <Name>Aghanims Scepter (Obsidian Destroyer)</Name>
       <ProperNames/>
@@ -14548,7 +14736,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IN</Id>
       <Name>Aghanims Scepter (Invoker)</Name>
       <ProperNames/>
@@ -14558,7 +14746,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IR</Id>
       <Name>Aghanims Scepter (Juggernaut)</Name>
       <ProperNames/>
@@ -14568,7 +14756,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JS</Id>
       <Name>Aghanims Scepter (Pudge)</Name>
       <ProperNames/>
@@ -14578,7 +14766,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JY</Id>
       <Name>Aghanims Scepter (Lord of Avernus)</Name>
       <ProperNames/>
@@ -14588,7 +14776,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JV</Id>
       <Name>Aghanims Scepter (Bane Elemental)</Name>
       <ProperNames/>
@@ -14598,7 +14786,27 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
+      <Id>I0FE</Id>
+      <Name>Aghanims Scepter (Ogre)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+    <Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
+      <Id>I00I</Id>
+      <Name>Aghanims Scepter (Ogre)</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+    <Item>
+      <Art>images/BTNINV_Wand_05.gif</Art>
+      <Comment/>
+      <Cost>4200</Cost>
       <Id>I0IK</Id>
       <Name>Aghanims Scepter (Holy Knight)</Name>
       <ProperNames/>
@@ -14608,7 +14816,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IU</Id>
       <Name>Aghanims Scepter (Clockwerk)</Name>
       <ProperNames/>
@@ -14618,7 +14826,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JX</Id>
       <Name>Aghanims Scepter (Shadow Priest)</Name>
       <ProperNames/>
@@ -14628,7 +14836,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IO</Id>
       <Name>Aghanims Scepter (Huskar)</Name>
       <ProperNames/>
@@ -14638,7 +14846,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IL</Id>
       <Name>Aghanims Scepter (Night Stalker)</Name>
       <ProperNames/>
@@ -14648,7 +14856,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0I7</Id>
       <Name>Aghanims Scepter (Pandaren Brewmaster)</Name>
       <ProperNames/>
@@ -14658,7 +14866,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IP</Id>
       <Name>Aghanims Scepter (Sand King)</Name>
       <ProperNames/>
@@ -14668,7 +14876,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JW</Id>
       <Name>Aghanims Scepter (Spiritbreaker)</Name>
       <ProperNames/>
@@ -14678,7 +14886,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0KH</Id>
       <Name>Aghanims Scepter (Goblin Techies)</Name>
       <ProperNames/>
@@ -14688,7 +14896,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IM</Id>
       <Name>Aghanims Scepter (Twin Head Dragon)</Name>
       <ProperNames/>
@@ -14698,7 +14906,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0IS</Id>
       <Name>Aghanims Scepter (Vengeful Spirit)</Name>
       <ProperNames/>
@@ -14708,7 +14916,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JU</Id>
       <Name>Aghanims Scepter (Void)</Name>
       <ProperNames/>
@@ -14718,7 +14926,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I0JT</Id>
       <Name>Aghanims Scepter (Windrunner)</Name>
       <ProperNames/>
@@ -14728,7 +14936,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I000</Id>
       <Name>Aghanims Scepter (Rylai)</Name>
       <ProperNames/>
@@ -14738,7 +14946,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I001</Id>
       <Name>Aghanims Scepter (Necro)</Name>
       <ProperNames/>
@@ -14748,7 +14956,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I002</Id>
       <Name>Aghanims Scepter (Luna)</Name>
       <ProperNames/>
@@ -14758,7 +14966,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I003</Id>
       <Name>Aghanims Scepter (Lucifer)</Name>
       <ProperNames/>
@@ -14768,7 +14976,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I004</Id>
       <Name>Aghanims Scepter (Lion)</Name>
       <ProperNames/>
@@ -14778,7 +14986,7 @@
     <Item>
       <Art>images/BTNINV_Wand_05.gif</Art>
       <Comment/>
-      <Cost>6000</Cost>
+      <Cost>4200</Cost>
       <Id>I005</Id>
       <Name>Aghanims Scepter (Lich)</Name>
       <ProperNames/>
@@ -15688,7 +15896,7 @@
     <Item>
       <Art>images/BTNBootsOfSpeed.gif</Art>
       <Comment/>
-      <Cost>500</Cost>
+      <Cost>450</Cost>
       <Id>I02O</Id>
       <Name>Boots of Speed</Name>
       <ProperNames/>
@@ -16859,7 +17067,7 @@
     <Item>
       <Art>images/BTNSnazzyScroll.gif</Art>
       <Comment/>
-      <Cost>240</Cost>
+      <Cost>155</Cost>
       <Id>I05X</Id>
       <Name>Null Talisman Recipe</Name>
       <ProperNames/>
@@ -17270,7 +17478,7 @@
     <Item>
       <Art>images/BTNSnazzyScroll.gif</Art>
       <Comment/>
-      <Cost>960</Cost>
+      <Cost>500</Cost>
       <Id>I072</Id>
       <Name>Euls Scepter of Divinity Recipe</Name>
       <ProperNames/>
@@ -17590,7 +17798,7 @@
     <Item>
       <Art>images/BTNSnazzyScroll.gif</Art>
       <Comment/>
-      <Cost>2240</Cost>
+      <Cost>900</Cost>
       <Id>I07Y</Id>
       <Name>Manta Style Recipe</Name>
       <ProperNames/>
@@ -17600,7 +17808,7 @@
     <Item>
       <Art>images/BTNSnazzyScroll.gif</Art>
       <Comment/>
-      <Cost>1760</Cost>
+      <Cost>1000</Cost>
       <Id>I07Z</Id>
       <Name>Lothars Edge Recipe</Name>
       <ProperNames/>
@@ -17960,7 +18168,7 @@
     <Item>
       <Art>images/BTNStaffofpurification.gif</Art>
       <Comment/>
-      <Cost>2925</Cost>
+      <Cost>2700</Cost>
       <Id>I08Z</Id>
       <Name>Euls Scepter of Divinity</Name>
       <ProperNames/>
@@ -18120,9 +18328,19 @@
     <Item>
       <Art>images/BTNINV_ThrowingAxe_02.gif</Art>
       <Comment/>
-      <Cost>5800</Cost>
+      <Cost>5050</Cost>
       <Id>I09F</Id>
       <Name>Manta Style</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTNINV_ThrowingAxe_02.gif</Art>
+      <Comment/>
+      <Cost>5050</Cost>
+      <Id>I0MU</Id>
+      <Name>Manta Style (Ranged)</Name>
       <ProperNames/>
       <RelatedTo/>
       <Type>ITEM</Type>
@@ -18140,7 +18358,7 @@
     <Item>
       <Art>images/BTNLothars.gif</Art>
       <Comment/>
-      <Cost>3610</Cost>
+      <Cost>3000</Cost>
       <Id>I09H</Id>
       <Name>Lothars Edge</Name>
       <ProperNames/>
@@ -20821,9 +21039,19 @@
     <Item>
       <Art>images/BTN_ForceStaff.jpg</Art>
       <Comment/>
-      <Cost>2200</Cost>
+      <Cost>2400</Cost>
       <Id>I0HI</Id>
       <Name>Force Staff</Name>
+      <ProperNames/>
+      <RelatedTo/>
+      <Type>ITEM</Type>
+    </Item>
+	<Item>
+      <Art>images/BTNSnazzyScrollPurple.gif</Art>
+      <Comment/>
+      <Cost>500</Cost>
+      <Id>I0HF</Id>
+      <Name>Force Staff Recipe</Name>
       <ProperNames/>
       <RelatedTo/>
       <Type>ITEM</Type>

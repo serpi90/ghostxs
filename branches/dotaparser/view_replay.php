@@ -91,7 +91,7 @@ function toggleDisplayedExtra(id, pid) {
         exit('No replay file given.');
         $error = 1;
   }
-  
+
   $version = sprintf('%02d', $replay->header['major_v']);
   
   echo "<h2>".$replay->extra['title']."</h2>";

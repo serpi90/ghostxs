@@ -3,7 +3,7 @@
 Last revision:
 - Author: Seven
 - Email: zabkar@gmail.com  (Subject CDP)
-- Date: 16.8.2010 (1.4) 
+- Date: 1.10.2012 (1.4.5)
 ******************************************************************************/
 
 class GenericMode {
@@ -92,7 +92,7 @@ class ModeCD extends GenericMode {
 * Short: CM
 */
 class ModeCM extends GenericMode {
-    private $bansPerTeam = 3;
+    private $bansPerTeam = 2;
     private $heroBans;
     private $heroPicks;
     
@@ -106,13 +106,37 @@ class ModeCM extends GenericMode {
         $this->shortName = "cm";
         $this->fullName = "Captain's mode";
     }
-    
-    /**
-    * Get bans per team
-    * @return Number of hero bans per team
-    */
-    public function getBansPerTeam() {
-        return $this->bansPerTeam;
+
+	/**
+	 * Get bans per team
+	 *
+	 * @param int $version - dota version
+	 *
+	 * @return Number of hero bans per team
+	 */
+    public function getBansPerTeam($version = 675) {
+	    if($version < 668) {
+		    return 4;
+	    }
+	    else {
+		    // If we're dealing with versions post 6.68 bans are split either 3/2 or 2/3
+		    // So initially bansPerTeam are set to either 3 or 2 for phase one.
+		    // Eventually bansPerTeam are set to 5 indicating we're in phase 2, in that case we return 5 as bans per team.
+		    if(5 !== $this->bansPerTeam) {
+			    // First phase bans
+				if($version > 668 && $version < 675) {
+					return 3;
+				}
+			    else {
+				    // 6.75+
+				    return 2;
+			    }
+		    }
+		    else {
+			    // Return second phase bans per team
+			    return 5;
+		    }
+	    }
     }
     
     /**
@@ -164,11 +188,12 @@ class ModeCM extends GenericMode {
     }
     
     /**
+    *
     * Returns TRUE if number of banned heroes equals or exceeds the set bansPerTeam
-    * @returns Boolean True - Ban Phase Complete or False
+    * @returns Boolean True - First Ban Phase Complete or False
     */
-    function banPhaseComplete() {
-        if(count($this->heroBans) >= ($this->bansPerTeam * 2) ) {
+    function banPhaseComplete($version = 675) {
+        if(count($this->heroBans) >= ($this->getBansPerTeam($version) * 2) ) {
             return true;
         }
         return false;

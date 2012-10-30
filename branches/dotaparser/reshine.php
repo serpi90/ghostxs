@@ -3,7 +3,7 @@
 Last revision:
 - Author: Seven
 - Email: zabkar@gmail.com  (Subject CDP)
-- Date: 14.5.2011 (1.4.4)
+- Date: 1.10.2012 (1.4.5)
 ------------------------------------------------------------------------------
 Based on the works of:
 - Julas, Rush4Hire, esby and Rachmadi
@@ -17,7 +17,7 @@ require('xml_parser.php');
 define("DEBUG_ON", false);
 
 // Used for CM-mode picking, for now
-define("NUM_OF_BANS", 8);
+// define("NUM_OF_BANS", 8); - Now handled in modes.php
 define("NUM_OF_PICKS", 10);
 
 // to know when there is a need to load next block
@@ -540,15 +540,15 @@ function parseblocks() {
                   case 0x01: $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Disconnect"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Disconnect
                   case 0x07:
                     if ($this->leave_unknown > 0 && $this->continue_game) {
-                      $this->game['winner_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Won
+                      @$this->game['winner_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Won
                     } else {
-                      $this->game['loser_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Lost
+                      @$this->game['loser_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Lost
                     }
                   case 0x08: $this->game['loser_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Lost
                   case 0x09: $this->game['winner_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Won
                   case 0x0B: // this isn't correct according to w3g_format but generally works...
                     if ($this->leave_unknown > 0) {
-                      $this->game['winner_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Won
+                      @$this->game['winner_team'] = $this->players[$this->game['saver_id']]['team']; $temp['mode'] = "QUIT"; $temp['time'] = $this->time; $temp['player_name'] = $this->players[$temp['player_id']]['name']; $temp['text']="Finished"; $this->chat[] = $temp;  $this->players[$temp['player_id']]['leave_result'] = $temp['text'];  break;//Saver Won
                     }
                 }
               } elseif ($temp['reason'] == 0x0C) {
@@ -664,21 +664,44 @@ function parseactions($actionblock, $data_length) {
                       if($this->inPickMode) {
                             
                             // Handle duplicated actions
-                            if(isset($this->previousPick) && $this->previousPick == $value->getName()) continue;
+                            if(isset($this->previousPick) && $this->previousPick == $value->getName()) {
+	                            continue;
+                            }
                             
                             $value->extra = $this->players[$player_id]['team'];
+	                        $version = $this->game['dota_major'] * 100 + $this->game['dota_minor'];
                           
-                            // 3-2 ban split CM Mode in versions 6.68+
+                            // 3-2 ban split CM Mode in versions 6.68-6.74
+	                        // 2-3 split in 6.75+
                             if( ($this->game['dota_major'] == 6 && $this->game['dota_minor'] >= 68) || $this->game['dota_major'] > 6) {
-                                // This action was triggered by CM banning, so ignore it
-                                if(!$this->dotaMode->banPhaseComplete())
+                                // This action was triggered by CM banning, so ignore it and let outer Switch get to Ban handling
+                                if(false == $this->dotaMode->banPhaseComplete($version)) {
                                     break;
-                                
-                                // We need to keep checking how many picks have been made, 
-                                // since we need to start another ban phase for the split CM mode
-                                if($this->dotaMode->getBansPerTeam() == 3) {
-                                    // We're done with phase 1, and waiting for 6 picks to be made to get to phase 2
+                                }
+
+	                            // First phase of bans for versions 6.68 - 6.74 is 3 per team
+	                            // and 2 per team for 6.75+
+	                            if($this->game['dota_major'] == 6 && $this->game['dota_minor'] >= 68 && $this->game['dota_minor'] < 75) {
+		                            $firstPhaseBansPerTeam = 3;
+	                            }
+	                            else {
+		                            $firstPhaseBansPerTeam = 2;
+	                            }
+
+	                            /*
+	                             * During the first ban phase we have dotaMode->bansPerTeam set to 2 or 3 based on version.
+	                             * When first ban phase is completed and all 6 required picks have been made we set
+	                             * dotaMode->setBansPerTeam(5) in Ban Handling.
+	                             *
+	                             * During each HERO ID case we check if Bans per Team is still set to our first phase limit.
+	                             * If more than 6 or more picks have been made and a HERO ID is detected that signals we're
+	                             * starting with Phase 2 of banning and thus we let Ban Handling take care of this action.
+	                             */
+	                            // Check if we're still in Phase 1
+	                            if($this->dotaMode->getBansPerTeam($version) == $firstPhaseBansPerTeam) {
+		                            // We're done with phase 1, and waiting for 6 picks to be made to get to phase 2
                                     if($this->dotaMode->getNumPicked() >= 6) {
+		                                // When this break occurs, Ban Handling will set dotaMode->bansPerTeam to 5 later down
                                         break;
                                     }
                                 }
@@ -688,10 +711,12 @@ function parseactions($actionblock, $data_length) {
                                 $this->picks_num++;     
                                 
                             }
-                            // Otherwise we're dealing with the pre 6.68 CM mode of 4 bans
+                            // Otherwise we're dealing with the pre 6.68 CM mode of 4 bans per team
                             else {
                                 // The hero was banned, don't add it to the picks.
-                                if($this->bans_num < NUM_OF_BANS) break;
+                                if($this->bans_num < 8 ) {
+	                                break;
+                                }
                                 
                                 // Add the picked hero to the array of picked heroes.
                                 $this->picks[] = $value;
@@ -1396,6 +1421,7 @@ function parseactions($actionblock, $data_length) {
                 // Detect mode
                 if( strstr($Key, "Mode") !== false ) {
                     $shortMode = substr($Key, 4, 2);
+	                $this->extra['mode'] = substr($Key, 4);
                     
                     switch ( $shortMode ) {
                         case "cd":
@@ -1489,9 +1515,10 @@ function parseactions($actionblock, $data_length) {
                     
                     // 3-2 ban split CM Mode in versions 6.68+
                     if( ($this->game['dota_major'] == 6 && $this->game['dota_minor'] >= 68) || $this->game['dota_major'] > 6) {
-                        // If we've already got all bans for phase 1 (6 bans) and we get a new ban action, 
+	                    $version = $this->game['dota_major'] * 100 + $this->game['dota_minor'];
+                        // If we've already got all bans for phase 1 (6 or 4 bans) and we get a new ban action,
                         // then we need to start phase 2
-                        if($this->dotaMode->banPhaseComplete()) {
+                        if($this->dotaMode->banPhaseComplete($version)) {
                             $this->dotaMode->setBansPerTeam(5);
                         }
                         
@@ -1668,6 +1695,13 @@ function parseactions($actionblock, $data_length) {
                 echo "MissionKey: ".$MissionKey." <br />";
                 echo "Key: ".$Key." <br />";
                 echo "Value: ".(is_object($value) ? $value->getName() : $value['val'])." <br /><hr />";
+
+	            if(!is_object($value) && isset($value['val']) && is_numeric($value['val']) && $value['val'] > 10000) {
+		            $entity = convert_itemid($value['val']);
+		            print_r($entity);
+	            }
+
+
             }
             
             

@@ -1,6 +1,20 @@
 ﻿---------------------------------------
-| CTS Dota Parser 1.4.4 (CDP) - Changelog
+| CTS Dota Parser 1.4.5 (CDP) - Changelog
 ---------------------------------------
+| 1.4.6 - Version update
+| Date: 22.10.2012
+| Author: Seven ( zabkar@gmail.com )
+---------------------------------------
+Features:
+ > Added 6.76 data and images
+---------------------------------------
+| 1.4.5 - Version update
+| Date: 1.10.2012
+| Author: Seven ( zabkar@gmail.com )
+---------------------------------------
+Features:
+ > Added support for 6.75+ CM Ban/Pick order
+ > Added 6.74 and 6.75 data and images
 ---------------------------------------
 | 1.4.4 - Version update
 | Date: 6.1.2012

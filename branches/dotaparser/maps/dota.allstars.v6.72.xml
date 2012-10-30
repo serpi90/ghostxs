@@ -4161,7 +4161,7 @@
       <Type>SKILL</Type>
     </Item>
     <Item>
-      <Art>images/BTNStormEarth&amp;Fire.gif</Art>
+      <Art>images/BTNStormEarthFire.gif</Art>
       <Comment/>
       <Cost/>
       <Id>A0BI</Id>
@@ -9333,7 +9333,7 @@
       <Type>ULTIMATE</Type>
     </Item>
     <Item>
-      <Art>images/BTNStormEarth&amp;Fire.gif</Art>
+      <Art>images/BTNStormEarthFire.gif</Art>
       <Comment/>
       <Cost/>
       <Id>A1B3</Id>
@@ -9343,7 +9343,7 @@
       <Type>ULTIMATE</Type>
     </Item>
     <Item>
-      <Art>images/BTNStormEarth&amp;Fire.gif</Art>
+      <Art>images/BTNStormEarthFire.gif</Art>
       <Comment/>
       <Cost/>
       <Id>A0MQ</Id>
