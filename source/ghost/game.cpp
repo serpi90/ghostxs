@@ -534,6 +534,33 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 			}*/
 
 			//
+			// !SGP
+			//
+
+			if( ( Command == "showgproxy" || Command == "sgp" ) )
+			{
+				string UsingGProxy;
+				for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
+				{
+					if( (*i)->GetGProxy( ) )
+					{
+						if( UsingGProxy.empty( ) )
+							UsingGProxy = (*i)->GetName( );
+						else
+							UsingGProxy += ", " + (*i)->GetName( );
+					}
+				}
+				if( Payload.empty( ) )
+				{
+					if( UsingGProxy.empty( ) )
+						SendAllChat( "No one is using GProxy++" );
+					else
+						SendAllChat( "Players using GProxy++: " + UsingGProxy );
+				}
+				else SendChat( player, "The command is .showgproxy or .sgp" );
+			}
+
+			//
 			// SameIp
 			//
 
@@ -1513,7 +1540,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             // !MUTEALL
             //
 
-            else if ( Command == "muteall" && m_GameLoaded )
+            else if ( ( Command == "muteall" || Command == "ma") && m_GameLoaded )
             {
 				if ( Payload.empty( ) )
 				{
@@ -2194,7 +2221,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             // !UNMUTEALL
             //
 
-            else if ( Command == "unmuteall" && m_GameLoaded )
+            else if ( ( Command == "unmuteall" || Command == "uma" ) && m_GameLoaded )
             {
 				if (Payload.empty ( ) )
 				{
