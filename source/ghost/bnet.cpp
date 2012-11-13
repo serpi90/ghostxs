@@ -1069,7 +1069,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !ADDADMIN
 				//
 
-				if( ( Command == "addadmin" || Command =="aa" ) && !Payload.empty( ) )
+				if( Command == "addadmin" && !Payload.empty( ) )
 				{
 					if( IsRootAdmin( User ) )
 					{
@@ -1087,7 +1087,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !BAN
 				//
 
-				else if( ( Command == "addban" || Command == "ban" || Command == "b" ) && !Payload.empty( ) )
+				else if( ( Command == "addban" || Command == "ban" ) && !Payload.empty( ) )
 				{
 					// extract the victim and the reason
 					// e.g. "Varlock leaver after dying" -> victim: "Varlock", reason: "leaver after dying"
@@ -2014,20 +2014,8 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				// !PUB (host public game)
 				//
 
-				else if( Command == "pub" || Command == "p" )
-				{
-					if( Payload.empty( ) )
-						
-						if( m_GHost->m_LastGameName == "" )
-						{
-							QueueChatCommand( m_GHost->m_Language->NoGameHasBeenHostedTillNow( ) , User, Whisper );
-							return;
-						}
-						else
-							Payload = m_GHost->m_LastGameName;
-					
+				else if( (Command == "pub" || Command == "p" ) && !Payload.empty( ) )
 					m_GHost->CreateGame( m_GHost->m_Map, GAME_PUBLIC, false, Payload, User, User, m_Server, Whisper );
-				}
 
 				//
 				// !PUBBY (host public game by other player)

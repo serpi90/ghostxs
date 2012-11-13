@@ -80,7 +80,6 @@ public:
 	bool m_AutoHostMatchMaking;
 	double m_AutoHostMinimumScore;
 	double m_AutoHostMaximumScore;
-	string m_LastGameName;					// Last Game Name for .pub command
 	bool m_AllGamesFinished;				// if all games finished (used when exiting nicely)
 	uint32_t m_AllGamesFinishedTime;		// GetTime when all games finished (used when exiting nicely)
 	string m_LanguageFile;					// config value: language file

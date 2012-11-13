@@ -1668,9 +1668,3 @@ string CLanguage :: UnmutedPlayersAll( string victim, string user )
     UTIL_Replace( Out, "$USER$", user );
     return Out;
 }
-
-string CLanguage :: NoGameHasBeenHostedTillNow( )
-{
-	string Out = m_CFG->GetString( "lang_0240", "lang_0240" );
-	return Out;
-}

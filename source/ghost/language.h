@@ -273,7 +273,6 @@ public:
 	string UnableToMutePlayersAllNoMatchesFound( string victim );
 	string MutedPlayersAll( string victim, string user );
 	string UnmutedPlayersAll( string victim, string user );
-	string NoGameHasBeenHostedTillNow( );
 };
 
 #endif

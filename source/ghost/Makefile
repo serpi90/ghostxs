@@ -42,7 +42,7 @@ PROGS = ./ghost++
 all: $(OBJS) $(COBJS) $(PROGS)
 
 ./ghost++: $(OBJS) $(COBJS)
-	$(C++) -o ../../runfiles/ghost++ $(OBJS) $(COBJS) $(LFLAGS)
+	$(C++) -o ../../shared/ghost++ $(OBJS) $(COBJS) $(LFLAGS)
 
 clean:
 	rm -f $(OBJS) $(COBJS) $(PROGS)
