@@ -5,8 +5,8 @@ MAPCFGDIR=/home/user/ghostxs/shared/mapcfgs/
 
 MAPNAME=`wget -q -O - getdota.com | grep file_name | grep -m 1 -o "DotA v[a-z\.0-9]*\.w3x"`
 
-# Se guardan en noMap para que no se pueda cargar el mapa directamente
-# obligando a cargar la config
+# Maps are stored in a subfolder called noMap, to prevent the use of .map, enforcing .load
+
 mkdir -p $MAPSDIR/noMap
 
 DOWNLOADED=`ls -l $MAPSDIR/noMap | grep -c "$MAPNAME"`
