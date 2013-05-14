@@ -17,4 +17,4 @@ done
 mkdir $1/
 cd $1
 
-cp -P ../example/* ./
+cp -Pr ../example/* ./
