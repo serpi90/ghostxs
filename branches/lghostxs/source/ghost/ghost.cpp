@@ -1182,46 +1182,46 @@ bool CGHost :: Update( long usecBlock )
 void CGHost :: EventBNETConnecting( CBNET *bnet )
 {
 	if( m_AdminGame )
-		m_AdminGame->SendAllChat( m_Language->ConnectingToBNET( bnet->GetServer( ) ) );
+		m_AdminGame->SendAllChat( m_Language->ConnectingToBNET( bnet->GetServerAlias( ) ) );
 
 	if( m_CurrentGame )
-		m_CurrentGame->SendAllChat( m_Language->ConnectingToBNET( bnet->GetServer( ) ) );
+		m_CurrentGame->SendAllChat( m_Language->ConnectingToBNET( bnet->GetServerAlias( ) ) );
 }
 
 void CGHost :: EventBNETConnected( CBNET *bnet )
 {
 	if( m_AdminGame )
-		m_AdminGame->SendAllChat( m_Language->ConnectedToBNET( bnet->GetServer( ) ) );
+		m_AdminGame->SendAllChat( m_Language->ConnectedToBNET( bnet->GetServerAlias( ) ) );
 
 	if( m_CurrentGame )
-		m_CurrentGame->SendAllChat( m_Language->ConnectedToBNET( bnet->GetServer( ) ) );
+		m_CurrentGame->SendAllChat( m_Language->ConnectedToBNET( bnet->GetServerAlias( ) ) );
 }
 
 void CGHost :: EventBNETDisconnected( CBNET *bnet )
 {
 	if( m_AdminGame )
-		m_AdminGame->SendAllChat( m_Language->DisconnectedFromBNET( bnet->GetServer( ) ) );
+		m_AdminGame->SendAllChat( m_Language->DisconnectedFromBNET( bnet->GetServerAlias( ) ) );
 
 	if( m_CurrentGame )
-		m_CurrentGame->SendAllChat( m_Language->DisconnectedFromBNET( bnet->GetServer( ) ) );
+		m_CurrentGame->SendAllChat( m_Language->DisconnectedFromBNET( bnet->GetServerAlias( ) ) );
 }
 
 void CGHost :: EventBNETLoggedIn( CBNET *bnet )
 {
 	if( m_AdminGame )
-		m_AdminGame->SendAllChat( m_Language->LoggedInToBNET( bnet->GetServer( ) ) );
+		m_AdminGame->SendAllChat( m_Language->LoggedInToBNET( bnet->GetServerAlias( ) ) );
 
 	if( m_CurrentGame )
-		m_CurrentGame->SendAllChat( m_Language->LoggedInToBNET( bnet->GetServer( ) ) );
+		m_CurrentGame->SendAllChat( m_Language->LoggedInToBNET( bnet->GetServerAlias( ) ) );
 }
 
 void CGHost :: EventBNETGameRefreshed( CBNET *bnet )
 {
 	if( m_AdminGame )
-		m_AdminGame->SendAllChat( m_Language->BNETGameHostingSucceeded( bnet->GetServer( ) ) );
+		m_AdminGame->SendAllChat( m_Language->BNETGameHostingSucceeded( bnet->GetServerAlias( ) ) );
 
 	if( m_CurrentGame )
-		m_CurrentGame->EventGameRefreshed( bnet->GetServer( ) );
+		m_CurrentGame->EventGameRefreshed( bnet->GetServerAlias( ) );
 }
 
 void CGHost :: EventBNETGameRefreshFailed( CBNET *bnet )
@@ -1230,16 +1230,16 @@ void CGHost :: EventBNETGameRefreshFailed( CBNET *bnet )
 	{
                 for( vector<CBNET *> :: iterator i = m_BNETs.begin( ); i != m_BNETs.end( ); ++i )
 		{
-			(*i)->QueueChatCommand( m_Language->UnableToCreateGameTryAnotherName( bnet->GetServer( ), m_CurrentGame->GetGameName( ) ) );
+			(*i)->QueueChatCommand( m_Language->UnableToCreateGameTryAnotherName( bnet->GetServerAlias( ), m_CurrentGame->GetGameName( ) ) );
 
 			if( (*i)->GetServer( ) == m_CurrentGame->GetCreatorServer( ) )
-				(*i)->QueueChatCommand( m_Language->UnableToCreateGameTryAnotherName( bnet->GetServer( ), m_CurrentGame->GetGameName( ) ), m_CurrentGame->GetCreatorName( ), true );
+				(*i)->QueueChatCommand( m_Language->UnableToCreateGameTryAnotherName( bnet->GetServerAlias( ), m_CurrentGame->GetGameName( ) ), m_CurrentGame->GetCreatorName( ), true );
 		}
 
 		if( m_AdminGame )
-			m_AdminGame->SendAllChat( m_Language->BNETGameHostingFailed( bnet->GetServer( ), m_CurrentGame->GetGameName( ) ) );
+			m_AdminGame->SendAllChat( m_Language->BNETGameHostingFailed( bnet->GetServerAlias( ), m_CurrentGame->GetGameName( ) ) );
 
-		m_CurrentGame->SendAllChat( m_Language->UnableToCreateGameTryAnotherName( bnet->GetServer( ), m_CurrentGame->GetGameName( ) ) );
+		m_CurrentGame->SendAllChat( m_Language->UnableToCreateGameTryAnotherName( bnet->GetServerAlias( ), m_CurrentGame->GetGameName( ) ) );
 
 		// we take the easy route and simply close the lobby if a refresh fails
 		// it's possible at least one refresh succeeded and therefore the game is still joinable on at least one battle.net (plus on the local network) but we don't keep track of that
@@ -1255,10 +1255,10 @@ void CGHost :: EventBNETGameRefreshFailed( CBNET *bnet )
 void CGHost :: EventBNETConnectTimedOut( CBNET *bnet )
 {
 	if( m_AdminGame )
-		m_AdminGame->SendAllChat( m_Language->ConnectingToBNETTimedOut( bnet->GetServer( ) ) );
+		m_AdminGame->SendAllChat( m_Language->ConnectingToBNETTimedOut( bnet->GetServerAlias( ) ) );
 
 	if( m_CurrentGame )
-		m_CurrentGame->SendAllChat( m_Language->ConnectingToBNETTimedOut( bnet->GetServer( ) ) );
+		m_CurrentGame->SendAllChat( m_Language->ConnectingToBNETTimedOut( bnet->GetServerAlias( ) ) );
 }
 
 void CGHost :: EventBNETWhisper( CBNET *bnet, string user, string message )

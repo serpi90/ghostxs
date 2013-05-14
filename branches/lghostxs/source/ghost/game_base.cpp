@@ -292,6 +292,7 @@ uint32_t CBaseGame :: GetNumHumanPlayers( )
 
 string CBaseGame :: GetDescription( )
 {
+	string Description = m_GameName +" C: "+ m_CreatorName + " O: " + m_OwnerName + " : " + UTIL_ToString( GetNumHumanPlayers( ) ) + "/" + UTIL_ToString( m_GameLoading || m_GameLoaded ? m_StartPlayers : m_Slots.size( ) );
 	string Description = m_GameName + " : " + m_OwnerName + " : " + UTIL_ToString( GetNumHumanPlayers( ) ) + "/" + UTIL_ToString( m_GameLoading || m_GameLoaded ? m_StartPlayers : m_Slots.size( ) );
 
 	if( m_GameLoading || m_GameLoaded )
@@ -2977,6 +2978,29 @@ void CBaseGame :: EventPlayerChatToHost( CGamePlayer *player, CIncomingChatPlaye
 					if( m_MuteAll  || player->GetAllMuted( ) ) //GHOSTXS
 						Relay = false;
 				}
+				else if( ExtraFlags[0] == 1 )
+				{
+					// this is an ingame [Allies] or [Sentinel/Scourge] message, print it to the console
+					if( m_MapType == "dota" )
+					{
+						unsigned char SID = GetSIDFromPID( player->GetPID() );
+						unsigned char fteam;
+						fteam = m_Slots[SID].GetTeam( );
+						if( fteam == 0 )
+						{
+							CONSOLE_Print( "[GAME: " + m_GameName + "] (" + MinString + ":" + SecString + ") [Sentinel] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage$
+						}
+						else
+						{
+							CONSOLE_Print( "[GAME: " + m_GameName + "] (" + MinString + ":" + SecString + ") [Scourge] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage($
+						}
+					}
+					else
+					{
+						CONSOLE_Print( "[GAME: " + m_GameName + "] (" + MinString + ":" + SecString + ") [Allies] [" + player->GetName( ) + "]: " + chatPlayer->GetMessage( ) );
+					}
+				}
+
 				else if( ExtraFlags[0] == 2 )
 				{
 					// this is an ingame [Obs/Ref] message, print it to the console

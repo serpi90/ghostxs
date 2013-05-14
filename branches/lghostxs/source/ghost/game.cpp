@@ -343,9 +343,9 @@ bool CGame :: EventPlayerAction( CGamePlayer *player, CIncomingAction *action )
         SendEndMessage( );
         m_GameOverTime = GetTime( );
     }
-	
+
 	return success;
-	
+
 	if (m_GameEndCountDownStarted)
     {
 		if (m_AutoEnded)
@@ -409,13 +409,13 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 
 	bool CommandExecuted = false;
 	bool NonLockableCommandExecuted = true;
-	
+
     if ( player->GetSpoofed( ) && ( AdminCheck || RootAdminCheck || IsOwner( User ) ) )
     {
 		CommandExecuted = true;
-		
-        CONSOLE_Print( "[GAME: " + m_GameName + "] admin [" + User + "] sent command [" + Command + "] with payload [" + Payload + "]" );
-        
+
+		CONSOLE_Print( "[GAME: " + m_GameName + "] admin [" + User + "] sent command [" + Command + "] with payload [" + Payload + "]" );
+
 		//
 		// !ADMINCHAT by Zephyrix improved by Metal_Koola
 		//
@@ -453,7 +453,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             /**************************
             * LOCKABLE ADMIN COMMANDS *
             ***************************/
-            
+
             //
             // !ABORT (abort countdown, this includes start, end and autoend countdown)
             // !A
@@ -480,6 +480,28 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 					m_GameEndCountDownStarted = false;
 				}
             }
+            else if( ( Command == "showgproxy" || Command == "sgp" ) )
+            {
+            	string UsingGProxy;
+            	for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
+            	{
+					if( (*i)->GetGProxy( ) )
+					{
+						if( UsingGProxy.empty( ) )
+							UsingGProxy = (*i)->GetName( );
+						else
+							UsingGProxy += ", " + (*i)->GetName( );
+					}
+				}
+				if( Payload.empty( ) )
+				{
+					if( UsingGProxy.empty( ) )
+						SendAllChat( "No one is using GProxy++" );
+					else
+						SendAllChat( "Players using GProxy++: " + UsingGProxy );
+				}
+				else SendChat( player, "The command is .showgproxy or .sgp" );
+			}
 
 			/*/
 			// !Rate
@@ -513,7 +535,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 				uint32_t team1;
 
 				for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
-				
+
 				{
 					playerSID = GetSIDFromPID( (*i)->GetPID( ) );
 					team = m_Slots[playerSID].GetTeam( );
@@ -569,9 +591,11 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 					SendAllChat("No matches.");
 				}
 			}
+
 			//
 			// !NORESERVER !NR
 			//
+
 			else if ( (Command == "nr" || Command == "noreserved") && Payload.empty() && !m_GameLoaded )
 			{
 				m_ReserveAdmins = !m_ReserveAdmins;
@@ -581,7 +605,6 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 					SendAllChat ("Sin reservas de slots para administradores");
 			}
 
-			
 			//
 			// !BANS
 			//
@@ -643,7 +666,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 				else
 					SendAllChat ( m_GHost->m_Language->YouDontHaveAccessToThatCommand( ) );
 			}
-			
+
             //
             // !ADDBAN
             // !BAN
@@ -1513,7 +1536,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             // !MUTEALL
             //
 
-            else if ( Command == "muteall" && m_GameLoaded )
+            else if ( ( Command == "muteall" || Command == "ma" ) && m_GameLoaded )
             {
 				if ( Payload.empty( ) )
 				{
@@ -1653,7 +1676,6 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
 						{
 							SendAllChat( m_GHost->m_Language->UnableToTransferOwnershipFoundMoreThanOneMatch( ) );
 						}
-						
                     }
                     else
                     {
@@ -1953,13 +1975,13 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
                     }
                 }
             }
-            			
+
 			//
 			// !Servers
 			// !sv
 			// !realm
 			//
-			
+
 			else if( Command == "servers" || Command == "sv" || Command == "realm" )
 			{
 				string Froms;
@@ -2194,7 +2216,7 @@ bool CGame :: EventPlayerBotCommand( CGamePlayer *player, string command, string
             // !UNMUTEALL
             //
 
-            else if ( Command == "unmuteall" && m_GameLoaded )
+            else if ( ( Command == "unmuteall" || Command == "uma" ) && m_GameLoaded )
             {
 				if (Payload.empty ( ) )
 				{
