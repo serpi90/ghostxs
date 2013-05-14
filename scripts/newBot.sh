@@ -1,4 +1,10 @@
 #!\bin\bash
+if [ $# -lt 1 ]
+then
+	echo "Usage: $0 [botName]" >&2
+	echo "Will create a new folder in accounts, named 'botName'" >&2
+	exit 1
+fi
 
 BOTS_ROOT=/home/user/ghostxs/
 
