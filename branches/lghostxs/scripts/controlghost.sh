@@ -1,34 +1,60 @@
 #!/bin/bash
 
-BOTS_ROOT=/home/user/ghostxs/
-VERBOSE=1
+BOTS_ROOT=/home/$USER/ghostxs/
+VERBOSE=0
+
+# Show help and exit
+if [ $(echo $@ | grep -ioE "\-[a-z-]*\b" | grep -cE '(-h)|(--help)') -gt 0 ]
+then
+	echo "Usage: $0 [OPERATION] [BOTNAME] -v --verbose -h --help"
+	echo "Operations:"
+	echo " - create		create a new bot instance, in accounts folder"
+	echo " - list		list current bots, in accounts folder"
+	echo " - kill		terminate the bot with a kill signal"
+	echo " - status		check if the bot is running"
+	echo " - start		start the bot"
+	echo " - stop		send a nice stop, will wait for current games to end"
+	echo " - stopforce	equivalent to sending 2 times stop, stops the current games and finishes"
+	echo " - restart	send a stopforce and then start the bot"
+	exit 1
+fi
 
 # Warn if not enough parameters
-if [ "$#" -lt 2 ]
+if [ "$#" -lt 1 ]
 then
-	echo "Usage: $0 [BOTNAME] start|stop|stopforce|kill|restart|status"
+	echo "Usage: $0 [OPERATION] [BOTNAME] -v --verbose -h --help"
+	echo "Operations:"
+	echo "create, kill, status, start, stop, stopforce, restart"
 	exit 1
 fi
 
 # Enable verbose on -v or --verbose
-for each in `echo $@ |  grep -oE "\-[a-Z-]*\b"`
+for each in $(echo $@ |  grep -oE "\-[a-Z-]*\b")
 do
         if [ $each = "-v" ] || [ $each = "--verbose" ]
         then
-                VERBOSE=1
+			VERBOSE=1
         fi
 done
 
-BOTNAME=$1
-OPERATION=$2
+OPERATION=$1
+BOTNAME=$2
 
 ######################
 ## Helper functions ##
 ######################
 
-function checkValidBot
+vecho ()
 {
-	if [ -d $BOTS_ROOT/accounts/$BOTNAME ] && [ $BOTNAME != example ]
+	if [ $VERBOSE -eq 1 ]
+	then
+		echo $@
+	fi
+}
+
+checkValidBot ()
+{
+	if [ -d $BOTS_ROOT/accounts/$BOTNAME ] && [ q$BOTNAME != "qexample" ]
 	then
 		RESULT=1
 	else
@@ -36,19 +62,31 @@ function checkValidBot
 	fi
 }
 
-function getStatus
+listBots ()
+{
+	for bot in $(ls $BOTS_ROOT/accounts/ -F | grep -ioE '\b\w*')
+	do
+		if [ $bot != "example" ]
+		then
+			echo -n "$bot "
+		fi
+	done
+	echo
+}
+
+getStatus ()
 {
 	RESULT=`ps -ewwo args | grep -c [G]$BOTNAME`
 }
 
-function getPid
+getPid ()
 {
 	local PARENT_PID
 	PARENT_PID=`ps -ewwo pid,args | grep [G]$BOTNAME | sed -r 's/^\ *([0-9]*).*/\1/'`
 	RESULT=`ps -ewwo pid,ppid,args | grep -E "^\ *[0-9]+\ +$PARENT_PID" | sed -r 's/^\ *([0-9]*).*/\1/'`
 }
 
-function stopBot
+stopBot ()
 {
 	getStatus
 	if [ $RESULT != 0 ]
@@ -58,13 +96,13 @@ function stopBot
 	fi
 }
 
-function stopForceBot
+stopForceBot ()
 {
 	stopBot
 	stopBot
 }
 
-function killBot
+killBot ()
 {
 	getStatus
 	if [ $RESULT != 0 ]
@@ -74,7 +112,7 @@ function killBot
 	fi
 }
 
-function startBot
+startBot ()
 {
 	if [ -d $BOTS_ROOT/accounts/$BOTNAME/ ] && [ $BOTNAME != example ]
 	then
@@ -87,10 +125,25 @@ function startBot
 	fi
 }
 
-function botNotRunning
+botNotRunning ()
 {
 	echo Error: $BOTNAME is not running.
 	exit 1
+}
+
+create ()
+{
+	for folder in $(ls $BOTS_ROOT/accounts/)
+	do
+		if [ $folder == $BOTNAME ]
+		then
+			echo Error: Bot $BOTNAME exists, not creating.
+			exit 1
+		fi
+	done
+	mkdir -p $BOTS_ROOT/accounts/$BOTNAME/
+	cp -r $BOTS_ROOT/accounts/example/* $BOTS_ROOT/accounts/$BOTNAME/
+	vecho Created $BOTNAME folder in $BOTS_ROOT/accounts/$BOTNAME please modify ghost.cfg
 }
 
 #################
@@ -98,7 +151,10 @@ function botNotRunning
 #################
 
 checkValidBot
-if [ $RESULT = 0 ]
+if [ $OPERATION = create ]
+then
+	create
+elif [ $RESULT = 0 ]
 then
 	echo $BOTNAME is not recognised as a valid bot name/folder
 	exit 1
@@ -113,7 +169,7 @@ then
 		exit 1
 	else
 		startBot
-		if [ $VERBOSE = 1 ]; then echo Started $BOTNAME; fi
+		vecho Started $BOTNAME
 	fi
 elif [ $OPERATION = stop ]
 then
@@ -122,7 +178,7 @@ then
 	then botNotRunning
 	else
 		stopBot
-		if [ $VERBOSE = 1 ]; then echo Stopped $BOTNAME; fi
+		vecho Stopped $BOTNAME
 	fi
 elif [ $OPERATION = stopforce ]
 then
@@ -131,7 +187,7 @@ then
 	then botNotRunning
 	else
 		stopForceBot
-		if [ $VERBOSE = 1 ]; then echo Stopped forcefully $BOTNAME; fi
+		vecho Stopped forcefully $BOTNAME
 	fi
 elif [ $OPERATION = kill ]
 then
@@ -140,7 +196,7 @@ then
 	then botNotRunning
 	else
 		killBot
-		if [ $VERBOSE = 1 ]; then echo Killed process for $BOTNAME; fi
+		vecho Killed process for $BOTNAME
 	fi
 elif [ $OPERATION = restart ]
 then
@@ -148,11 +204,11 @@ then
 	if [ $RESULT = 0 ]
 	then botNotRunning
 	else
-		stopBot
-		if [ $VERBOSE = 1 ]; then echo Stopped $BOTNAME; fi
+		stopForceBot
+		vecho Stopped $BOTNAME
 		sleep 2
 		startBot
-		if [ $VERBOSE = 1 ]; then echo Started $BOTNAME; fi
+		vecho Started $BOTNAME
 	fi
 elif [ $OPERATION = status ]
 then
@@ -161,6 +217,9 @@ then
 	then echo $BOTNAME is not Running.
 	else echo $BOTNAME is Running.
 	fi
+elif [ $OPERATION = list ]
+then
+	listBots
 else
 	echo ERROR: $OPERATION is not recognised as a valid operand.
 fi

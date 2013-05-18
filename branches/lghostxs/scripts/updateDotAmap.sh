@@ -1,7 +1,9 @@
 #!/bin/bash
 
-MAPSDIR=/home/user/ghostxs/shared/maps/
-MAPCFGDIR=/home/user/ghostxs/shared/mapcfgs/
+BOTS_ROOT=/home/$USER/ghostxs/
+
+MAPSDIR=$BOTS_ROOT/shared/maps/
+MAPCFGDIR=$BOTS_ROOT/shared/mapcfgs/
 
 MAPNAME=`wget -q -O - getdota.com | grep file_name | grep -m 1 -o "DotA v[a-z\.0-9]*\.w3x"`
 
