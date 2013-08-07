@@ -6,7 +6,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
    CODE PORTED FROM THE ORIGINAL GHOST PROJECT: http://ghost.pwner.org/
 
-*/
+ */
 
 #include "ghost.h"
 #include "config.h"
@@ -27,90 +27,90 @@
 // CConfig
 //
 
-CConfig :: CConfig( )
+CConfig::CConfig()
 {
 
 }
 
-CConfig :: ~CConfig( )
+CConfig::~CConfig()
 {
 
 }
 
-void CConfig :: Read( string file )
+void CConfig::Read(string file)
 {
 	ifstream in;
-	in.open( file.c_str( ) );
+	in.open(file.c_str());
 
-	if( in.fail( ) )
-		CONSOLE_Print( "[CONFIG] warning - unable to read file [" + file + "]" );
+	if (in.fail())
+		CONSOLE_Print("[CONFIG] warning - unable to read file [" + file + "]");
 	else
 	{
-		CONSOLE_Print( "[CONFIG] loading file [" + file + "]" );
+		CONSOLE_Print("[CONFIG] loading file [" + file + "]");
 		string Line;
 
-		while( !in.eof( ) )
+		while (!in.eof())
 		{
-			getline( in, Line );
+			getline(in, Line);
 
 			// ignore blank lines and comments
 
-			if( Line.empty( ) || Line[0] == '#' )
+			if (Line.empty() || Line[0] == '#')
 				continue;
 
 			// remove newlines and partial newlines to help fix issues with Windows formatted config files on Linux systems
 
-			Line.erase( remove( Line.begin( ), Line.end( ), '\r' ), Line.end( ) );
-			Line.erase( remove( Line.begin( ), Line.end( ), '\n' ), Line.end( ) );
+			Line.erase(remove(Line.begin(), Line.end(), '\r'), Line.end());
+			Line.erase(remove(Line.begin(), Line.end(), '\n'), Line.end());
 
-			string :: size_type Split = Line.find( "=" );
+			string::size_type Split = Line.find("=");
 
-			if( Split == string :: npos )
+			if (Split == string::npos)
 				continue;
 
-			string :: size_type KeyStart = Line.find_first_not_of( " " );
-			string :: size_type KeyEnd = Line.find( " ", KeyStart );
-			string :: size_type ValueStart = Line.find_first_not_of( " ", Split + 1 );
-			string :: size_type ValueEnd = Line.size( );
+			string::size_type KeyStart = Line.find_first_not_of(" ");
+			string::size_type KeyEnd = Line.find(" ", KeyStart);
+			string::size_type ValueStart = Line.find_first_not_of(" ", Split + 1);
+			string::size_type ValueEnd = Line.size();
 
-			if( ValueStart != string :: npos )
-				m_CFG[Line.substr( KeyStart, KeyEnd - KeyStart )] = Line.substr( ValueStart, ValueEnd - ValueStart );
+			if (ValueStart != string::npos)
+				m_CFG[Line.substr(KeyStart, KeyEnd - KeyStart)] = Line.substr(ValueStart, ValueEnd - ValueStart);
 		}
 
-		in.close( );
+		in.close();
 	}
 }
 
-bool CConfig :: Exists( string key )
+bool CConfig::Exists(string key)
 {
-	return m_CFG.find( key ) != m_CFG.end( );
+	return m_CFG.find(key) != m_CFG.end();
 }
 
-int CConfig :: GetInt( string key, int x )
+int CConfig::GetInt(string key, int x)
 {
-	if( m_CFG.find( key ) == m_CFG.end( ) )
+	if (m_CFG.find(key) == m_CFG.end())
 		return x;
 	else
-		return atoi( m_CFG[key].c_str( ) );
+		return atoi(m_CFG[key].c_str());
 }
 
-uint32_t CConfig :: GetUInt( string key, uint32_t x )
+uint32_t CConfig::GetUInt(string key, uint32_t x)
 {
-	if( m_CFG.find( key ) == m_CFG.end( ) )
+	if (m_CFG.find(key) == m_CFG.end())
 		return x;
 	else
-		return strtoul( m_CFG[key].c_str( ), NULL, 0 );
+		return strtoul(m_CFG[key].c_str(), NULL, 0);
 }
 
-string CConfig :: GetString( string key, string x )
+string CConfig::GetString(string key, string x)
 {
-	if( m_CFG.find( key ) == m_CFG.end( ) )
+	if (m_CFG.find(key) == m_CFG.end())
 		return x;
 	else
 		return m_CFG[key];
 }
 
-void CConfig :: Set( string key, string x )
+void CConfig::Set(string key, string x)
 {
 	m_CFG[key] = x;
 }

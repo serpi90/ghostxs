@@ -46,20 +46,20 @@
 // or compiler give many errors like this:
 //   error C2733: second C linkage of overloaded function 'wmemchr' not allowed
 #if (_MSC_VER < 1300) && defined(__cplusplus)
-   extern "C++" {
+extern "C++" {
 #endif 
-#     include <wchar.h>
+#include <wchar.h>
 #if (_MSC_VER < 1300) && defined(__cplusplus)
-   }
+}
 #endif
 
 // Define _W64 macros to mark types changing their size, like intptr_t.
 #ifndef _W64
-#  if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
-#     define _W64 __w64
-#  else
-#     define _W64
-#  endif
+#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
+#define _W64 __w64
+#else
+#define _W64
+#endif
 #endif
 
 // Workaround for V2010
@@ -69,47 +69,47 @@
 // 7.18.1 Integer types
 
 // 7.18.1.1 Exact-width integer types
-typedef __int8            int8_t;
-typedef __int16           int16_t;
-typedef __int32           int32_t;
-typedef __int64           int64_t;
-typedef unsigned __int8   uint8_t;
-typedef unsigned __int16  uint16_t;
-typedef unsigned __int32  uint32_t;
-typedef unsigned __int64  uint64_t;
+typedef __int8 int8_t;
+typedef __int16 int16_t;
+typedef __int32 int32_t;
+typedef __int64 int64_t;
+typedef unsigned __int8 uint8_t;
+typedef unsigned __int16 uint16_t;
+typedef unsigned __int32 uint32_t;
+typedef unsigned __int64 uint64_t;
 
 // 7.18.1.2 Minimum-width integer types
-typedef int8_t    int_least8_t;
-typedef int16_t   int_least16_t;
-typedef int32_t   int_least32_t;
-typedef int64_t   int_least64_t;
-typedef uint8_t   uint_least8_t;
-typedef uint16_t  uint_least16_t;
-typedef uint32_t  uint_least32_t;
-typedef uint64_t  uint_least64_t;
+typedef int8_t int_least8_t;
+typedef int16_t int_least16_t;
+typedef int32_t int_least32_t;
+typedef int64_t int_least64_t;
+typedef uint8_t uint_least8_t;
+typedef uint16_t uint_least16_t;
+typedef uint32_t uint_least32_t;
+typedef uint64_t uint_least64_t;
 
 // 7.18.1.3 Fastest minimum-width integer types
-typedef int8_t    int_fast8_t;
-typedef int16_t   int_fast16_t;
-typedef int32_t   int_fast32_t;
-typedef int64_t   int_fast64_t;
-typedef uint8_t   uint_fast8_t;
-typedef uint16_t  uint_fast16_t;
-typedef uint32_t  uint_fast32_t;
-typedef uint64_t  uint_fast64_t;
+typedef int8_t int_fast8_t;
+typedef int16_t int_fast16_t;
+typedef int32_t int_fast32_t;
+typedef int64_t int_fast64_t;
+typedef uint8_t uint_fast8_t;
+typedef uint16_t uint_fast16_t;
+typedef uint32_t uint_fast32_t;
+typedef uint64_t uint_fast64_t;
 
 // 7.18.1.4 Integer types capable of holding object pointers
 #ifdef _WIN64 // [
-   typedef __int64           intptr_t;
-   typedef unsigned __int64  uintptr_t;
+typedef __int64 intptr_t;
+typedef unsigned __int64 uintptr_t;
 #else // _WIN64 ][
-   typedef _W64 int               intptr_t;
-   typedef _W64 unsigned int      uintptr_t;
+typedef _W64 int intptr_t;
+typedef _W64 unsigned int uintptr_t;
 #endif // _WIN64 ]
 
 // 7.18.1.5 Greatest-width integer types
-typedef int64_t   intmax_t;
-typedef uint64_t  uintmax_t;
+typedef int64_t intmax_t;
+typedef uint64_t uintmax_t;
 
 
 // 7.18.2 Limits of specified-width integer types
@@ -160,13 +160,13 @@ typedef uint64_t  uintmax_t;
 
 // 7.18.2.4 Limits of integer types capable of holding object pointers
 #ifdef _WIN64 // [
-#  define INTPTR_MIN   INT64_MIN
-#  define INTPTR_MAX   INT64_MAX
-#  define UINTPTR_MAX  UINT64_MAX
+#define INTPTR_MIN   INT64_MIN
+#define INTPTR_MAX   INT64_MAX
+#define UINTPTR_MAX  UINT64_MAX
 #else // _WIN64 ][
-#  define INTPTR_MIN   INT32_MIN
-#  define INTPTR_MAX   INT32_MAX
-#  define UINTPTR_MAX  UINT32_MAX
+#define INTPTR_MIN   INT32_MIN
+#define INTPTR_MAX   INT32_MAX
+#define UINTPTR_MAX  UINT32_MAX
 #endif // _WIN64 ]
 
 // 7.18.2.5 Limits of greatest-width integer types
@@ -177,30 +177,30 @@ typedef uint64_t  uintmax_t;
 // 7.18.3 Limits of other integer types
 
 #ifdef _WIN64 // [
-#  define PTRDIFF_MIN  _I64_MIN
-#  define PTRDIFF_MAX  _I64_MAX
+#define PTRDIFF_MIN  _I64_MIN
+#define PTRDIFF_MAX  _I64_MAX
 #else  // _WIN64 ][
-#  define PTRDIFF_MIN  _I32_MIN
-#  define PTRDIFF_MAX  _I32_MAX
+#define PTRDIFF_MIN  _I32_MIN
+#define PTRDIFF_MAX  _I32_MAX
 #endif  // _WIN64 ]
 
 #define SIG_ATOMIC_MIN  INT_MIN
 #define SIG_ATOMIC_MAX  INT_MAX
 
 #ifndef SIZE_MAX // [
-#  ifdef _WIN64 // [
-#     define SIZE_MAX  _UI64_MAX
-#  else // _WIN64 ][
-#     define SIZE_MAX  _UI32_MAX
-#  endif // _WIN64 ]
+#ifdef _WIN64 // [
+#define SIZE_MAX  _UI64_MAX
+#else // _WIN64 ][
+#define SIZE_MAX  _UI32_MAX
+#endif // _WIN64 ]
 #endif // SIZE_MAX ]
 
 // WCHAR_MIN and WCHAR_MAX are also defined in <wchar.h>
 #ifndef WCHAR_MIN // [
-#  define WCHAR_MIN  0
+#define WCHAR_MIN  0
 #endif  // WCHAR_MIN ]
 #ifndef WCHAR_MAX // [
-#  define WCHAR_MAX  _UI16_MAX
+#define WCHAR_MAX  _UI16_MAX
 #endif  // WCHAR_MAX ]
 
 #define WINT_MIN  0

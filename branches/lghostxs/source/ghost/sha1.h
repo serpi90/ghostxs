@@ -2,7 +2,7 @@
 	100% free public domain implementation of the SHA-1
 	algorithm by Dominik Reichl <Dominik.Reichl@tiscali.de>
 
-	* modified by Trevor Hogan for use with GHost++ *
+ * modified by Trevor Hogan for use with GHost++ *
 
 	=== Test Vectors (from FIPS PUB 180-1) ===
 
@@ -14,7 +14,7 @@
 
 	A million repetitions of "a"
 		34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F
-*/
+ */
 
 #ifndef ___SHA1_H___
 #define ___SHA1_H___
@@ -26,35 +26,34 @@
 // standard integer sizes for 64 bit compatibility
 
 #ifdef WIN32
- #include "ms_stdint.h"
+#include "ms_stdint.h"
 #else
- #include <stdint.h>
+#include <stdint.h>
 #endif
 
 #define MAX_FILE_READ_BUFFER 8000
 
-class CSHA1
-{
+class CSHA1 {
 public:
 	// Rotate x bits to the left
-	#define ROL32(value, bits) (((value)<<(bits))|((value)>>(32-(bits))))
+#define ROL32(value, bits) (((value)<<(bits))|((value)>>(32-(bits))))
 
-	#ifdef GHOST_BIG_ENDIAN
-		#define SHABLK0(i) (block->l[i])
-	#else
-		#define SHABLK0(i) (block->l[i] = (ROL32(block->l[i],24) & 0xFF00FF00) \
+#ifdef GHOST_BIG_ENDIAN
+#define SHABLK0(i) (block->l[i])
+#else
+#define SHABLK0(i) (block->l[i] = (ROL32(block->l[i],24) & 0xFF00FF00) \
 			| (ROL32(block->l[i],8) & 0x00FF00FF))
-	#endif
+#endif
 
-	#define SHABLK(i) (block->l[i&15] = ROL32(block->l[(i+13)&15] ^ block->l[(i+8)&15] \
+#define SHABLK(i) (block->l[i&15] = ROL32(block->l[(i+13)&15] ^ block->l[(i+8)&15] \
 		^ block->l[(i+2)&15] ^ block->l[i&15],1))
 
 	// SHA-1 rounds
-	#define R0(v,w,x,y,z,i) { z+=((w&(x^y))^y)+SHABLK0(i)+0x5A827999+ROL32(v,5); w=ROL32(w,30); }
-	#define R1(v,w,x,y,z,i) { z+=((w&(x^y))^y)+SHABLK(i)+0x5A827999+ROL32(v,5); w=ROL32(w,30); }
-	#define R2(v,w,x,y,z,i) { z+=(w^x^y)+SHABLK(i)+0x6ED9EBA1+ROL32(v,5); w=ROL32(w,30); }
-	#define R3(v,w,x,y,z,i) { z+=(((w|x)&y)|(w&x))+SHABLK(i)+0x8F1BBCDC+ROL32(v,5); w=ROL32(w,30); }
-	#define R4(v,w,x,y,z,i) { z+=(w^x^y)+SHABLK(i)+0xCA62C1D6+ROL32(v,5); w=ROL32(w,30); }
+#define R0(v,w,x,y,z,i) { z+=((w&(x^y))^y)+SHABLK0(i)+0x5A827999+ROL32(v,5); w=ROL32(w,30); }
+#define R1(v,w,x,y,z,i) { z+=((w&(x^y))^y)+SHABLK(i)+0x5A827999+ROL32(v,5); w=ROL32(w,30); }
+#define R2(v,w,x,y,z,i) { z+=(w^x^y)+SHABLK(i)+0x6ED9EBA1+ROL32(v,5); w=ROL32(w,30); }
+#define R3(v,w,x,y,z,i) { z+=(((w|x)&y)|(w&x))+SHABLK(i)+0x8F1BBCDC+ROL32(v,5); w=ROL32(w,30); }
+#define R4(v,w,x,y,z,i) { z+=(w^x^y)+SHABLK(i)+0xCA62C1D6+ROL32(v,5); w=ROL32(w,30); }
 
 	typedef union {
 		unsigned char c[64];
@@ -62,7 +61,10 @@ public:
 	} SHA1_WORKSPACE_BLOCK;
 
 	// Two different formats for ReportHash(...)
-	enum { REPORT_HEX = 0, REPORT_DIGIT = 1 };
+
+	enum {
+		REPORT_HEX = 0, REPORT_DIGIT = 1
+	};
 
 	// Constructor and Destructor
 	CSHA1();

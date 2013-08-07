@@ -6,7 +6,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
    CODE PORTED FROM THE ORIGINAL GHOST PROJECT: http://ghost.pwner.org/
 
-*/
+ */
 
 #ifndef PACKED_H
 #define PACKED_H
@@ -27,8 +27,7 @@
 
 class CCRC32;
 
-class CPacked
-{
+class CPacked {
 public:
 	CCRC32 *m_CRC;
 
@@ -48,32 +47,75 @@ protected:
 	uint32_t m_ReplayLength;
 
 public:
-	CPacked( );
-	virtual ~CPacked( );
+	CPacked();
+	virtual ~CPacked();
 
-	virtual bool GetValid( )				{ return m_Valid; }
-	virtual uint32_t GetHeaderSize( )		{ return m_HeaderSize; }
-	virtual uint32_t GetCompressedSize( )	{ return m_CompressedSize; }
-	virtual uint32_t GetHeaderVersion( )	{ return m_HeaderVersion; }
-	virtual uint32_t GetDecompressedSize( )	{ return m_DecompressedSize; }
-	virtual uint32_t GetNumBlocks( )		{ return m_NumBlocks; }
-	virtual uint32_t GetWar3Identifier( )	{ return m_War3Identifier; }
-	virtual uint32_t GetWar3Version( )		{ return m_War3Version; }
-	virtual uint16_t GetBuildNumber( )		{ return m_BuildNumber; }
-	virtual uint16_t GetFlags( )			{ return m_Flags; }
-	virtual uint32_t GetReplayLength( )		{ return m_ReplayLength; }
+	virtual bool GetValid() {
+		return m_Valid;
+	}
 
-	virtual void SetWar3Version( uint32_t nWar3Version )			{ m_War3Version = nWar3Version; }
-	virtual void SetBuildNumber( uint16_t nBuildNumber )			{ m_BuildNumber = nBuildNumber; }
-	virtual void SetFlags( uint16_t nFlags )						{ m_Flags = nFlags; }
-	virtual void SetReplayLength( uint32_t nReplayLength )			{ m_ReplayLength = nReplayLength; }
+	virtual uint32_t GetHeaderSize() {
+		return m_HeaderSize;
+	}
 
-	virtual void Load( string fileName, bool allBlocks );
-	virtual bool Save( bool TFT, string fileName );
-	virtual bool Extract( string inFileName, string outFileName );
-	virtual bool Pack( bool TFT, string inFileName, string outFileName );
-	virtual void Decompress( bool allBlocks );
-	virtual void Compress( bool TFT );
+	virtual uint32_t GetCompressedSize() {
+		return m_CompressedSize;
+	}
+
+	virtual uint32_t GetHeaderVersion() {
+		return m_HeaderVersion;
+	}
+
+	virtual uint32_t GetDecompressedSize() {
+		return m_DecompressedSize;
+	}
+
+	virtual uint32_t GetNumBlocks() {
+		return m_NumBlocks;
+	}
+
+	virtual uint32_t GetWar3Identifier() {
+		return m_War3Identifier;
+	}
+
+	virtual uint32_t GetWar3Version() {
+		return m_War3Version;
+	}
+
+	virtual uint16_t GetBuildNumber() {
+		return m_BuildNumber;
+	}
+
+	virtual uint16_t GetFlags() {
+		return m_Flags;
+	}
+
+	virtual uint32_t GetReplayLength() {
+		return m_ReplayLength;
+	}
+
+	virtual void SetWar3Version(uint32_t nWar3Version) {
+		m_War3Version = nWar3Version;
+	}
+
+	virtual void SetBuildNumber(uint16_t nBuildNumber) {
+		m_BuildNumber = nBuildNumber;
+	}
+
+	virtual void SetFlags(uint16_t nFlags) {
+		m_Flags = nFlags;
+	}
+
+	virtual void SetReplayLength(uint32_t nReplayLength) {
+		m_ReplayLength = nReplayLength;
+	}
+
+	virtual void Load(string fileName, bool allBlocks);
+	virtual bool Save(bool TFT, string fileName);
+	virtual bool Extract(string inFileName, string outFileName);
+	virtual bool Pack(bool TFT, string inFileName, string outFileName);
+	virtual void Decompress(bool allBlocks);
+	virtual void Compress(bool TFT);
 };
 
 #endif

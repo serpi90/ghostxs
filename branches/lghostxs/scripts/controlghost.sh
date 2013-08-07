@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BOTS_ROOT=/home/$USER/ghostxs/
+BOTS_ROOT=/home/$USER/lghostxs/
 VERBOSE=0
 
 # Show help and exit
@@ -154,6 +154,7 @@ checkValidBot
 if [ $OPERATION = create ]
 then
 	create
+	exit 1
 elif [ $RESULT = 0 ]
 then
 	echo $BOTNAME is not recognised as a valid bot name/folder
