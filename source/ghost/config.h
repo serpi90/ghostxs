@@ -6,7 +6,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
    CODE PORTED FROM THE ORIGINAL GHOST PROJECT: http://ghost.pwner.org/
 
-*/
+ */
 
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -25,21 +25,20 @@
 // CConfig
 //
 
-class CConfig
-{
+class CConfig {
 private:
 	map<string, string> m_CFG;
 
 public:
-	CConfig( );
-	~CConfig( );
+	CConfig();
+	~CConfig();
 
-	void Read( string file );
-	bool Exists( string key );
-	int GetInt( string key, int x );
-	uint32_t GetUInt( string key, uint32_t x );
-	string GetString( string key, string x );
-	void Set( string key, string x );
+	void Read(string file);
+	bool Exists(string key);
+	int GetInt(string key, int x);
+	uint32_t GetUInt(string key, uint32_t x);
+	string GetString(string key, string x);
+	void Set(string key, string x);
 };
 
 #endif

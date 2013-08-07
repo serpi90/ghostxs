@@ -6,7 +6,7 @@
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+	   http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
    CODE PORTED FROM THE ORIGINAL GHOST PROJECT: http://ghost.pwner.org/
 
-*/
+ */
 
 #ifndef SAVEGAME_H
 #define SAVEGAME_H
@@ -27,8 +27,7 @@
 // CSaveGame
 //
 
-class CSaveGame : public CPacked
-{
+class CSaveGame : public CPacked {
 private:
 	string m_FileName;
 	string m_FileNameNoPath;
@@ -40,22 +39,50 @@ private:
 	BYTEARRAY m_MagicNumber;
 
 public:
-	CSaveGame( );
-	virtual ~CSaveGame( );
+	CSaveGame();
+	virtual ~CSaveGame();
 
-	string GetFileName( )				{ return m_FileName; }
-	string GetFileNameNoPath( )			{ return m_FileNameNoPath; }
-	string GetMapPath( )				{ return m_MapPath; }
-	string GetGameName( )				{ return m_GameName; }
-	unsigned char GetNumSlots( )		{ return m_NumSlots; }
-	vector<CGameSlot> GetSlots( )		{ return m_Slots; }
-	uint32_t GetRandomSeed( )			{ return m_RandomSeed; }
-	BYTEARRAY GetMagicNumber( )			{ return m_MagicNumber; }
+	string GetFileName() {
+		return m_FileName;
+	}
 
-	void SetFileName( string nFileName )				{ m_FileName = nFileName; }
-	void SetFileNameNoPath( string nFileNameNoPath )	{ m_FileNameNoPath = nFileNameNoPath; }
+	string GetFileNameNoPath() {
+		return m_FileNameNoPath;
+	}
 
-	void ParseSaveGame( );
+	string GetMapPath() {
+		return m_MapPath;
+	}
+
+	string GetGameName() {
+		return m_GameName;
+	}
+
+	unsigned char GetNumSlots() {
+		return m_NumSlots;
+	}
+
+	vector<CGameSlot> GetSlots() {
+		return m_Slots;
+	}
+
+	uint32_t GetRandomSeed() {
+		return m_RandomSeed;
+	}
+
+	BYTEARRAY GetMagicNumber() {
+		return m_MagicNumber;
+	}
+
+	void SetFileName(string nFileName) {
+		m_FileName = nFileName;
+	}
+
+	void SetFileNameNoPath(string nFileNameNoPath) {
+		m_FileNameNoPath = nFileNameNoPath;
+	}
+
+	void ParseSaveGame();
 };
 
 #endif
