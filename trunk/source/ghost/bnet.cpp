@@ -2017,7 +2017,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 				else if( Command == "pub" || Command == "p" )
 				{
 					if( Payload.empty( ) )
-						
+					{
 						if( m_GHost->m_LastGameName == "" )
 						{
 							QueueChatCommand( m_GHost->m_Language->NoGameHasBeenHostedTillNow( ) , User, Whisper );
@@ -2025,7 +2025,7 @@ void CBNET :: ProcessChatEvent( CIncomingChatEvent *chatEvent )
 						}
 						else
 							Payload = m_GHost->m_LastGameName;
-					
+					}
 					m_GHost->CreateGame( m_GHost->m_Map, GAME_PUBLIC, false, Payload, User, User, m_Server, Whisper );
 				}
 
